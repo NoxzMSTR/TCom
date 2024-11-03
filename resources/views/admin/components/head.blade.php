@@ -17,5 +17,5 @@
     <link href="{{ asset('mAssets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('mAssets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
-
+    @yield('css')
 </head>

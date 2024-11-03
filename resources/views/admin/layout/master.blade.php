@@ -43,6 +43,13 @@
             <!--begin::Aside-->
             @include('admin.components.sidebar')
             <!--end::Aside-->
+            <style>
+                @media (min-width: 992px) {
+                    .aside-secondary-enabled.aside-fixed .wrapper {
+                        padding-left: 300px;
+                    }
+                }
+            </style>
             <!--begin::Wrapper-->
             <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
                 <!--begin::Header-->

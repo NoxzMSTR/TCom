@@ -1,3 +1,10 @@
+<style>
+    @media (min-width: 992px) {
+        .aside-fixed.aside-secondary-enabled[data-kt-sticky-header=on] .header {
+            left: 300px;
+        }
+    }
+</style>
 <div id="kt_header" class="header" data-kt-sticky="true" data-kt-sticky-name="header"
     data-kt-sticky-offset="{default: '200px', lg: '300px'}">
     <!--begin::Container-->

@@ -21,5 +21,5 @@
 <script src="{{ asset('mAssets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <!--end::Vendors Javascript-->
 <!--begin::Custom Javascript(used for this page only)-->
-
+@yield('js')
 <!--end::Custom Javascript-->

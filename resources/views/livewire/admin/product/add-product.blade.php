@@ -1,0 +1,316 @@
+<div class="d-flex flex-md-nowrap flex-wrap">
+    <!--begin::Aside column-->
+    <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
+        <!--begin::Thumbnail settings-->
+        <div class="card card-flush py-4">
+            <!--begin::Card header-->
+            <div class="card-header">
+                <!--begin::Card title-->
+                <div class="card-title">
+                    <h2>Thumbnail</h2>
+                </div>
+                <!--end::Card title-->
+            </div>
+            <!--end::Card header-->
+
+            <!--begin::Card body-->
+            <div class="card-body text-center pt-0">
+                <!--begin::Image input-->
+                <!--begin::Image input placeholder-->
+                <style>
+                    .image-input-placeholder {
+                        background-image: url('{{ $showThumbnail ? $showThumbnail : asset('mAssets/media/avatars/thumbnail.jpg') }}');
+                    }
+
+                    [data-bs-theme="dark"] .image-input-placeholder {
+                        background-image: url('{{ $showThumbnail ? $showThumbnail : asset('mAssets/media/avatars/thumbnail.jpg') }}');
+                    }
+                </style>
+                <!--end::Image input placeholder-->
+
+                <div class="image-input image-input-empty image-input-outline image-input-placeholder mb-3"
+                    data-kt-image-input="true">
+                    <!--begin::Preview existing avatar-->
+                    <div class="image-input-wrapper image-input-placeholder w-150px h-150px"></div>
+                    <!--end::Preview existing avatar-->
+
+                    <!--begin::Label-->
+                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                        data-kt-image-input-action="change" data-bs-toggle="tooltip" aria-label="Change avatar"
+                        data-bs-original-title="Change avatar" data-kt-initialized="1">
+                        <i class="ki-duotone ki-pencil fs-7"><span class="path1"></span><span
+                                class="path2"></span></i>
+                        <!--begin::Inputs-->
+                        <input type="file" wire:model="thumbnail" name="avatar" accept=".png, .jpg, .jpeg">
+                        <input type="hidden" name="avatar_remove">
+                        <!--end::Inputs-->
+                    </label>
+                    <!--end::Label-->
+
+                    <!--begin::Cancel-->
+                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip" aria-label="Cancel avatar"
+                        data-bs-original-title="Cancel avatar" data-kt-initialized="1">
+                        <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span class="path2"></span></i>
+                    </span>
+                    <!--end::Cancel-->
+
+                    <!--begin::Remove-->
+                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                        data-kt-image-input-action="remove" data-bs-toggle="tooltip" aria-label="Remove avatar"
+                        data-bs-original-title="Remove avatar" data-kt-initialized="1">
+                        <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span class="path2"></span></i>
+                    </span>
+                    <!--end::Remove-->
+                </div>
+                <!--end::Image input-->
+
+                <!--begin::Description-->
+                <div class="text-muted fs-7">Set the product thumbnail image. Only *.png, *.jpg and *.jpeg image
+                    files are accepted</div>
+                <!--end::Description-->
+                @error('thumbnail')
+                    <br>
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Thumbnail settings-->
+        <!--begin::Status-->
+        <div class="card card-flush py-4">
+            <!--begin::Card header-->
+            <div class="card-header">
+                <!--begin::Card title-->
+                <div class="card-title">
+                    <h2>Status</h2>
+                </div>
+                <!--end::Card title-->
+
+                <!--begin::Card toolbar-->
+                <div class="card-toolbar">
+                    <div class="rounded-circle bg-success w-15px h-15px" id="kt_ecommerce_add_product_status"></div>
+                </div>
+                <!--begin::Card toolbar-->
+            </div>
+            <!--end::Card header-->
+
+            <!--begin::Card body-->
+            <div class="card-body pt-0">
+                <!--begin::Select2-->
+                <select class="form-select" wire:model.fill='status'>
+                    @foreach (PRODUCT_STATUS as $key => $value)
+                        <option value="{{ $key }}" {{ $status == $key ? 'selected' : '' }}>{{ $value }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <!--end::Select2-->
+
+                <!--begin::Description-->
+                <div class="text-muted fs-7">Set the product status.</div>
+                <!--end::Description-->
+
+                <!--begin::Datepicker-->
+                @error('status')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+                <!--end::Datepicker-->
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Status-->
+
+        <!--begin::Category & tags-->
+        <div class="card card-flush py-4">
+            <!--begin::Card header-->
+            <div class="card-header">
+                <!--begin::Card title-->
+                <div class="card-title">
+                    <h2>Product Details</h2>
+                </div>
+                <!--end::Card title-->
+            </div>
+            <!--end::Card header-->
+
+            <!--begin::Card body-->
+            <div class="card-body pt-0">
+                <!--begin::Input group-->
+                <!--begin::Label-->
+                <label class="form-label">Categories</label>
+                <!--end::Label-->
+
+                <!--begin::Select2-->
+                <select class="form-select category mb-3" wire:modal.fill='category' data-control="select2"
+                    data-placeholder="Select category">
+                    <option value=""></option>
+                    @foreach ($this->categories as $key => $value)
+                        <option value="{{ $key }}" {{ $category == $key ? 'selected' : '' }}>
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                </select>
+                <!--end::Select2-->
+
+                <!--end::Input group-->
+
+                <!--begin::Button-->
+                <a href="{{ route('admin.product.categories') }}" wire:navigate
+                    class="btn btn-light-primary btn-sm mb-10">
+                    <i class="ki-duotone ki-plus fs-2"></i> Create new category
+                </a>
+                <!--end::Button-->
+                @error('category')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Category & tags-->
+
+    </div>
+    <!--end::Aside column-->
+
+    <!--begin::Main column-->
+    <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+        <!--begin:::Tabs-->
+        <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-n2"
+            role="tablist" wire:ignore>
+            <!--begin:::Tab item-->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#product_general"
+                    aria-selected="true" role="tab">General</a>
+            </li>
+            <!--end:::Tab item-->
+            <!--begin:::Tab item-->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab" href="#product_media"
+                    aria-selected="false" tabindex="-1" role="tab">Media</a>
+            </li>
+            <!--end:::Tab item-->
+            <!--begin:::Tab item-->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab" href="#product_advanced"
+                    aria-selected="false" tabindex="-1" role="tab">Advanced</a>
+            </li>
+            <!--end:::Tab item-->
+            <!--begin:::Tab item-->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab" href="#product_vendor"
+                    aria-selected="false" tabindex="-1" role="tab">Vendor</a>
+            </li>
+            <!--end:::Tab item-->
+
+        </ul>
+        <!--end:::Tabs-->
+        <div>
+            @if ($errors->all())
+                @foreach ($errors->all() as $error)
+                    <div class="text-danger mb-1">{{ $error }}</div>
+                @endforeach
+            @endif
+        </div>
+        <!--begin::Tab content-->
+        <div class="tab-content">
+            <!--begin::Tab pane-->
+            @include('livewire.admin.product.partials.product.general')
+            <!--end::Tab pane-->
+
+            <!--begin::Tab pane-->
+            @include('livewire.admin.product.partials.product.media')
+            <!--end::Tab pane-->
+
+            <!--begin::Tab pane-->
+            @include('livewire.admin.product.partials.product.advanced')
+            <!--end::Tab pane-->
+
+            <!--begin::Tab pane-->
+            @include('livewire.admin.product.partials.product.vendor')
+            <!--end::Tab pane-->
+        </div>
+        <!--end::Tab content-->
+
+        <div class="d-flex justify-content-end">
+            <!--begin::Button-->
+            <a wire:click='clear' id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">
+                Clear
+            </a>
+            <!--end::Button-->
+            @if ($product)
+                <!--begin::Button-->
+                <button wire:click='updateProduct' onclick="KTApp.showPageLoading();" class="btn btn-primary">
+                    <span class="indicator-label">
+                        Update
+                    </span>
+                    <span class="indicator-progress">
+                        Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
+                <!--end::Button-->
+            @else
+                <!--begin::Button-->
+                <button wire:click='saveProduct' onclick="KTApp.showPageLoading();" class="btn btn-primary">
+                    <span class="indicator-label">
+                        Add
+                    </span>
+                    <span class="indicator-progress">
+                        Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
+                <!--end::Button-->
+            @endif
+
+        </div>
+    </div>
+    <!--end::Main column-->
+
+</div>
+@script
+    <script>
+        setTimeout(() => {
+            KTApp.hidePageLoading();
+            initEl();
+        }, 1000);
+
+        $wire.on('show-loader', () => {
+            KTApp.showPageLoading();
+        });
+
+        $wire.on('hide-loader', (e) => {
+            setTimeout(() => {
+                KTApp.hidePageLoading();
+                initEl(e);
+            }, 1000);
+
+        });
+
+        function initEl(e = null) {
+            var metatags = document.querySelector("#metatags");
+            $('#metatags').parent().find('.tagify').remove();
+            if (typeof metatags.__tagify !== 'undefined') {
+                delete metatags.__tagify
+            }
+            new Tagify(metatags, {
+                callbacks: {
+                    "change": (e) => $wire.set('metaTags', e.detail.value, false),
+                }
+            });
+
+            KTComponents.init();
+            $('.type').on('select2:select', function(e) {
+                var key = $(this).attr('wire:model');
+                $wire.set(key, $(this).val(), false)
+            });
+            $('.type').on('select2:unselect', function(e) {
+                var key = $(this).attr('wire:model');
+                $wire.set(key, $(this).val(), false)
+            });
+            $('.category').on('select2:select', function(e) {
+                $wire.set("category", $(this).val(), false)
+            });
+            $('.category').on('select2:unselect', function(e) {
+                $wire.set("category", $(this).val(), false)
+            });
+        }
+    </script>
+@endscript
