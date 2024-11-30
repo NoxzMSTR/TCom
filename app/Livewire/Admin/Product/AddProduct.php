@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Product;
 
+use App\Models\Brands;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Computed;
@@ -51,6 +52,8 @@ class AddProduct extends Component
     public $width = 0;
     #[Validate('required', message: 'Please enter a product height')]
     public $height = 0;
+    #[Validate('required', message: 'Please select a product brand')]
+    public $brand;
     public $metaTitle;
     public $metaDescription;
     public $metaTags;
@@ -73,6 +76,8 @@ class AddProduct extends Component
     public $vendor = [];
 
     public $product;
+
+    public $featured = 0;
 
     public function mount($productID = null)
     {
@@ -106,6 +111,8 @@ class AddProduct extends Component
                 $this->height = $product->height;
                 $this->metaTitle = $product->metaTagTitle;
                 $this->metaDescription = $product->metaTagDescription;
+                $this->featured = $product->isFeatured;
+                $this->brand = $product->hasBrand;
                 $this->metaTags = json_validate($product->metaTagKeywords) ? json_decode($product->metaTagKeywords) : [];
                 $this->hasAssets = $product->assets;
                 foreach ($product->variations as $key => $value) {
@@ -153,6 +160,19 @@ class AddProduct extends Component
 
         return $categories;
     }
+
+    #[Computed]
+    public function brands()
+    {
+        $brands = [];
+        $brand = Brands::get();
+        foreach ($brand as $key => $brd) {
+            $brands[$brd->id] = $brd->name;
+        }
+
+        return $brands;
+    }
+
 
     public function addVariations()
     {
@@ -245,6 +265,8 @@ class AddProduct extends Component
 
         $this->validate();
 
+        $data = [];
+
         if ($this->product) {
 
             $hasVendor = $this->hasVendor();
@@ -255,13 +277,14 @@ class AddProduct extends Component
                 $name = $file->getClientOriginalName();
 
                 $path = $file->storeAs('products', $name, ['disk' => 'public']);
+                $data += ['thumbnail' => isset($path) && !empty($path) ? asset($path) : ''];
             }
 
-            $product = $this->product->update([
+            $data += [
                 'name' => $this->name,
                 'description' => $this->description,
                 'amount' => $this->price,
-                'thumbnail' => isset($path) && !empty($path) ? asset($path) : '',
+
                 'category' => $this->category,
                 'discountType' => $this->discountType,
                 'discountData' => $this->discountData,
@@ -281,7 +304,11 @@ class AddProduct extends Component
                 'metaTagDescription' => $this->metaDescription,
                 'metaTagKeywords' => json_encode($this->metaTags),
                 'hasVendor' => $hasVendor,
-            ]);
+                'hasBrand' => $this->brand,
+                'isFeatured' => $this->featured,
+            ];
+
+            $product = $this->product->update($data);
 
             $path = null;
 
@@ -369,6 +396,8 @@ class AddProduct extends Component
             'metaTagDescription' => $this->metaDescription,
             'metaTagKeywords' => json_encode($this->metaTags),
             'hasVendor' => $hasVendor,
+            'hasBrand' => $this->brand,
+            'isFeatured' => $this->featured,
         ]);
 
         $path = null;
@@ -443,6 +472,8 @@ class AddProduct extends Component
         $this->length = 0;
         $this->width = 0;
         $this->height = 0;
+        $this->featured = 0;
+        $this->brand = null;
         $this->metaTitle = null;
         $this->metaDescription = null;
         $this->metaTags = null;

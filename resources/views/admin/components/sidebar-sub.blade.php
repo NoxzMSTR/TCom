@@ -177,6 +177,25 @@
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                 <!--begin:Menu link-->
                                 <a wire:navigate
+                                    class="menu-link {{ url()->current() == route('admin.brands') ? 'active' : '' }}"
+                                    href="{{ route('admin.brands') }}">
+                                    <span class="menu-icon">
+                                        <i class="ki-duotone ki-abstract-44 fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+
+                                    </span>
+                                    <span class="menu-title">Brands</span>
+                                </a>
+                                <!--end:Menu link-->
+
+                            </div>
+                            <!--end:Menu item-->
+                            <!--begin:Menu item-->
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                <!--begin:Menu link-->
+                                <a wire:navigate
                                     class="menu-link {{ url()->current() == route('admin.buyer.list') ? 'active' : '' }}"
                                     href="{{ route('admin.buyer.list') }}">
                                     <span class="menu-icon">

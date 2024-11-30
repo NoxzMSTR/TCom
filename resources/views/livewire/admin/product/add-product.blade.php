@@ -167,7 +167,80 @@
             <!--end::Card body-->
         </div>
         <!--end::Category & tags-->
+        <!--begin::Category & tags-->
+        <div class="card card-flush py-4">
+            <!--begin::Card header-->
+            <div class="card-header">
+                <!--begin::Card title-->
+                <div class="card-title">
+                    <h2>Brand</h2>
+                </div>
+                <!--end::Card title-->
+            </div>
+            <!--end::Card header-->
 
+            <!--begin::Card body-->
+            <div class="card-body pt-0">
+                <!--begin::Input group-->
+                <!--begin::Select2-->
+                <select class="form-select brand mb-3" wire:modal.fill='brand' data-control="select2"
+                    data-placeholder="Select brand">
+                    <option value=""></option>
+                    @foreach ($this->brands as $key => $value)
+                        <option value="{{ $key }}" {{ $brand == $key ? 'selected' : '' }}>
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                </select>
+                <!--end::Select2-->
+
+                <!--end::Input group-->
+
+                <!--begin::Button-->
+                <a href="{{ route('admin.brands') }}" wire:navigate class="btn btn-light-primary btn-sm mb-10">
+                    <i class="ki-duotone ki-plus fs-2"></i> Create new brand
+                </a>
+                <!--end::Button-->
+                @error('brand')
+                    <br>
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Category & tags-->
+        <!--begin::Shipping-->
+        <div class="card card-flush py-4">
+            <!--begin::Card header-->
+            <div class="card-header">
+                <div class="card-title">
+                    <h2>Is Featured</h2>
+                </div>
+            </div>
+            <!--end::Card header-->
+
+            <!--begin::Card body-->
+            <div class="card-body pt-0">
+                <!--begin::Input group-->
+                <div class="fv-row">
+                    <!--begin::Input-->
+                    <div class="form-check form-check-custom form-check-solid mb-2">
+                        <label class="form-check form-switch form-check-custom form-check-solid">
+                            <input class="form-check-input" type="checkbox" value="1" wire:model.fill='featured'
+                                {{ $featured ? 'checked' : '' }} />
+                        </label>
+                        <label class="form-check-label">
+                            Feature Product
+                        </label>
+                    </div>
+                    <!--end::Input-->
+
+                </div>
+                <!--end::Input group-->
+            </div>
+            <!--end::Card header-->
+        </div>
+        <!--end::Shipping-->
     </div>
     <!--end::Aside column-->
 
@@ -310,6 +383,12 @@
             });
             $('.category').on('select2:unselect', function(e) {
                 $wire.set("category", $(this).val(), false)
+            });
+            $('.brand').on('select2:select', function(e) {
+                $wire.set("brand", $(this).val(), false)
+            });
+            $('.brand').on('select2:unselect', function(e) {
+                $wire.set("brand", $(this).val(), false)
             });
         }
     </script>

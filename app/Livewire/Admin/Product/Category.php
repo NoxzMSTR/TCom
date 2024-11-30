@@ -26,6 +26,7 @@ class Category extends Component
     public $showThumbnail = '';
     public $parent = 0;
     public $category;
+    public $featured = 0;
 
     public function mount() {}
 
@@ -57,6 +58,7 @@ class Category extends Component
             $this->tags = $this->category->metaTags;
             $this->showThumbnail = $this->category->thumbnail;
             $this->parent = $this->category->parent;
+            $this->featured = $this->category->isFeatured;
         }
 
         $this->dispatch('hide-loader');
@@ -88,6 +90,7 @@ class Category extends Component
                 'description' => !empty($this->description) ? $this->description : '',
                 'metaTags' => !empty($this->tags) ? $this->tags : json_encode([]),
                 'parent' => $this->parent,
+                'isFeatured' => $this->featured,
             ];
 
 
@@ -118,6 +121,7 @@ class Category extends Component
             'metaTags' => !empty($this->tags) ? $this->tags : json_encode([]),
             'thumbnail' => isset($path) && !empty($path) ? asset($path) : '',
             'parent' => $this->parent,
+            'isFeatured' => $this->featured,
         ]);
 
         $this->clear();
@@ -137,6 +141,7 @@ class Category extends Component
         $this->tags = null;
         $this->thumbnail = '';
         $this->parent = 0;
+        $this->featured = 0;
 
         $this->dispatch('refreshDatatable');
     }

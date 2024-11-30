@@ -18,18 +18,19 @@ class System extends Component
 
     public function mount()
     {
-        $system = SettingsSystem::first();
-        if ($system) {
-            $this->system['name'] = $system->name;
-            $this->system['aLogoLight'] = $system->logoLight;
-            $this->system['aLogoDark'] = $system->logoDark;
-            $this->system['aFavicon'] = $system->favconLogo;
-            $this->system['privacyPolicy'] = $system->privacyPolicy;
-            $this->system['termNCondition'] = $system->termsNCondition;
-            $this->system['aboutUs'] = $system->aboutUs;
-            $this->system['facebook'] = $system->facebookLink;
-            $this->system['instagram'] = $system->instagramLink;
-            $this->system['pinterest'] = $system->pinterestLink;
+        $system = SettingsSystem::get()->keyBy('key');
+        if ($system->count()) {
+
+            $this->system['name'] = isset($system['name']) ? $system['name']->value : '';
+            $this->system['aLogoLight'] = isset($system['logoLight']) ?  $system['logoLight']->value : '';
+            $this->system['aLogoDark'] = isset($system['logoDark']) ?  $system['logoDark']->value : '';
+            $this->system['aFavicon'] = isset($system['favconLogo']) ?  $system['favconLogo']->value : '';
+            $this->system['privacyPolicy'] = isset($system['privacyPolicy']) ?  $system['privacyPolicy']->value : '';
+            $this->system['termNCondition'] = isset($system['termsNCondition']) ? $system['termsNCondition']->value : '';
+            $this->system['aboutUs'] = isset($system['aboutUs']) ?  $system['aboutUs']->value : '';
+            $this->system['facebook'] = isset($system['facebook']) ?  $system['facebook']->value : '';
+            $this->system['instagram'] = isset($system['instagram']) ? $system['instagram']->value : '';
+            $this->system['pinterest'] = isset($system['pinterest']) ?  $system['pinterest']->value : '';
         }
     }
 
@@ -40,9 +41,9 @@ class System extends Component
             'privacyPolicy' => $this->system['privacyPolicy'],
             'termsNCondition' => $this->system['termNCondition'],
             'aboutUs' => $this->system['aboutUs'],
-            'facebookLink' => $this->system['facebook'],
-            'instagramLink' => $this->system['instagram'],
-            'pinterestLink' => $this->system['pinterest'],
+            'facebook' => $this->system['facebook'],
+            'instagram' => $this->system['instagram'],
+            'pinterest' => $this->system['pinterest'],
         ];
 
         if (isset($this->system['logoLight'])) {
@@ -75,12 +76,20 @@ class System extends Component
             $data += ['favconLogo' =>  isset($favicon) && !empty($favicon) ? asset($favicon) : ''];
         }
 
-        $system = SettingsSystem::first();
+        foreach ($data as $key => $value) {
+            $system = SettingsSystem::where('key', $key)->where('type', 'system')->first();
 
-        if ($system) {
-            $system->update($data);
-        } else {
-            SettingsSystem::create($data);
+            if ($system) {
+                $system->update([
+                    'value' => $value
+                ]);
+            } else {
+                SettingsSystem::create([
+                    'key' => $key,
+                    'value' => $value,
+                    'type' => 'system'
+                ]);
+            }
         }
     }
 

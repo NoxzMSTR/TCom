@@ -142,6 +142,16 @@
                 @enderror
             </div>
             <!--end::Input group-->
+
+            <div class="form-check form-check-custom form-check-solid mb-2">
+                <label class="form-check form-switch form-check-custom form-check-solid">
+                    <input class="form-check-input" type="checkbox" value="1" wire:model.fill='featured'
+                        {{ $featured ? 'checked' : '' }} />
+                </label>
+                <label class="form-check-label">
+                    Featured Categories
+                </label>
+            </div>
         </div>
         <!--end::Card body-->
         <div class="card-footer d-flex justify-content-end">

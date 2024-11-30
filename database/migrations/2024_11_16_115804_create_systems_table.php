@@ -13,16 +13,9 @@ return new class extends Migration
     {
         Schema::create('systems', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('logoLight');
-            $table->text('logoDark');
-            $table->text('favconLogo');
-            $table->text('privacyPolicy')->nullable();
-            $table->text('termsNCondition')->nullable();
-            $table->text('aboutUs')->nullable();
-            $table->string('facebookLink')->nullable();
-            $table->string('instagramLink')->nullable();
-            $table->string('pinterestLink')->nullable();
+            $table->string('type');
+            $table->text('key');
+            $table->text('value');
             $table->timestamps();
         });
     }
