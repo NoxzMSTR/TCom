@@ -33,7 +33,22 @@
                     @enderror
                 </div>
                 <!--end::Input group-->
+                <!--begin::Input group-->
+                <div>
+                    <!--begin::Label-->
+                    <label class="form-label">Short Description</label>
+                    <!--end::Label-->
 
+                    <!--begin::Editor-->
+                    <livewire:quill-text-editor wire:model="shortDescription" />
+                    <!--end::Editor-->
+
+                    <!--begin::Description-->
+                    <div class="text-muted fs-7">Set a short description to the product for better
+                        visibility.</div>
+                    <!--end::Description-->
+                </div>
+                <!--end::Input group-->
                 <!--begin::Input group-->
                 <div>
                     <!--begin::Label-->

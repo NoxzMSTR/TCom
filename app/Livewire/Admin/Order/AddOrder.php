@@ -277,6 +277,7 @@ class AddOrder extends Component
             OrderItems::create([
                 'orderID' => $order->id,
                 'productID' => $product['id'],
+                'name' => $product['name'],
                 'amount' => $product['amount'],
                 'qty' => $product['qty'],
                 'discountType' => $product['discountType'],

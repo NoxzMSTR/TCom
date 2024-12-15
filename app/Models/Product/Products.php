@@ -2,6 +2,7 @@
 
 namespace App\Models\Product;
 
+use App\Models\Brands;
 use App\Models\Product\Categories;
 use App\Models\Vendors;
 use Illuminate\Database\Eloquent\Model;
@@ -31,5 +32,20 @@ class Products extends Model
     public function vendor()
     {
         return $this->hasOne(Vendors::class, 'id', 'hasVendor');
+    }
+
+    public function brand()
+    {
+        return $this->hasOne(Brands::class, 'id', 'hasBrand');
+    }
+
+    public function feedback()
+    {
+        return $this->hasMany(ProductFeedBack::class, 'productID', 'id');
+    }
+
+    function hasFeedBack()
+    {
+        return $this->feedback()->count();
     }
 }

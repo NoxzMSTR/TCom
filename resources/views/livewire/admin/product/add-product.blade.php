@@ -134,7 +134,7 @@
             <!--end::Card header-->
 
             <!--begin::Card body-->
-            <div class="card-body pt-0">
+            <div class="card-body pt-0 pb-0">
                 <!--begin::Input group-->
                 <!--begin::Label-->
                 <label class="form-label">Categories</label>
@@ -180,7 +180,7 @@
             <!--end::Card header-->
 
             <!--begin::Card body-->
-            <div class="card-body pt-0">
+            <div class="card-body pt-0 pb-0">
                 <!--begin::Input group-->
                 <!--begin::Select2-->
                 <select class="form-select brand mb-3" wire:modal.fill='brand' data-control="select2"
@@ -214,13 +214,13 @@
             <!--begin::Card header-->
             <div class="card-header">
                 <div class="card-title">
-                    <h2>Is Featured</h2>
+                    <h2>Is Featured?</h2>
                 </div>
             </div>
             <!--end::Card header-->
 
             <!--begin::Card body-->
-            <div class="card-body pt-0">
+            <div class="card-body pt-0 pb-0">
                 <!--begin::Input group-->
                 <div class="fv-row">
                     <!--begin::Input-->
@@ -241,6 +241,36 @@
             <!--end::Card header-->
         </div>
         <!--end::Shipping-->
+        <div class="card card-flush py-4">
+            <!--begin::Card header-->
+            <div class="card-header">
+                <div class="card-title">
+                    <h2>Is Offer?</h2>
+                </div>
+            </div>
+            <!--end::Card header-->
+
+            <!--begin::Card body-->
+            <div class="card-body pt-0 pb-0">
+                <!--begin::Input group-->
+                <div class="fv-row">
+                    <!--begin::Input-->
+                    <div class="form-check form-check-custom form-check-solid mb-2">
+                        <label class="form-check form-switch form-check-custom form-check-solid">
+                            <input class="form-check-input" type="checkbox" value="1" wire:model.fill='offered'
+                                {{ $offered ? 'checked' : '' }} />
+                        </label>
+                        <label class="form-check-label">
+                            Special Offered Product
+                        </label>
+                    </div>
+                    <!--end::Input-->
+
+                </div>
+                <!--end::Input group-->
+            </div>
+            <!--end::Card header-->
+        </div>
     </div>
     <!--end::Aside column-->
 

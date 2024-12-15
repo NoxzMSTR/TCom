@@ -20,6 +20,7 @@
 </script>
 <script src="{{ asset('pAssets/vendor/jquery-validation/dist/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('pAssets/vendor/fancybox/jquery.fancybox.min.js') }}"></script>
+<script src="{{ asset('pAssets/vendor/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
 <script src="{{ asset('pAssets/vendor/typed.js/lib/typed.min.js') }}"></script>
 <script src="{{ asset('pAssets/vendor/slick-carousel/slick/slick.js') }}"></script>
 <script src="{{ asset('pAssets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>

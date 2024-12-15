@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Settings\System;
+use App\Models\Order\OrderSettings;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +25,18 @@ class AppServiceProvider extends ServiceProvider
         if (Schema::hasTable('systems')) {
             $system = System::get()->keyBy('key');
             config(['system' => $system]);
+        }
+        if (Schema::hasTable('order_settings')) {
+            $orderSettings = OrderSettings::get()->toArray();
+
+            foreach ($orderSettings as $key => $value) {
+                if ($value['type'] == 'default_currency') {
+                    $currency = json_validate($value['data']) ? json_decode($value['data'])[0] : 'PKR';
+                    if (!defined('default_currency')) {
+                        define('default_currency', $currency);
+                    }
+                }
+            }
         }
     }
 }

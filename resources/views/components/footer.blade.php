@@ -40,7 +40,7 @@
     <div class="pt-8 pb-4 bg-gray-13">
         <div class="container mt-1">
             <div class="row">
-                <div class="col-lg-5">
+                <div class="col-lg-10">
                     <div class="mb-6">
                         <a href="#" class="d-inline-block">
                             <svg version="1.1" x="0px" y="0px" width="156px" height="37px"
@@ -135,68 +135,18 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-7">
+                <div class="col">
                     <div class="row">
-                        <div class="col-12 col-md mb-4 mb-md-0">
-                            <h6 class="mb-3 font-weight-bold">Find it Fast</h6>
-                            <!-- List Group -->
-                            <ul class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent">
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Laptops &
-                                        Computers</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Cameras &
-                                        Photography</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Smart Phones &
-                                        Tablets</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Video Games &
-                                        Consoles</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">TV & Audio</a>
-                                </li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Gadgets</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Car Electronic &
-                                        GPS</a></li>
-                            </ul>
-                            <!-- End List Group -->
-                        </div>
-
-                        <div class="col-12 col-md mb-4 mb-md-0">
-                            <!-- List Group -->
-                            <ul
-                                class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent mt-md-6">
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Printers & Ink</a>
-                                </li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Software</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Office
-                                        Supplies</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Computer
-                                        Components</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/product-categories-5-column-sidebar.html">Accesories</a>
-                                </li>
-                            </ul>
-                            <!-- End List Group -->
-                        </div>
-
                         <div class="col-12 col-md mb-4 mb-md-0">
                             <h6 class="mb-3 font-weight-bold">Customer Care</h6>
                             <!-- List Group -->
                             <ul class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent">
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/my-account.html">My Account</a></li>
+                                <li><a class="list-group-item list-group-item-action" href="../shop/my-account.html">My
+                                        Account</a></li>
                                 <li><a class="list-group-item list-group-item-action"
                                         href="../shop/track-your-order.html">Order Tracking</a></li>
-                                <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/wishlist.html">Wish List</a></li>
+                                <li><a class="list-group-item list-group-item-action" href="../shop/wishlist.html">Wish
+                                        List</a></li>
                                 <li><a class="list-group-item list-group-item-action"
                                         href="../home/terms-and-conditions.html">Customer Service</a></li>
                                 <li><a class="list-group-item list-group-item-action"

@@ -6,7 +6,12 @@
 <body>
 
     <!-- ========== HEADER ========== -->
-    @include('components.header')
+    @if (url()->current() == route('public.home'))
+        @include('components.header')
+    @else
+        @include('components.content-header')
+    @endif
+
     <!-- ========== END HEADER ========== -->
 
     <!-- ========== MAIN CONTENT ========== -->

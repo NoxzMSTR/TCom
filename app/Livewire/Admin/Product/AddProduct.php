@@ -25,6 +25,7 @@ class AddProduct extends Component
     #[Validate('required|min:3', message: 'Please provide a product name')]
     public $name = '';
     public $description = '';
+    public $shortDescription = '';
     #[Validate('required', message: 'Please add a product price')]
     public $price = 0;
     #[Validate('image|max:1024', message: 'Please add a product thumbnail')]
@@ -79,6 +80,8 @@ class AddProduct extends Component
 
     public $featured = 0;
 
+    public $offered = 0;
+
     public function mount($productID = null)
     {
         if ($productID) {
@@ -93,6 +96,7 @@ class AddProduct extends Component
                 $this->variations = [];
                 $this->name = $product->name;
                 $this->description = $product->description;
+                $this->shortDescription = $product->shortDescription;
                 $this->price = $product->amount;
                 $this->showThumbnail = $product->thumbnail;
                 $this->category = $product->category;
@@ -113,6 +117,7 @@ class AddProduct extends Component
                 $this->metaDescription = $product->metaTagDescription;
                 $this->featured = $product->isFeatured;
                 $this->brand = $product->hasBrand;
+                $this->offered = $product->isOffer;
                 $this->metaTags = json_validate($product->metaTagKeywords) ? json_decode($product->metaTagKeywords) : [];
                 $this->hasAssets = $product->assets;
                 foreach ($product->variations as $key => $value) {
@@ -283,8 +288,8 @@ class AddProduct extends Component
             $data += [
                 'name' => $this->name,
                 'description' => $this->description,
+                'shortDescription' => $this->shortDescription,
                 'amount' => $this->price,
-
                 'category' => $this->category,
                 'discountType' => $this->discountType,
                 'discountData' => $this->discountData,
@@ -306,6 +311,7 @@ class AddProduct extends Component
                 'hasVendor' => $hasVendor,
                 'hasBrand' => $this->brand,
                 'isFeatured' => $this->featured,
+                'isOffer' => $this->offered,
             ];
 
             $product = $this->product->update($data);
@@ -375,6 +381,7 @@ class AddProduct extends Component
         $product = Products::create([
             'name' => $this->name,
             'description' => $this->description,
+            'shortDescription' => $this->shortDescription,
             'amount' => $this->price,
             'thumbnail' => isset($path) && !empty($path) ? asset($path) : '',
             'category' => $this->category,
@@ -398,6 +405,7 @@ class AddProduct extends Component
             'hasVendor' => $hasVendor,
             'hasBrand' => $this->brand,
             'isFeatured' => $this->featured,
+            'isOffer' => $this->offered,
         ]);
 
         $path = null;

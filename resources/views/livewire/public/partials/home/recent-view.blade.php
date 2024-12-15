@@ -56,7 +56,7 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +132,7 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +170,7 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -208,7 +208,7 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -284,7 +284,7 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -322,7 +322,7 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -360,18 +360,18 @@
                                     <div class="d-none d-xl-block prodcut-add-cart">
                                         <a href="../shop/single-product-fullwidth.html"
                                             class="btn-add-cart btn-primary transition-3d-hover"><i
-                                                class="ec ec-add-to-cart"></i></a>
+                                                class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="product-item__footer">
+                            {{-- <div class="product-item__footer">
                                 <div class="border-top pt-2 flex-center-between flex-wrap">
                                     <a href="../shop/compare.html" class="text-gray-6 font-size-13"><i
                                             class="ec ec-compare mr-1 font-size-15"></i> Compare</a>
                                     <a href="../shop/wishlist.html" class="text-gray-6 font-size-13"><i
                                             class="ec ec-favorites mr-1 font-size-15"></i> Wishlist</a>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
