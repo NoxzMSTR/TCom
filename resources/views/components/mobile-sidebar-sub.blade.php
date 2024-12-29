@@ -1,6 +1,7 @@
 @if (isset($list))
     <ul id="headerSidebarList" class="u-header-collapse__nav">
-        <li class=""><a class="u-header-collapse__submenu-nav-link" href="#">All
+        <li class=""><a class="u-header-collapse__submenu-nav-link"
+                href="{{ route('public.shop', ['category' => $categories['name']]) }}">All
                 {{ $categories['name'] }}</a>
         </li>
         @foreach ($categories['descendants'] as $key => $value)
@@ -12,7 +13,8 @@
                     ])
                 </ul>
             @else
-                <li class=""><a class="u-header-collapse__submenu-nav-link" href="#">{{ $value['name'] }}</a>
+                <li class=""><a class="u-header-collapse__submenu-nav-link"
+                        href="{{ route('public.shop', ['category' => $value['name']]) }}">{{ $value['name'] }}</a>
                 </li>
             @endif
         @endforeach
@@ -28,7 +30,8 @@
         <div id="menu_{{ md5($categories['name']) }}" class="accordion-collapse collapse"
             data-parent="#subheaderSidebarContent">
             <ul class="u-header-collapse__nav-list">
-                <li class=""><a class="u-header-collapse__submenu-nav-link" href="#">All
+                <li class=""><a class="u-header-collapse__submenu-nav-link"
+                        href="{{ route('public.shop', ['category' => $categories['name']]) }}">All
                         {{ $categories['name'] }}</a>
                 </li>
                 @foreach ($categories['descendants'] as $key => $value)
@@ -41,7 +44,8 @@
                         </ul>
                     @else
                         <li class=""><a class="u-header-collapse__submenu-nav-link"
-                                href="#">{{ $value['name'] }}</a></li>
+                                href="{{ route('public.shop', ['category' => $value['name']]) }}">{{ $value['name'] }}</a>
+                        </li>
                     @endif
                 @endforeach
             </ul>

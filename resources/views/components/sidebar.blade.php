@@ -20,11 +20,7 @@
                         </div>
                         <div id="basicsCollapseOne" class="collapse show vertical-menu"
                             aria-labelledby="basicsHeadingOne" data-parent="#basicsAccordion">
-                            <div class="card-body p-0"
-                                style="
-                            max-height: 524px;
-                            overflow-y: scroll;
-                        ">
+                            <div class="card-body p-0" style="max-height: 524px;overflow-y: scroll;">
                                 <nav
                                     class="js-mega-menu navbar navbar-expand-xl u-header__navbar u-header__navbar--no-space hs-menu-initialized">
                                     <div id="navBar" class="collapse navbar-collapse u-header__navbar-collapse">
@@ -75,7 +71,7 @@
                                                                             @endforeach
                                                                             <li>
                                                                                 <a class="nav-link u-header__sub-menu-nav-link u-nav-divider border-top pt-2 flex-column align-items-start"
-                                                                                    href="#">
+                                                                                    href="{{ route('public.shop', ['category' => $category['name']]) }}">
                                                                                     <div class="">All
                                                                                         {{ $category['name'] }}
                                                                                     </div>
@@ -92,7 +88,7 @@
                                                     @else
                                                         <li class="nav-item u-header__nav-item" data-event="hover"
                                                             data-position="left">
-                                                            <a href="#"
+                                                            <a href="{{ route('public.shop', ['category' => $category['name']]) }}"
                                                                 class="nav-link u-header__nav-link">{{ $category['name'] }}</a>
                                                         </li>
                                                     @endif
@@ -148,8 +144,9 @@
 
                             <!-- Button -->
                             <li class="nav-item u-header__nav-last-item">
-                                <a class="text-gray-90" href="#" target="_blank">
-                                    Bestsellers
+                                <a class="nav-link u-header__nav-link text-sale" href="{{ route('public.shop') }}"
+                                    target="_blank">
+                                    Shop
                                 </a>
                             </li>
                             <!-- End Button -->

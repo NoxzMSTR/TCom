@@ -40,7 +40,15 @@
                 var key = $(this).attr('wire:model.fill');
                 $wire.set(key, $(this).val(), false)
             });
+            $('.cities').on('select2:select', function(e) {
+                var key = $(this).attr('wire:model.fill');
 
+                $wire.set(key, $(this).val(), false)
+            });
+            $('.cities').on('select2:unselect', function(e) {
+                var key = $(this).attr('wire:model.fill');
+                $wire.set(key, $(this).val(), false)
+            });
         }
     </script>
 @endscript

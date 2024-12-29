@@ -19,6 +19,29 @@
             <!--begin::Input group-->
             <div class="row mb-6">
                 <!--begin::Label-->
+                <label class="col-lg-4 col-form-label required fw-semibold fs-6">Avaiable For City</label>
+                <!--end::Label-->
+
+                <!--begin::Col-->
+                <div class="col-lg-8 fv-row">
+                    <select wire:model.fill='availableCities' aria-label="Select cities" data-control="select2"
+                        data-placeholder="Select cities.." class="form-select form-select-solid form-select-lg cities"
+                        tabindex="-1" multiple>
+                        <option value="">Select
+                            cities..</option>
+                        @foreach ($this->cities as $key => $value)
+                            <option value="{{ $value->name }}"
+                                {{ $value->name == $defaultCurrency ? 'selected' : '' }}>
+                                {{ $value->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <!--end::Col-->
+            </div>
+            <!--end::Input group-->
+            <!--begin::Input group-->
+            <div class="row mb-6">
+                <!--begin::Label-->
                 <label class="col-lg-4 col-form-label required fw-semibold fs-6">Default Currency</label>
                 <!--end::Label-->
 

@@ -38,6 +38,45 @@
                     </div>
                     <div class="row">
                         <!--begin::Input group-->
+                        <div class="row col-12 mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-12 col-form-label required fw-semibold fs-6">Contact</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-6 fv-row">
+                                <input type="text" wire:model='system.email'
+                                    class="form-control form-control-lg form-control-solid " placeholder="Enter email "
+                                    value="" />
+                            </div>
+                            <div class="col-lg-6 fv-row">
+                                <input type="text" wire:model='system.phone'
+                                    class="form-control form-control-lg form-control-solid " placeholder="Enter phone"
+                                    value="" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+
+                    </div>
+                    <div class="row">
+                        <!--begin::Input group-->
+                        <div class="row col-12 mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-12 col-form-label required fw-semibold fs-6">Address</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-12 fv-row">
+                                <input type="text" wire:model='system.address'
+                                    class="form-control form-control-lg form-control-solid "
+                                    placeholder="Enter Address " value="" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+
+                    </div>
+                    <div class="row">
+                        <!--begin::Input group-->
                         <div class="row col mb-6">
                             <!--begin::Label-->
                             <label class="col-lg-12 col-form-label required fw-semibold fs-6"> System Logo Light
@@ -51,11 +90,11 @@
 
                                     @if (isset($system['aLogoLight']))
                                         <div class="image-input-wrapper w-125px h-125px"
-                                            style="background-image: url('{{ $system['aLogoLight'] }}')">
+                                            style="background-image: url('{{ $system['aLogoLight'] }}');background-size: contain;">
                                         </div>
                                     @elseif (isset($system['logoLight']))
                                         <div class="image-input-wrapper w-125px h-125px"
-                                            style="background-image: url('{{ $system['logoLight']->temporaryUrl() }}')">
+                                            style="background-image: url('{{ $system['logoLight']->temporaryUrl() }}');background-size: contain;">
                                         </div>
                                     @else
                                         <div class="image-input-wrapper w-125px h-125px"></div>
@@ -115,11 +154,11 @@
 
                                     @if (isset($system['aLogoDark']))
                                         <div class="image-input-wrapper w-125px h-125px"
-                                            style="background-image: url('{{ $system['aLogoDark'] }}')">
+                                            style="background-image: url('{{ $system['aLogoDark'] }}');background-size: contain;">
                                         </div>
                                     @elseif (isset($system['logoDark']))
                                         <div class="image-input-wrapper w-125px h-125px"
-                                            style="background-image: url('{{ $system['logoDark']->temporaryUrl() }}')">
+                                            style="background-image: url('{{ $system['logoDark']->temporaryUrl() }}');background-size: contain;">
                                         </div>
                                     @else
                                         <div class="image-input-wrapper w-125px h-125px"></div>
@@ -177,11 +216,11 @@
 
                                     @if (isset($system['aFavicon']))
                                         <div class="image-input-wrapper w-125px h-125px"
-                                            style="background-image: url('{{ $system['aFavicon'] }}')">
+                                            style="background-image: url('{{ $system['aFavicon'] }}');background-size: contain;">
                                         </div>
                                     @elseif (isset($system['favicon']))
                                         <div class="image-input-wrapper w-125px h-125px"
-                                            style="background-image: url('{{ $system['favicon']->temporaryUrl() }}')">
+                                            style="background-image: url('{{ $system['favicon']->temporaryUrl() }}');background-size: contain;">
                                         </div>
                                     @else
                                         <div class="image-input-wrapper w-125px h-125px"></div>
@@ -236,8 +275,7 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-12 fv-row">
-                                <textarea id="privacyPolicy" class="form-control form-control-lg form-control-solid"
-                                    wire:model='system.privacyPolicy' id="" cols="5" rows="3"></textarea>
+                                <livewire:quill-text-editor wire:model="system.privacyPolicy" />
                             </div>
                             <!--end::Col-->
                         </div>
@@ -245,13 +283,12 @@
                         <!--begin::Input group-->
                         <div class="row col-12 mb-6">
                             <!--begin::Label-->
-                            <label class="col-lg-12 col-form-label required fw-semibold fs-6">Term
+                            <label class="col-lg-12 col-form-label required fw-semibold fs-6">Terms &
                                 Conditions</label>
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-12 fv-row">
-                                <textarea id="termCondition" class="form-control form-control-lg form-control-solid"
-                                    wire:model='system.termNCondition' id="" cols="5" rows="3"></textarea>
+                                <livewire:quill-text-editor wire:model="system.termNCondition" />
                             </div>
                             <!--end::Col-->
                         </div>
@@ -263,8 +300,7 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-12 fv-row">
-                                <textarea id="aboutUs" class="form-control form-control-lg form-control-solid" wire:model='system.aboutUs'
-                                    cols="5" rows="3"></textarea>
+                                <livewire:quill-text-editor wire:model="system.aboutUs" />
                             </div>
                             <!--end::Col-->
                         </div>
@@ -303,13 +339,13 @@
                         <!--begin::Input group-->
                         <div class="row col mb-6">
                             <!--begin::Label-->
-                            <label class="col-lg-12 col-form-label fw-semibold fs-6 url ">Pinterest Link</label>
+                            <label class="col-lg-12 col-form-label fw-semibold fs-6 url ">Google Link</label>
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-12 fv-row">
-                                <input type="text" wire:model='system.pinterest'
+                                <input type="text" wire:model='system.google'
                                     class="form-control form-control-lg form-control-solid"
-                                    placeholder="Enter Pinterest Link" value="" />
+                                    placeholder="Enter Google Link" value="" />
                             </div>
                             <!--end::Col-->
                         </div>

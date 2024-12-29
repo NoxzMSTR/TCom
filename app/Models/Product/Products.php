@@ -44,6 +44,16 @@ class Products extends Model
         return $this->hasMany(ProductFeedBack::class, 'productID', 'id');
     }
 
+    public function tags()
+    {
+        return $this->hasMany(ProductTags::class, 'productID', 'id');
+    }
+
+    public function specification()
+    {
+        return $this->hasMany(ProductSpecification::class, 'productID', 'id');
+    }
+
     function hasFeedBack()
     {
         return $this->feedback()->count();

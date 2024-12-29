@@ -7,6 +7,9 @@ use Livewire\Component;
 use App\Models\Order\Orders;
 use App\Models\Order\OrderItems;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
+use Aaqib\GeoPakistan\Models\District;
+use Stevebauman\Location\Facades\Location;
 
 class Checkout extends Component
 {
@@ -19,21 +22,14 @@ class Checkout extends Component
             'required',
             'min:3'
         ],
-        'billing.country' => [
-            'required'
-        ],
+
         'billing.address' => [
             'required'
         ],
         'billing.city' => [
             'required'
         ],
-        'billing.postcode' => [
-            'required'
-        ],
-        'billing.state' => [
-            'required'
-        ],
+
         'billing.email' => [
             'required',
             'email',
@@ -54,8 +50,11 @@ class Checkout extends Component
     public $billing = [];
 
     public $shipping = [];
+    public $sameDayProducts;
+
     public $shippingdiffrentAddress = 0;
     public $note;
+    public $userIP;
 
 
     public function mount()
@@ -85,9 +84,11 @@ class Checkout extends Component
                         $totalAmount +=  $discount = $amount - $discount;
                     } elseif ($product->discountType == 2) {
                         $totalAmount += $discount = $product->discountData;
+                    } else {
+                        $totalAmount +=  $discount = $product->amount;
                     }
                 } else {
-                    $discount = $product->amount;
+                    $totalAmount +=  $discount = $product->amount;
                 }
             }
 
@@ -108,21 +109,14 @@ class Checkout extends Component
                     'required',
                     'min:3'
                 ],
-                'shipping.country' => [
-                    'required'
-                ],
+
                 'shipping.address' => [
                     'required'
                 ],
                 'shipping.city' => [
                     'required'
                 ],
-                'shipping.postcode' => [
-                    'required'
-                ],
-                'shipping.state' => [
-                    'required'
-                ],
+
                 'shipping.email' => [
                     'required',
                     'email',
@@ -169,6 +163,19 @@ class Checkout extends Component
 
         $this->validateShipping();
 
+        $billing = DB::table('pakistan_districts')->select(['pakistan_districts.name as city', 'pakistan_provinces.name as state'])->join('pakistan_provinces', 'pakistan_districts.province_id', '=', 'pakistan_provinces.id')->where('pakistan_districts.name', $this->billing['city'])->first();
+        if ($this->shippingdiffrentAddress) {
+            $shipping = DB::table('pakistan_districts')->select(['pakistan_districts.name as city', 'pakistan_provinces.name as state'])->join('pakistan_provinces', 'pakistan_districts.province_id', '=', 'pakistan_provinces.id')->where('pakistan_districts.name', $this->shipping['city'])->first();
+        }
+        try {
+            $location = getCountry($this->userIP);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+        $country = isset($location['country']) ? $location['country'] : 'Pakistan';
+        $postalCode = isset($location['zip']) ? $location['zip'] : '0';
+
         $buyerID =  $this->hasBuyer();
 
         $count = Orders::count();
@@ -189,16 +196,16 @@ class Checkout extends Component
             'userLastName' => '',
             'userEmail' => $this->billing['email'],
             'userPhone' => $this->billing['phone'],
-            'shippingPostalCode' => $this->shippingdiffrentAddress ? $this->shipping['postcode'] : $this->billing['postcode'],
+            'shippingPostalCode' => $this->shippingdiffrentAddress ? $postalCode : $postalCode,
             'shippingAddress' => $this->shippingdiffrentAddress ? $this->shipping['address'] : $this->billing['address'],
             'shippingCity' => $this->shippingdiffrentAddress ? $this->shipping['city'] : $this->billing['city'],
-            'shippingRegion' => $this->shippingdiffrentAddress ? $this->shipping['state'] : $this->billing['state'],
-            'shippingCountry' => $this->shippingdiffrentAddress ? $this->shipping['country'] : $this->billing['country'],
-            'deliveryPostalCode' => $this->billing['postcode'],
+            'shippingRegion' => $this->shippingdiffrentAddress ? $shipping->state : $billing->state,
+            'shippingCountry' => $this->shippingdiffrentAddress ? $country : $country,
+            'deliveryPostalCode' => $postalCode,
             'deliveryAddress' => $this->billing['address'],
             'deliveryCity' => $this->billing['city'],
-            'deliveryRegion' => $this->billing['state'],
-            'deliveryCountry' => $this->billing['country'],
+            'deliveryRegion' => $billing->state,
+            'deliveryCountry' => $country,
             'isPaid' => 0,
             'shippingSameAsBilling' => $this->shippingdiffrentAddress,
             'status' => 0,
@@ -219,18 +226,33 @@ class Checkout extends Component
                 $discount = $amount - $discount;
             } elseif ($product->discountType == 2) {
                 $discount = $product->discountData;
+            } else {
+                $discount = $product->amount;
             }
-
-            OrderItems::create([
-                'orderID' => $order->id,
-                'productID' => $product->id,
-                'name' => $product->name,
-                'amount' => $discount,
-                'qty' => $qty,
-                'discountType' => $product->discountType,
-                'discountData' => $product->discountData,
-                'variationID' => isset($product->variationID) ? $product->variationID : 0,
-            ]);
+            if ($product->shippingType == 1) {
+                OrderItems::create([
+                    'orderID' => $order->id,
+                    'productID' => $product->id,
+                    'name' => $product->name,
+                    'amount' => $discount,
+                    'qty' => $qty,
+                    'discountType' => $product->discountType,
+                    'discountData' => $product->discountData,
+                    'sameDaySlot' => $this->sameDayProducts,
+                    'variationID' => isset($product->variationID) ? $product->variationID : 0,
+                ]);
+            } else {
+                OrderItems::create([
+                    'orderID' => $order->id,
+                    'productID' => $product->id,
+                    'name' => $product->name,
+                    'amount' => $discount,
+                    'qty' => $qty,
+                    'discountType' => $product->discountType,
+                    'discountData' => $product->discountData,
+                    'variationID' => isset($product->variationID) ? $product->variationID : 0,
+                ]);
+            }
         }
 
         return redirect()->route('public.checkout.success', [$order->trackingNo, 'type' => 'success']);

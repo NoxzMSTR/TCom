@@ -5,178 +5,160 @@
         </div>
         <div class="border-bottom pb-4 mb-4">
             <h4 class="font-size-14 mb-3 font-weight-bold">Brands</h4>
-
+            @php
+                $exBrands = [];
+                foreach ($brands as $key => $value) {
+                    if ($key > 5) {
+                        $exBrands[1][] = $value;
+                    } else {
+                        $exBrands[0][] = $value;
+                    }
+                }
+            @endphp
             <!-- Checkboxes -->
-            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="brandAdidas">
-                    <label class="custom-control-label" for="brandAdidas">Adidas
-                        <span class="text-gray-25 font-size-12 font-weight-normal"> (56)</span>
-                    </label>
+            @foreach ($exBrands[0] as $key => $value)
+                <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" wire:model='filter.brand.{{ $value->id }}'
+                            id="brand{{ $value->id }}" value="{{ $value->id }}">
+                        <label class="custom-control-label" for="brand{{ $value->id }}">{{ $value->name }}
+                            <span class="text-gray-25 font-size-12 font-weight-normal">
+                                ({{ $value->products_count }})
+                            </span>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="brandNewBalance">
-                    <label class="custom-control-label" for="brandNewBalance">New Balance
-                        <span class="text-gray-25 font-size-12 font-weight-normal"> (56)</span>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="brandNike">
-                    <label class="custom-control-label" for="brandNike">Nike
-                        <span class="text-gray-25 font-size-12 font-weight-normal"> (56)</span>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="brandFredPerry">
-                    <label class="custom-control-label" for="brandFredPerry">Fred Perry
-                        <span class="text-gray-25 font-size-12 font-weight-normal"> (56)</span>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="brandTnf">
-                    <label class="custom-control-label" for="brandTnf">The North Face
-                        <span class="text-gray-25 font-size-12 font-weight-normal"> (56)</span>
-                    </label>
-                </div>
-            </div>
+            @endforeach
+
             <!-- End Checkboxes -->
-
-            <!-- View More - Collapse -->
-            <div class="collapse" id="collapseBrand">
-                <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="brandGucci">
-                        <label class="custom-control-label" for="brandGucci">Gucci
-                            <span class="text-gray-25 font-size-12 font-weight-normal"> (56)</span>
-                        </label>
-                    </div>
+            @if (isset($exBrands[1]))
+                <!-- View More - Collapse -->
+                <div class="collapse" id="collapseBrand">
+                    @foreach ($exBrands[1] as $key => $value)
+                        <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="brand{{ $value->id }}"
+                                    wire:model='filter.brand.{{ $value->id }}' value="{{ $value->id }}">
+                                <label class="custom-control-label" for="brand{{ $value->id }}">{{ $value->name }}
+                                    <span class="text-gray-25 font-size-12 font-weight-normal">
+                                        ({{ $value->products_count }})
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-                <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="brandMango">
-                        <label class="custom-control-label" for="brandMango">Mango
-                            <span class="text-gray-25 font-size-12 font-weight-normal"> (56)</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <!-- End View More - Collapse -->
+                <!-- End View More - Collapse -->
 
-            <!-- Link -->
-            <a class="link link-collapse small font-size-13 text-gray-27 d-inline-flex mt-2" data-toggle="collapse"
-                href="#collapseBrand" role="button" aria-expanded="false" aria-controls="collapseBrand">
-                <span class="link__icon text-gray-27 bg-white">
-                    <span class="link__icon-inner">+</span>
-                </span>
-                <span class="link-collapse__default">Show more</span>
-                <span class="link-collapse__active">Show less</span>
-            </a>
-            <!-- End Link -->
+                <!-- Link -->
+                <a class="link link-collapse small font-size-13 text-gray-27 d-inline-flex mt-2" data-toggle="collapse"
+                    href="#collapseBrand" role="button" aria-expanded="false" aria-controls="collapseBrand">
+                    <span class="link__icon text-gray-27 bg-white">
+                        <span class="link__icon-inner">+</span>
+                    </span>
+                    <span class="link-collapse__default">Show more</span>
+                    <span class="link-collapse__active">Show less</span>
+                </a>
+                <!-- End Link -->
+            @endif
+
         </div>
+        @php
+            $exVariations = [];
+            foreach ($variations as $key => $value) {
+                if ($key > 3) {
+                    $exVariations[$value->type][1][] = $value;
+                } else {
+                    $exVariations[$value->type][0][] = $value;
+                }
+            }
+        @endphp
+        @foreach ($exVariations as $type => $typeData)
+            <div class="border-bottom pb-4 mb-4">
+                <h4 class="font-size-14 mb-3 font-weight-bold">
+                    {{ isset(PRODUCT_VARIATIONS[$type]) ? PRODUCT_VARIATIONS[$type] : '-' }}</h4>
+
+                <!-- Checkboxes -->
+                @foreach ($typeData[0] as $key => $value)
+                    <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="category{{ md5($value->data) }}"
+                                wire:model='filter.variation.{{ $type }}.{{ $value->data }}'
+                                value="{{ $value->data }}">
+                            <label class="custom-control-label"
+                                for="category{{ md5($value->data) }}">{{ $value->data }}
+                                <span class="text-gray-25 font-size-12 font-weight-normal">
+                                    ({{ $value->products_count }})
+                                </span></label>
+                        </div>
+                    </div>
+                @endforeach
+                <!-- End Checkboxes -->
+                @if (isset($typeData[1]))
+                    <!-- View More - Collapse -->
+                    <div class="collapse" id="collapse{{ PRODUCT_VARIATIONS[$type] }}">
+                        @foreach ($typeData[1] as $key => $value)
+                            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                        id="category{{ md5($value->data) }}"
+                                        wire:model='filter.variation.{{ $type }}.{{ $value->data }}'
+                                        value="{{ $value->data }}">
+                                    <label class="custom-control-label"
+                                        for="category{{ md5($value->data) }}">{{ $value->data }} <span
+                                            class="text-gray-25 font-size-12 font-weight-normal">
+                                            ({{ $value->products_count }})
+                                        </span></label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <!-- End View More - Collapse -->
+
+                    <!-- Link -->
+                    <a class="link link-collapse small font-size-13 text-gray-27 d-inline-flex mt-2"
+                        data-toggle="collapse" href="#collapse{{ PRODUCT_VARIATIONS[$type] }}" role="button"
+                        aria-expanded="false" aria-controls="collapse{{ PRODUCT_VARIATIONS[$type] }}">
+                        <span class="link__icon text-gray-27 bg-white">
+                            <span class="link__icon-inner">+</span>
+                        </span>
+                        <span class="link-collapse__default">Show more</span>
+                        <span class="link-collapse__active">Show less</span>
+                    </a>
+                    <!-- End Link -->
+                @endif
+
+            </div>
+        @endforeach
+
         <div class="border-bottom pb-4 mb-4">
-            <h4 class="font-size-14 mb-3 font-weight-bold">Color</h4>
-
+            <h4 class="font-size-14 mb-3 font-weight-bold">Set your price range</h4>
             <!-- Checkboxes -->
             <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="categoryTshirt">
-                    <label class="custom-control-label" for="categoryTshirt">Black <span
-                            class="text-gray-25 font-size-12 font-weight-normal"> (56)</span></label>
+                <div class="align-items-center input-group-append" style="gap: 15px;">
+                    <label class="form-label" for="Min">
+                        Min
+                    </label>
+                    <input type="number" class="form-control form-control-sm" id="min"
+                        wire:model='filter.price.min' placeholder="Enter Min Price">
+
                 </div>
             </div>
             <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="categoryShoes">
-                    <label class="custom-control-label" for="categoryShoes">Black Leather <span
-                            class="text-gray-25 font-size-12 font-weight-normal"> (56)</span></label>
-                </div>
-            </div>
-            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="categoryAccessories">
-                    <label class="custom-control-label" for="categoryAccessories">Black with Red <span
-                            class="text-gray-25 font-size-12 font-weight-normal"> (56)</span></label>
-                </div>
-            </div>
-            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="categoryTops">
-                    <label class="custom-control-label" for="categoryTops">Gold <span
-                            class="text-gray-25 font-size-12 font-weight-normal"> (56)</span></label>
-                </div>
-            </div>
-            <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="categoryBottom">
-                    <label class="custom-control-label" for="categoryBottom">Spacegrey <span
-                            class="text-gray-25 font-size-12 font-weight-normal"> (56)</span></label>
+                <div class="align-items-center input-group-append" style="gap: 15px;">
+                    <label class="form-label" for="max">
+                        Max
+                    </label>
+                    <input type="number" class="form-control form-control-sm" id="max"
+                        wire:model='filter.price.max' placeholder="Enter Max Price">
+
                 </div>
             </div>
             <!-- End Checkboxes -->
 
-            <!-- View More - Collapse -->
-            <div class="collapse" id="collapseColor">
-                <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="categoryShorts">
-                        <label class="custom-control-label" for="categoryShorts">Turquoise <span
-                                class="text-gray-25 font-size-12 font-weight-normal"> (56)</span></label>
-                    </div>
-                </div>
-                <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="categoryHats">
-                        <label class="custom-control-label" for="categoryHats">White <span
-                                class="text-gray-25 font-size-12 font-weight-normal"> (56)</span></label>
-                    </div>
-                </div>
-                <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="categorySocks">
-                        <label class="custom-control-label" for="categorySocks">White with Gold <span
-                                class="text-gray-25 font-size-12 font-weight-normal"> (56)</span></label>
-                    </div>
-                </div>
-            </div>
-            <!-- End View More - Collapse -->
 
-            <!-- Link -->
-            <a class="link link-collapse small font-size-13 text-gray-27 d-inline-flex mt-2" data-toggle="collapse"
-                href="#collapseColor" role="button" aria-expanded="false" aria-controls="collapseColor">
-                <span class="link__icon text-gray-27 bg-white">
-                    <span class="link__icon-inner">+</span>
-                </span>
-                <span class="link-collapse__default">Show more</span>
-                <span class="link-collapse__active">Show less</span>
-            </a>
-            <!-- End Link -->
         </div>
-        <div class="range-slider">
-            <h4 class="font-size-14 mb-3 font-weight-bold">Price</h4>
-            <!-- Range Slider -->
-            <input class="js-range-slider" type="text"
-                data-extra-classes="u-range-slider u-range-slider-indicator u-range-slider-grid" data-type="double"
-                data-grid="false" data-hide-from-to="true" data-prefix="$" data-min="0" data-max="3456"
-                data-from="0" data-to="3456" data-result-min="#rangeSliderExample3MinResult"
-                data-result-max="#rangeSliderExample3MaxResult">
-            <!-- End Range Slider -->
-            <div class="mt-1 text-gray-111 d-flex mb-4">
-                <span class="mr-0dot5">Price: </span>
-                <span>$</span>
-                <span id="rangeSliderExample3MinResult" class=""></span>
-                <span class="mx-0dot5"> — </span>
-                <span>$</span>
-                <span id="rangeSliderExample3MaxResult" class=""></span>
-            </div>
-            <button type="submit" class="btn px-4 btn-primary-dark-w py-2 rounded-lg">Filter</button>
-        </div>
+        <button type="button" wire:click='setFilter()'
+            class="btn px-4 btn-primary-dark-w py-2 rounded-lg">Filter</button>
     </div>
 </div>

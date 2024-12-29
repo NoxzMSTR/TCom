@@ -11,8 +11,10 @@ use App\Livewire\Admin\Product\AddProduct;
 use App\Livewire\Admin\Product\Category;
 use App\Livewire\Admin\Product\ProductDatatable;
 use App\Livewire\Admin\Settings\Account;
+use App\Livewire\Admin\Settings\Customization;
 use App\Livewire\Admin\Settings\System;
 
 Route::middleware([Authenticated::class])->prefix('admin/settings')->as('admin.settings.')->group(function () {
     Route::get('/system', System::class)->name('system');
+    Route::get('/customization', Customization::class)->name('customization');
 });

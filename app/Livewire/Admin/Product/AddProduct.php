@@ -10,6 +10,8 @@ use Livewire\Attributes\Validate;
 use App\Models\Product\Categories;
 use App\Models\Product\ProductAssets;
 use App\Models\Product\Products;
+use App\Models\Product\ProductSpecification;
+use App\Models\Product\ProductTags;
 use App\Models\Product\ProductVariations;
 use App\Models\Vendors;
 use Monarobase\CountryList\CountryListFacade;
@@ -76,6 +78,8 @@ class AddProduct extends Component
 
     public $vendor = [];
 
+    public $specification = [];
+
     public $product;
 
     public $featured = 0;
@@ -88,7 +92,7 @@ class AddProduct extends Component
             $this->title = 'Update Product';
             $this->breadCrumb = 'Home.Product.Update';
 
-            $this->product = Products::with(['assets', 'variations', 'vendor'])->find($productID);
+            $this->product = Products::with(['assets', 'variations', 'vendor', 'specification'])->find($productID);
 
             if ($this->product) {
 
@@ -121,9 +125,14 @@ class AddProduct extends Component
                 $this->metaTags = json_validate($product->metaTagKeywords) ? json_decode($product->metaTagKeywords) : [];
                 $this->hasAssets = $product->assets;
                 foreach ($product->variations as $key => $value) {
-                    $this->variations[] = ['id' => $value['id'], 'type' => $value['type'], 'data' => $value['data'], 'hasPrice' => $value['hasPrice'], 'showThumbnail' => $value['thumbnail']];
+                    $this->variations[] = ['id' => $value['id'], 'type' => $value['type'], 'data' => $value['data'], 'hasPrice' => $value['hasPrice'], 'previewThumbnail' => $value['thumbnail']];
                 }
-
+                $specification = [];
+                foreach ($product->specification as $key => $value) {
+                    $specification[$value['title']]['title'] = $value['title'];
+                    $specification[$value['title']]['data'][] = ['name' => $value['key'], 'value' => $value['value']];
+                }
+                $this->specification = array_values($specification);
                 if ($product->vendor) {
                     $this->vendor = [
                         'id' => $product->vendor->id,
@@ -316,6 +325,26 @@ class AddProduct extends Component
 
             $product = $this->product->update($data);
 
+
+
+            if (json_validate($this->metaTags)) {
+                $tags = [];
+
+                foreach (json_decode($this->metaTags, true) as $key => $tag) {
+                    if (isset($tag['value']) && !empty($tag['value'])) {
+                        $tags[] = $tag['value'];
+                        $existed = ProductTags::where('tag', $tag['value'])->where('productID', $this->product->id)->first();
+                        if (!$existed) {
+                            ProductTags::create([
+                                'tag' => $tag['value'],
+                                'productID' => $this->product->id,
+                            ]);
+                        }
+                    }
+                }
+                ProductTags::whereNotIn('tag', $tags)->where('productID', $this->product->id)->delete();
+            }
+
             $path = null;
 
             $assets = $this->assets;
@@ -342,6 +371,7 @@ class AddProduct extends Component
             }
 
             if ($this->variations) {
+                $excludedTypes = [];
                 foreach ($this->variations as $key => $value) {
                     if (isset($value['thumbnail']) && !empty($value['thumbnail'])) {
                         $file = $value['thumbnail'];
@@ -357,6 +387,28 @@ class AddProduct extends Component
                         'thumbnail' => isset($path) && !empty($path) ? asset($path) : '',
                         'productID' => $this->product->id,
                     ]);
+                    $excludedTypes[] = $value['type'];
+                }
+
+                ProductVariations::whereNotIn('type', $excludedTypes)->where('productID', $this->product->id)->delete();
+            }
+            if ($this->specification) {
+                $excludedSpecs = [];
+                if (is_array($this->specification)) {
+                    foreach ($this->specification as $key => $specification) {
+                        if (isset($specification['data']) && is_array($specification['data'])) {
+                            foreach ($specification['data'] as $key => $value) {
+                                ProductSpecification::create([
+                                    'title' => $specification['title'],
+                                    'key' => $value['name'],
+                                    'value' => $value['value'],
+                                    'productID' => $this->product->id,
+                                ]);
+                                $excludedSpecs[] = $value['name'];
+                            }
+                        }
+                    }
+                    ProductSpecification::whereNotIn('key', $excludedSpecs)->where('productID', $this->product->id)->delete();
                 }
             }
         }
@@ -408,6 +460,19 @@ class AddProduct extends Component
             'isOffer' => $this->offered,
         ]);
 
+        if (is_array($this->metaTags)) {
+            $tags = [];
+            foreach ($this->metaTags as $key => $tag) {
+                if (isset($tag['value']) && !empty($tag['value'])) {
+                    ProductTags::create([
+                        'tag' => $tag['value'],
+                        'productID' => $product->id,
+                    ]);
+                }
+            }
+            ProductTags::whereNotIn('tag', $tags)->where('productID', $product->id)->delete();
+        }
+
         $path = null;
 
         $assets = $this->assets;
@@ -453,6 +518,23 @@ class AddProduct extends Component
                     'thumbnail' => isset($path) && !empty($path) ? asset($path) : '',
                     'productID' => $product->id,
                 ]);
+            }
+        }
+
+        if ($this->specification) {
+            if (is_array($this->specification)) {
+                foreach ($this->specification as $key => $specification) {
+                    if (isset($specification['data']) && is_array($specification['data'])) {
+                        foreach ($specification['data'] as $key => $value) {
+                            ProductSpecification::create([
+                                'title' => $specification['title'],
+                                'key' => $value['name'],
+                                'value' => $value['value'],
+                                'productID' => $product->id,
+                            ]);
+                        }
+                    }
+                }
             }
         }
 

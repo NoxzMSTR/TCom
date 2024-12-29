@@ -5,9 +5,13 @@
     <!-- Required Meta Tags Always Come First -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    @php
+        $favconLogo = isset(system_config['favconLogo']['value'])
+            ? system_config['favconLogo']['value']
+            : asset('mAssets/media/logos/logo.jpg');
+    @endphp
     <!-- Favicon -->
-    <link rel="shortcut icon" href="../../favicon.png">
+    <link rel="shortcut icon" href="{{ $favconLogo }}">
 
     <!-- Google Fonts -->
     <link
@@ -29,7 +33,7 @@
     <link rel="stylesheet" href="{{ asset('pAssets/vendor/bootstrap-select/dist/css/bootstrap-select.min.css') }}">
 
     <!-- CSS Electro Template -->
-    <link rel="stylesheet" href="{{ asset('pAssets/css/theme.css') }}">
+    <link rel="stylesheet" href="{{ url('/theme-dynamic-css') }}">
 
     @stack('css')
 </head>

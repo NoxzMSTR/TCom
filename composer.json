@@ -11,13 +11,17 @@
         "php": "^8.2",
         "aaqib/geo-pakistan": "^1.0",
         "amrshawky/laravel-currency": "^3.2",
+        "awcodes/postal-codes": "^0.0.3",
         "dasundev/livewire-quill-text-editor": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "monarobase/country-list": "^3.5",
+        "ozdemirburak/iris": "^3.1",
         "rappasoft/laravel-livewire-tables": "^3.4",
+        "spatie/color": "^1.6",
         "spatie/laravel-activitylog": "^4.9",
+        "stevebauman/location": "^7.4",
         "torann/currency": "^1.1"
     },
     "require-dev": {

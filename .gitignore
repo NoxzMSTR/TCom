@@ -24,3 +24,8 @@ yarn-error.log
 !/public/
 !/public/client/*
 /public/mAssets
+/public/pAssets
+/public/system
+/public/customize
+/public/products
+/public/categories

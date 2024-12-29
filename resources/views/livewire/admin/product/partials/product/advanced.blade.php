@@ -102,37 +102,63 @@
                     <!--end::Label-->
 
                     <!--begin::Repeater-->
-                    <div id="variations">
+                    <div id="variations" x-data="{
+                        variations: $wire.entangle('variations'),
+                        addVariation() {
+                            var index = this.variations.length;
+                            this.variations[index] = {
+                                type: '',
+                                hasPrice: '',
+                                data: '',
+                                thumbnail: null,
+                                previewThumbnail: null,
+                            };
+                        },
+                        deleteVariation(index) {
+                            this.variations.splice(index, 1);
+                        },
+                        previewImage(event, index) {
+                            const file = event.target.files[0];
+                            if (file) {
+                                const reader = new FileReader();
+                                reader.onload = (e) => {
+                                    this.variations[index]['previewThumbnail'] = e.target.result; // Store the preview
+                                };
+                                reader.readAsDataURL(file);
+                                $wire.upload(`variations.${index}.thumbnail`, file); // Send the file to Livewire
+                            }
+                        },
+                        init() {
+                            if (this.variations.length == 0) {
+                                this.variations[0] = {
+                                    type: '',
+                                    hasPrice: '',
+                                    data: '',
+                                    thumbnail: null,
+                                    previewThumbnail: null,
+                                };
+                            }
+                    
+                        }
+                    }">
                         <!--begin::Form group-->
                         <div class="form-group">
                             <div data-repeater-list="variations" class="d-flex flex-column gap-3">
-                                @foreach ($variations as $key => $value)
+                                <template x-for="(variation, index) in variations" :key="index">
                                     <div class="align-items-center d-flex gap-2 justify-content-between">
-                                        @if (isset($value['thumbnail']) && $value['thumbnail'] !== null && $value['thumbnail'] !== '')
-                                            <div>
-                                                <label class="form-check-image">
-                                                    <div class="form-check-wrapper">
-                                                        <img class="w-100px"
-                                                            src="{{ $value['thumbnail']->temporaryUrl() }}" />
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        @elseif(isset($value['showThumbnail']))
-                                            <div>
-                                                <label class="form-check-image">
-                                                    <div class="form-check-wrapper">
-                                                        <img class="w-100px" src="{{ $value['showThumbnail'] }}" />
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        @endif
+                                        <div x-show="variation.previewThumbnail" class="image-preview" wire:ignore>
+                                            <label class="form-check-image">
+                                                <div class="form-check-wrapper">
+                                                    <img class="w-100px" :src="variation.previewThumbnail" />
+                                                </div>
+                                            </label>
+                                        </div>
 
                                         <div>
-                                            <div data-repeater-item
+                                            <div
                                                 class="form-group d-flex flex-wrap flex-md-nowrap align-items-center gap-5">
                                                 <!--begin::Select2-->
-                                                <select class="form-select type"
-                                                    wire:model='variations.{{ $key }}.type'>
+                                                <select class="form-select type" x-model="variation.type">
                                                     <option value=""></option>
                                                     @foreach (PRODUCT_VARIATIONS as $vKey => $vValue)
                                                         <option value="{{ $vKey }}">{{ $vValue }}</option>
@@ -141,25 +167,22 @@
                                                 <!--end::Select2-->
 
                                                 <!--begin::Input-->
-                                                <input type="text" class="form-control "
-                                                    wire:model='variations.{{ $key }}.hasPrice'
+                                                <input type="text" class="form-control " x-model="variation.hasPrice"
                                                     placeholder="Has Price">
                                                 <!--end::Input-->
 
                                                 <!--begin::Input-->
-                                                <input type="text" class="form-control "
-                                                    wire:model='variations.{{ $key }}.data'
+                                                <input type="text" class="form-control " x-model="variation.data"
                                                     placeholder="Variation">
                                                 <!--end::Input-->
 
-                                                <button type="button"
-                                                    wire:click='deleteVariations({{ $key }})'
+                                                <button type="button" @click="deleteVariation(index)"
                                                     class="bg-transparent btn btn-flush btn-icon btn-light-danger btn-sm">
                                                     <i class="ki-duotone ki-cross fs-1"><span
                                                             class="path1"></span><span class="path2"></span></i>
                                                 </button>
                                             </div>
-                                            <label for="variations{{ $key }}thumbnail"
+                                            <label :for="'variationsT' + index"
                                                 class="dropzone dz-clickable h-100 mt-4 py-2 w-100"
                                                 id="kt_ecommerce_add_product_media">
                                                 <!--begin::Message-->
@@ -176,19 +199,18 @@
                                                     <!--end::Info-->
                                                 </div>
                                             </label>
-                                            <input id="variations{{ $key }}thumbnail" type="file"
-                                                wire:model="variations.{{ $key }}.thumbnail" hidden>
+                                            <input :id="'variationsT' + index" type="file"
+                                                @change="previewImage($event, index)" hidden>
                                         </div>
                                     </div>
-                                @endforeach
-
+                                </template>
                             </div>
                         </div>
                         <!--end::Form group-->
 
                         <!--begin::Form group-->
                         <div class="form-group mt-5">
-                            <button wire:click='addVariations()' type="button" class="btn btn-sm btn-light-primary">
+                            <button @click="addVariation()" type="button" class="btn btn-sm btn-light-primary">
                                 <i class="ki-duotone ki-plus fs-2"></i> Add another variation
                             </button>
                         </div>
@@ -324,7 +346,7 @@
                 <!--begin::Input group-->
                 <div>
                     <!--begin::Label-->
-                    <label class="form-label">Meta Tag Keywords</label>
+                    <label class="form-label">Tag Keywords</label>
                     <!--end::Label-->
 
                     <!--begin::Editor-->

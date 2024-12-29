@@ -7,7 +7,16 @@
         <div class="aside-logo d-none d-lg-flex flex-column align-items-center flex-column-auto py-10"
             id="kt_aside_logo">
             <p>
-                <img alt="Logo" src="{{ asset('mAssets/media/logos/logo.jpg') }}" class="h-35px" />
+                @php
+                    $logoLight = isset(system_config['logoLight']['value'])
+                        ? system_config['logoLight']['value']
+                        : asset('mAssets/media/logos/logo.jpg');
+                    $logoDark = isset(system_config['logoDark']['value'])
+                        ? system_config['logoDark']['value']
+                        : asset('mAssets/media/logos/logo.jpg');
+                @endphp
+                <img alt="Logo" src="{{ $logoLight }}" class="h-35px theme-light-show" />
+                <img alt="Logo" src="{{ $logoDark }}" class="h-35px theme-dark-show" />
             </p>
         </div>
         <!--end::Logo-->

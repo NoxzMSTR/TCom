@@ -22,6 +22,9 @@ class System extends Component
         if ($system->count()) {
 
             $this->system['name'] = isset($system['name']) ? $system['name']->value : '';
+            $this->system['email'] = isset($system['email']) ? $system['email']->value : '';
+            $this->system['phone'] = isset($system['phone']) ? $system['phone']->value : '';
+            $this->system['address'] = isset($system['address']) ? $system['address']->value : '';
             $this->system['aLogoLight'] = isset($system['logoLight']) ?  $system['logoLight']->value : '';
             $this->system['aLogoDark'] = isset($system['logoDark']) ?  $system['logoDark']->value : '';
             $this->system['aFavicon'] = isset($system['favconLogo']) ?  $system['favconLogo']->value : '';
@@ -30,7 +33,7 @@ class System extends Component
             $this->system['aboutUs'] = isset($system['aboutUs']) ?  $system['aboutUs']->value : '';
             $this->system['facebook'] = isset($system['facebook']) ?  $system['facebook']->value : '';
             $this->system['instagram'] = isset($system['instagram']) ? $system['instagram']->value : '';
-            $this->system['pinterest'] = isset($system['pinterest']) ?  $system['pinterest']->value : '';
+            $this->system['google'] = isset($system['google']) ?  $system['google']->value : '';
         }
     }
 
@@ -38,12 +41,15 @@ class System extends Component
     {
         $data = [
             'name' => $this->system['name'],
+            'address' => $this->system['address'],
+            'email' => $this->system['email'],
+            'phone' => $this->system['phone'],
             'privacyPolicy' => $this->system['privacyPolicy'],
             'termsNCondition' => $this->system['termNCondition'],
             'aboutUs' => $this->system['aboutUs'],
             'facebook' => $this->system['facebook'],
             'instagram' => $this->system['instagram'],
-            'pinterest' => $this->system['pinterest'],
+            'google' => $this->system['google'],
         ];
 
         if (isset($this->system['logoLight'])) {

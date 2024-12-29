@@ -103,7 +103,9 @@
                         @php
                             $variations = [];
                             foreach ($product->variations as $key => $variation) {
-                                $variations[PRODUCT_VARIATIONS[$variation->type]][] = $variation;
+                                if ($variation->type) {
+                                    $variations[PRODUCT_VARIATIONS[$variation->type]][] = $variation;
+                                }
                             }
                         @endphp
                         <div class="d-flex flex-wrap" style="gap: 20px">
@@ -175,6 +177,11 @@
                     </li>
                     <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
                         <a class="nav-link" id="Jpills-four-example1-tab" data-toggle="pill"
+                            href="#product-specs-tab" role="tab" aria-controls="Jpills-four-example1"
+                            aria-selected="false">Specification</a>
+                    </li>
+                    <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
+                        <a class="nav-link" id="Jpills-four-example1-tab" data-toggle="pill"
                             href="#Jpills-four-example1" role="tab" aria-controls="Jpills-four-example1"
                             aria-selected="false">Reviews</a>
                     </li>
@@ -185,6 +192,8 @@
                 <div class="tab-content" id="Jpills-tabContent">
 
                     @include('livewire.public.partials.product.description')
+
+                    @include('livewire.public.partials.product.specification')
 
                     @include('livewire.public.partials.product.reviews')
 

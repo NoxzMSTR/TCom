@@ -299,6 +299,12 @@
             <!--end:::Tab item-->
             <!--begin:::Tab item-->
             <li class="nav-item" role="presentation">
+                <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab" href="#product_specification"
+                    aria-selected="false" tabindex="-1" role="tab">Specification</a>
+            </li>
+            <!--end:::Tab item-->
+            <!--begin:::Tab item-->
+            <li class="nav-item" role="presentation">
                 <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab" href="#product_vendor"
                     aria-selected="false" tabindex="-1" role="tab">Vendor</a>
             </li>
@@ -321,6 +327,10 @@
 
             <!--begin::Tab pane-->
             @include('livewire.admin.product.partials.product.media')
+            <!--end::Tab pane-->
+
+            <!--begin::Tab pane-->
+            @include('livewire.admin.product.partials.product.specification')
             <!--end::Tab pane-->
 
             <!--begin::Tab pane-->

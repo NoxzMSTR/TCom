@@ -224,7 +224,7 @@
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click"
-                                class="menu-item menu-accordion {{ in_array(url()->current(), [route('admin.settings.account')]) ? 'here show' : '' }}">
+                                class="menu-item menu-accordion {{ in_array(url()->current(), [route('admin.settings.account'), route('admin.settings.system'), route('admin.settings.customization')]) ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
@@ -258,6 +258,19 @@
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
                                             <span class="menu-title">System</span>
+                                        </a>
+                                        <!--end:Menu link-->
+                                    </div>
+                                    <!--end:Menu item-->
+                                    <!--begin:Menu item-->
+                                    <div class="menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link {{ url()->current() == route('admin.settings.customization') ? 'active' : '' }}"
+                                            wire:navigate href="{{ route('admin.settings.customization') }}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Customization</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>

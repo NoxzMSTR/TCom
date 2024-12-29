@@ -19,6 +19,8 @@ return [
      */
     'default_log_name' => 'default',
 
+    'enable_logging_for_anonymous_user' => true, // Set to true
+
     /*
      * You can specify an auth driver here that gets user models.
      * If this is null we'll use the current Laravel auth driver.

@@ -4,8 +4,9 @@ namespace App\Livewire\Admin\Order;
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Aaqib\GeoPakistan\Models\District;
 use App\Models\Order\OrderSettings as oSettings;
-use AmrShawky\Currency\Facade\Currency;
+use Illuminate\Support\Facades\DB;
 
 class OrderSettings extends Component
 {
@@ -14,6 +15,8 @@ class OrderSettings extends Component
     public $breadCrumb = 'Home.Order.Settings';
 
     public $defaultCurrency = 'PKR';
+
+    public $availableCities = [];
 
     public $sameDayDelivery = [['from' => '00:00', 'to' => '00:00']];
 
@@ -71,6 +74,13 @@ class OrderSettings extends Component
     }
 
     #[Computed]
+    public function cities()
+    {
+        $district = DB::table('pakistan_districts');
+        return $district->get();
+    }
+
+    #[Computed]
     public function currencies()
     {
         return currency()->getCurrencies();
@@ -107,14 +117,22 @@ class OrderSettings extends Component
     public function saveGeneral()
     {
 
-        $settings = oSettings::whereIn('type', ['default_currency'])->get();
+        $settings = oSettings::whereIn('type', ['default_currency', 'available_for'])->get();
         $hasType = [];
 
         foreach ($settings as $key => $value) {
-            $hasType[] = $value->type;
-            $value->update([
-                'data' => json_encode([$this->defaultCurrency]),
-            ]);
+            if ($value->type == 'default_currency') {
+                $hasType[] = $value->type;
+                $value->update([
+                    'data' => json_encode([$this->defaultCurrency]),
+                ]);
+            }
+            if ($value->type == 'available_for') {
+                $hasType[] = $value->type;
+                $value->update([
+                    'data' => json_encode($this->availableCities),
+                ]);
+            }
         }
 
         if (!in_array('default_currency', $hasType)) {
@@ -124,6 +142,12 @@ class OrderSettings extends Component
             ]);
         }
 
+        if (!in_array('available_for', $hasType)) {
+            oSettings::create([
+                'type' => 'available_for',
+                'data' => json_encode($this->availableCities),
+            ]);
+        }
         $this->dispatch('hide-loader');
     }
 

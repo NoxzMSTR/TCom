@@ -17,6 +17,9 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $totalAmount = 0;
+                        @endphp
                         @foreach ($products as $key => $product)
                             @php
                                 $qty = count($product);
@@ -89,7 +92,7 @@
 
                                 <td data-title="Total">
                                     @php
-                                        $amount = $amount * $qty;
+                                        $totalAmount = $amount = $amount * $qty;
                                     @endphp
                                     <span class="">{{ currency_format($amount, $default_currency) }}</span>
                                 </td>
@@ -146,7 +149,9 @@
                         <tbody>
                             <tr class="cart-subtotal">
                                 <th>Subtotal</th>
-                                <td data-title="Subtotal"><span class="amount">{{ $totalAmount }}</span></td>
+                                <td data-title="Subtotal"><span
+                                        class="amount">{{ currency_format($totalAmount, $default_currency) }}</span>
+                                </td>
                             </tr>
                             <tr class="shipping">
                                 <th>Shipping</th>
@@ -165,7 +170,8 @@
                             </tr>
                             <tr class="order-total">
                                 <th>Total</th>
-                                <td data-title="Total"><strong><span class="amount">{{ $totalAmount }}</span></strong>
+                                <td data-title="Total"><strong><span
+                                            class="amount">{{ currency_format($totalAmount, $default_currency) }}</span></strong>
                                 </td>
                             </tr>
                         </tbody>

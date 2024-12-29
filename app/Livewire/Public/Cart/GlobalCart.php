@@ -50,11 +50,14 @@ class GlobalCart extends Component
                         $totalAmount +=  $discount = $amount - $discount;
                     } elseif ($product->discountType == 2) {
                         $totalAmount += $discount = $product->discountData;
+                    } else {
+                        $totalAmount += $discount = $product->amount;
                     }
                 } else {
-                    $discount = $product->amount;
+                    $totalAmount += $discount = $product->amount;
                 }
             }
+
             $this->total = count($exProducts);
             $this->totalAmount = currency_format(
                 $totalAmount,

@@ -32,38 +32,37 @@
             </ul>
         </div>
         <div class="d-flex">
-            <form method="get">
-                <!-- Select -->
-                <select
-                    class="js-select selectpicker dropdown-select max-width-200 max-width-160-sm right-dropdown-0 px-2 px-xl-0"
-                    data-style="btn-sm bg-white font-weight-normal py-2 border text-gray-20 bg-lg-down-transparent border-lg-down-0">
-                    <option value="one" selected>Default sorting</option>
-                    <option value="two">Sort by popularity</option>
-                    <option value="three">Sort by average rating</option>
-                    <option value="four">Sort by latest</option>
-                    <option value="five">Sort by price: low to high</option>
-                    <option value="six">Sort by price: high to low</option>
-                </select>
-                <!-- End Select -->
-            </form>
-            <form method="POST" class="ml-2 d-none d-xl-block">
-                <!-- Select -->
-                <select class="js-select selectpicker dropdown-select max-width-120"
-                    data-style="btn-sm bg-white font-weight-normal py-2 border text-gray-20 bg-lg-down-transparent border-lg-down-0">
-                    <option value="one" selected>Show 20</option>
-                    <option value="two">Show 40</option>
-                    <option value="three">Show All</option>
-                </select>
-                <!-- End Select -->
-            </form>
+
+            <!-- Select -->
+            <select class="form-control mr-3" wire:model.live.debounce.300ms='filter.sort'
+                data-style="btn-sm bg-white font-weight-normal py-2 border text-gray-20 bg-lg-down-transparent border-lg-down-0">
+                <option value="0" selected>Default sorting</option>
+                <option value="1">Sort by popularity</option>
+                {{-- <option value="2">Sort by average rating</option> --}}
+                <option value="3">Sort by latest</option>
+                <option value="4">Sort by price: low to high</option>
+                <option value="5">Sort by price: high to low</option>
+            </select>
+            <!-- End Select -->
+
+
+            <!-- Select -->
+            <select class="form-control" wire:model.live.debounce.300ms='filter.totalPages'
+                data-style="btn-sm bg-white font-weight-normal py-2 border text-gray-20 bg-lg-down-transparent border-lg-down-0">
+                <option value="20" selected>Show 20</option>
+                <option value="40">Show 40</option>
+                <option value="60">Show 60</option>
+            </select>
+            <!-- End Select -->
+
         </div>
-        <nav class="px-3 flex-horizontal-center text-gray-20 d-none d-xl-flex">
+        {{-- <nav class="px-3 flex-horizontal-center text-gray-20 d-none d-xl-flex">
             <form method="post" class="min-width-50 mr-1">
                 <input size="2" min="1" max="3" step="1" type="number"
                     class="form-control text-center px-2 height-35" value="1">
             </form> of 3
             <a class="text-gray-30 font-size-20 ml-2" href="#">→</a>
-        </nav>
+        </nav> --}}
     </div>
     <!-- End Shop-control-bar -->
     <!-- Shop Body -->

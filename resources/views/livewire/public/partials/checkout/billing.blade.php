@@ -32,27 +32,6 @@
         <!-- End Input -->
     </div>
 
-    <div class="col-md-12">
-        <!-- Input -->
-        <div class="js-form-message mb-6">
-            <label class="form-label">
-                Country
-                <span class="text-danger">*</span>
-            </label>
-            <select class="form-control js-select selectpicker dropdown-select" required=""
-                data-msg="Please select country." data-error-class="u-has-error" data-success-class="u-has-success"
-                data-live-search="true" data-style="form-control border-color-1 font-weight-normal"
-                wire:model.fill='billing.country'>
-                <option value="">Select country</option>
-                <option value="PK" selected>Pakistan</option>
-            </select>
-            @error('billing.country')
-                <div class="text-danger" style="font-weight: 700;">{{ $message }}</div>
-            @enderror
-        </div>
-        <!-- End Input -->
-    </div>
-
     <div class="col-md-8">
         <!-- Input -->
         <div class="js-form-message mb-6">
@@ -60,7 +39,7 @@
                 Street address
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control" name="streetAddress" placeholder="Address"
+            <input type="text" class="form-control" name="streetAddress" placeholder="Address" x-model='address'
                 aria-label="470 Lucy Forks" required="" data-msg="Please enter a valid address."
                 data-error-class="u-has-error" data-success-class="u-has-success" wire:model='billing.address'>
             @error('billing.address')
@@ -76,65 +55,31 @@
             <label class="form-label">
                 Apt, suite, etc.
             </label>
-            <input type="text" class="form-control" placeholder="Optional address" aria-label="YC7B 3UT"
+            <input type="text" class="form-control" placeholder="Apt, suite, etc." aria-label="YC7B 3UT"
                 data-msg="Please enter a valid address." data-error-class="u-has-error"
                 data-success-class="u-has-success" wire:model='billing.address2'>
         </div>
         <!-- End Input -->
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-12">
         <!-- Input -->
         <div class="js-form-message mb-6">
             <label class="form-label">
                 City
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" readonly class="form-control" name="cityAddress" value="Sialkot" placeholder="Sialkot"
-                aria-label="Sialkot" required="" data-msg="Please enter a valid address."
-                data-error-class="u-has-error" data-success-class="u-has-success" autocomplete="off"
-                wire:model.fill='billing.city'>
-            @error('billing.city')
-                <div class="text-danger" style="font-weight: 700;">{{ $message }}</div>
-            @enderror
-        </div>
-        <!-- End Input -->
-    </div>
-
-    <div class="col-md-6">
-        <!-- Input -->
-        <div class="js-form-message mb-6">
-            <label class="form-label">
-                Postcode/Zip
-                <span class="text-danger">*</span>
-            </label>
-            <input type="text" class="form-control" name="postcode" placeholder="99999" aria-label="99999"
-                required="" data-msg="Please enter a postcode or zip code." data-error-class="u-has-error"
-                data-success-class="u-has-success" wire:model='billing.postcode'>
-            @error('billing.postcode')
-                <div class="text-danger" style="font-weight: 700;">{{ $message }}</div>
-            @enderror
-        </div>
-        <!-- End Input -->
-    </div>
-
-    <div class="w-100"></div>
-
-    <div class="col-md-12">
-        <!-- Input -->
-        <div class="js-form-message mb-6">
-            <label class="form-label">
-                State
-                <span class="text-danger">*</span>
-            </label>
             <select class="form-control js-select selectpicker dropdown-select" required=""
-                data-msg="Please select state." data-error-class="u-has-error" data-success-class="u-has-success"
+                data-msg="Please select city." data-error-class="u-has-error" data-success-class="u-has-success"
                 data-live-search="true" data-style="form-control border-color-1 font-weight-normal"
-                wire:model.fill='billing.state'>
-                <option value="">Select state</option>
-                <option value="PJB" selected>Punjab</option>
+                wire:model.fill='billing.city'>
+                <option value="" disabled>Select city</option>
+                @foreach ($cities as $key => $city)
+                    <option value="{{ $city }}">{{ $city }}</option>
+                @endforeach
+
             </select>
-            @error('billing.state')
+            @error('billing.city')
                 <div class="text-danger" style="font-weight: 700;">{{ $message }}</div>
             @enderror
         </div>
