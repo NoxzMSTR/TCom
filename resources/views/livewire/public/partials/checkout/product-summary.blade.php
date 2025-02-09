@@ -20,13 +20,15 @@
                 @php
                     $productsByCType = [];
                     $productsByType = [];
-                    foreach ($products as $key => $product) {
-                        if ($product[0]->vendor) {
-                            $productsByCType[$product[0]->vendor->city][$product[0]['shippingType']][] = $product;
+                    foreach ($products as $key => $vars) {
+                        $product = $vars['product'];
+                        if ($product->vendor) {
+                            $productsByCType[$product->vendor->city][$product['shippingType']] = $vars;
                         } else {
-                            $productsByType[0][] = $product;
+                            $productsByType[0] = $vars;
                         }
                     }
+
                 @endphp
 
                 @foreach ($productsByCType as $city => $cityData)
@@ -65,38 +67,24 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($nProducts as $key => $product)
-                                            @php
-                                                $qty = count($product);
-                                                $amount = 0;
-                                                $product = $product[0];
-                                                if (isset($default_currency)) {
-                                                    $price = currency_format($product->amount, $default_currency);
-                                                    $discount = 0;
-                                                    $amount = $product->amount;
-                                                    if ($product->discountType == 1) {
-                                                        $discount = ($amount / 100) * $product->discountData;
-                                                        $discount = $amount - $discount;
-                                                        $amount = $discount;
-                                                        $discount = currency_format($discount, $default_currency);
-                                                    } elseif ($product->discountType == 2) {
-                                                        $discount = $product->discountData;
-                                                        $amount = $discount;
-                                                        $discount = currency_format($discount, $default_currency);
-                                                    }
-                                                } else {
-                                                    $discount = 0;
-                                                    $price = $product->amount;
-                                                    $amount = $price;
-                                                }
-                                            @endphp
-                                            <tr class="cart_item">
-                                                <td>{{ $product->name }}<strong class="product-quantity"> ×
-                                                        {{ $qty }}</strong>
-                                                </td>
-                                                <td>{{ $discount ? $discount : $price }}</td>
-                                            </tr>
-                                        @endforeach
+
+                                        @php
+                                            $qty = $nProducts['qty'];
+                                            $variations = $nProducts['variations'];
+                                            $amount = $nProducts['final'];
+                                            if (isset($default_currency)) {
+                                                $amount = currency_format($amount, $default_currency);
+                                            }
+                                            $product = $nProducts['product'];
+
+                                        @endphp
+                                        <tr class="cart_item">
+                                            <td>{{ $product->name }}<strong class="product-quantity"> ×
+                                                    {{ $qty }}</strong>
+                                            </td>
+                                            <td>{{ $amount }}</td>
+                                        </tr>
+
                                     </tbody>
                                 </table>
                                 <!-- End Product Content -->
@@ -122,18 +110,6 @@
                                                     <label class="form-label m-0">
                                                         Expired in: <span class="text-primary"
                                                             x-text="timeLeft[index]"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </template>
-                                        <template x-if="!Object.keys(currentSlot[city]).length">
-                                            <div
-                                                class="border border-primary border-width-3 custom-control custom-radio d-flex py-2 px-3 mb-3 rounded-left-pill rounded-right-pill justify-content-between">
-                                                <div>
-                                                    <label class="form-label text-primary m-0">
-                                                        Notice: same day is converted to "Standard Delivery" We will
-                                                        delivery the product within or after {{ $standard_delivery }}
-                                                        hrs.
                                                     </label>
                                                 </div>
                                             </div>
@@ -170,38 +146,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($nProducts as $key => $product)
-                                        @php
-                                            $qty = count($product);
-                                            $amount = 0;
-                                            $product = $product[0];
-                                            if (isset($default_currency)) {
-                                                $price = currency_format($product->amount, $default_currency);
-                                                $discount = 0;
-                                                $amount = $product->amount;
-                                                if ($product->discountType == 1) {
-                                                    $discount = ($amount / 100) * $product->discountData;
-                                                    $discount = $amount - $discount;
-                                                    $amount = $discount;
-                                                    $discount = currency_format($discount, $default_currency);
-                                                } elseif ($product->discountType == 2) {
-                                                    $discount = $product->discountData;
-                                                    $amount = $discount;
-                                                    $discount = currency_format($discount, $default_currency);
-                                                }
-                                            } else {
-                                                $discount = 0;
-                                                $price = $product->amount;
-                                                $amount = $price;
-                                            }
-                                        @endphp
-                                        <tr class="cart_item">
-                                            <td>{{ $product->name }}<strong class="product-quantity"> ×
-                                                    {{ $qty }}</strong>
-                                            </td>
-                                            <td>{{ $discount ? $discount : $price }}</td>
-                                        </tr>
-                                    @endforeach
+
+                                    @php
+                                        $qty = $nProducts['qty'];
+                                        $variations = $nProducts['variations'];
+                                        $amount = $nProducts['final'];
+                                        if (isset($default_currency)) {
+                                            $amount = currency_format($amount, $default_currency);
+                                        }
+                                        $product = $nProducts['product'];
+
+                                    @endphp
+                                    <tr class="cart_item">
+                                        <td>{{ $product->name }}<strong class="product-quantity"> ×
+                                                {{ $qty }}</strong>
+                                        </td>
+                                        <td>{{ $amount }}</td>
+                                    </tr>
+
                                 </tbody>
                             </table>
                             <!-- End Product Content -->

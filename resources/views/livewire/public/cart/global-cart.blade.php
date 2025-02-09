@@ -51,32 +51,16 @@
                 class="cart-dropdown dropdown-menu dropdown-unfold border-top border-top-primary mt-3 border-width-2 border-left-0 border-right-0 border-bottom-0 left-auto right-0"
                 aria-labelledby="basicDropdownHoverInvoker" wire:ignore.self>
                 <ul class="list-unstyled px-3 pt-3">
-                    @php
-                        $exProducts = [];
-                        foreach ($products as $key => $product) {
-                            $exProducts[$product->id][] = $product;
-                        }
-                    @endphp
-                    @foreach ($exProducts as $key => $product)
+                    @foreach ($products as $key => $product)
                         @php
-                            $qty = count($product);
-                            $product = $product[0];
+                            $qty = $product['qty'];
+                            $variations = $product['variations'];
+                            $amount = $product['final'];
                             if (isset($default_currency)) {
-                                $price = currency_format($product->amount, $default_currency);
-                                $discount = 0;
-                                $amount = $product->amount;
-                                if ($product->discountType == 1) {
-                                    $discount = ($amount / 100) * $product->discountData;
-                                    $discount = $amount - $discount;
-                                    $discount = currency_format($discount, $default_currency);
-                                } elseif ($product->discountType == 2) {
-                                    $discount = $product->discountData;
-                                    $discount = currency_format($discount, $default_currency);
-                                }
-                            } else {
-                                $discount = 0;
-                                $price = $product->amount;
+                                $amount = currency_format($amount, $default_currency);
                             }
+                            $product = $product['product'];
+
                         @endphp
                         <li class="border-bottom pb-3 mb-3">
                             <div class="">
@@ -89,7 +73,7 @@
                                         <h5 class="text-blue font-size-14 font-weight-bold">
                                             {{ $product->name }}</h5>
                                         <span class="font-size-14">{{ $qty }} ×
-                                            {{ $discount ? $discount : $price }}</span>
+                                            {{ $amount }}</span>
                                     </li>
                                     <li class="px-2 col-auto">
                                         <a href="javascript:;"
@@ -146,32 +130,17 @@
                 class="cart-dropdown dropdown-menu dropdown-unfold border-top border-top-primary mt-3 border-width-2 border-left-0 border-right-0 border-bottom-0 left-auto right-0 "
                 aria-labelledby="basicDropdownHoverInvoker" wire:ignore.self>
                 <ul class="list-unstyled px-3 pt-3">
-                    @php
-                        $exProducts = [];
-                        foreach ($products as $key => $product) {
-                            $exProducts[$product->id][] = $product;
-                        }
-                    @endphp
-                    @foreach ($exProducts as $key => $product)
+
+                    @foreach ($products as $key => $product)
                         @php
-                            $qty = count($product);
-                            $product = $product[0];
+                            $qty = $product['qty'];
+                            $variations = $product['variations'];
+                            $amount = $product['final'];
                             if (isset($default_currency)) {
-                                $price = currency_format($product->amount, $default_currency);
-                                $discount = 0;
-                                $amount = $product->amount;
-                                if ($product->discountType == 1) {
-                                    $discount = ($amount / 100) * $product->discountData;
-                                    $discount = $amount - $discount;
-                                    $discount = currency_format($discount, $default_currency);
-                                } elseif ($product->discountType == 2) {
-                                    $discount = $product->discountData;
-                                    $discount = currency_format($discount, $default_currency);
-                                }
-                            } else {
-                                $discount = 0;
-                                $price = $product->amount;
+                                $amount = currency_format($amount, $default_currency);
                             }
+                            $product = $product['product'];
+
                         @endphp
                         <li class="border-bottom pb-3 mb-3">
                             <div class="">
@@ -184,7 +153,7 @@
                                         <h5 class="text-blue font-size-14 font-weight-bold">
                                             {{ $product->name }}</h5>
                                         <span class="font-size-14">{{ $qty }} ×
-                                            {{ $discount ? $discount : $price }}</span>
+                                            {{ $amount }}</span>
                                     </li>
                                     <li class="px-2 col-auto">
                                         <a href="javascript:;"

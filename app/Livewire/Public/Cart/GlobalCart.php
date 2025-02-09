@@ -36,28 +36,12 @@ class GlobalCart extends Component
 
         $default_currency = default_currency;
         if (is_array($products)) {
-
             $totalAmount = 0;
             $exProducts = [];
-            foreach ($products as $key => $product) {
-                $exProducts[$product->id] = 1;
-                if (isset($default_currency)) {
-                    $discount = 0;
-                    $amount = $product->amount;
-                    if ($product->discountType == 1) {
-                        $discount =
-                            ($amount / 100) * $product->discountData;
-                        $totalAmount +=  $discount = $amount - $discount;
-                    } elseif ($product->discountType == 2) {
-                        $totalAmount += $discount = $product->discountData;
-                    } else {
-                        $totalAmount += $discount = $product->amount;
-                    }
-                } else {
-                    $totalAmount += $discount = $product->amount;
-                }
+            foreach ($products as $key => $vars) {
+                $exProducts[$vars['product']->id] = 1;
+                $totalAmount += $vars['final'];
             }
-
             $this->total = count($exProducts);
             $this->totalAmount = currency_format(
                 $totalAmount,
@@ -67,41 +51,24 @@ class GlobalCart extends Component
     }
 
     #[On('add-to-cart')]
-    public function addToCart($product)
+    public function addToCart()
     {
-
         $products = getSharedProperty('add-to-cart');
 
         if ($products == null) {
             $products = [];
         }
 
-        $products[] = Products::find($product);
-
-        sharedProperty('add-to-cart', $products);
-
         $this->products = $products;
 
         $default_currency = default_currency;
-        if (is_array($products)) {
 
+        if (is_array($products)) {
             $totalAmount = 0;
             $exProducts = [];
-            foreach ($products as $key => $product) {
-                $exProducts[$product->id] = 1;
-                if (isset($default_currency)) {
-                    $discount = 0;
-                    $amount = $product->amount;
-                    if ($product->discountType == 1) {
-                        $discount =
-                            ($amount / 100) * $product->discountData;
-                        $totalAmount +=  $discount = $amount - $discount;
-                    } elseif ($product->discountType == 2) {
-                        $totalAmount += $discount = $product->discountData;
-                    }
-                } else {
-                    $discount = $product->amount;
-                }
+            foreach ($products as $key => $vars) {
+                $exProducts[$vars['product']->id] = 1;
+                $totalAmount += $vars['final'];
             }
             $this->total = count($exProducts);
             $this->totalAmount = currency_format(
@@ -124,6 +91,7 @@ class GlobalCart extends Component
         $exProducts = [];
 
         foreach ($products as $key => $product) {
+            $product = $product['product'];
             if ($product->id !== $productID) {
                 $exProducts[] = $product;
             }

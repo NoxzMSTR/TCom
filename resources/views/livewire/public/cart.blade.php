@@ -22,9 +22,15 @@
                         @endphp
                         @foreach ($products as $key => $product)
                             @php
-                                $qty = count($product);
-                                $amount = 0;
-                                $product = $product[0];
+                                $qty = $product['qty'];
+                                $variations = $product['variations'];
+                                $amount = $product['final'];
+                                $totalAmount += $amount;
+                                if (isset($default_currency)) {
+                                    $amount = currency_format($amount, $default_currency);
+                                }
+                                $product = $product['product'];
+
                             @endphp
                             <tr class="">
                                 <td class="text-center">
@@ -39,30 +45,9 @@
                                 <td data-title="Product">
                                     <a href="#" class="text-gray-90">{{ $product->name }}</a>
                                 </td>
-                                @php
 
-                                    if (isset($default_currency)) {
-                                        $price = currency_format($product->amount, $default_currency);
-                                        $discount = 0;
-                                        $amount = $product->amount;
-                                        if ($product->discountType == 1) {
-                                            $discount = ($amount / 100) * $product->discountData;
-                                            $discount = $amount - $discount;
-                                            $amount = $discount;
-                                            $discount = currency_format($discount, $default_currency);
-                                        } elseif ($product->discountType == 2) {
-                                            $discount = $product->discountData;
-                                            $amount = $discount;
-                                            $discount = currency_format($discount, $default_currency);
-                                        }
-                                    } else {
-                                        $discount = 0;
-                                        $price = $product->amount;
-                                        $amount = $price;
-                                    }
-                                @endphp
                                 <td data-title="Price">
-                                    <span class="">{{ $discount ? $discount : $price }}</span>
+                                    <span class="">{{ $amount }}</span>
                                 </td>
 
                                 <td data-title="Quantity">
@@ -91,10 +76,7 @@
                                 </td>
 
                                 <td data-title="Total">
-                                    @php
-                                        $totalAmount = $amount = $amount * $qty;
-                                    @endphp
-                                    <span class="">{{ currency_format($amount, $default_currency) }}</span>
+                                    <span class="">{{ $amount }}</span>
                                 </td>
                             </tr>
                         @endforeach

@@ -69,32 +69,13 @@ class Checkout extends Component
         $default_currency = default_currency;
 
         if (is_array($products)) {
-
             $totalAmount = 0;
-
-            $exProduct = [];
-
-            foreach ($products as $key => $product) {
-                $exProduct[$product->id][] = $product;
-                if (isset($default_currency)) {
-                    $discount = 0;
-                    $amount = $product->amount;
-                    if ($product->discountType == 1) {
-                        $discount =
-                            ($amount / 100) * $product->discountData;
-                        $totalAmount +=  $discount = $amount - $discount;
-                    } elseif ($product->discountType == 2) {
-                        $totalAmount += $discount = $product->discountData;
-                    } else {
-                        $totalAmount +=  $discount = $product->amount;
-                    }
-                } else {
-                    $totalAmount +=  $discount = $product->amount;
-                }
+            $exProducts = [];
+            foreach ($products as $key => $vars) {
+                $exProducts[$vars['product']->id] = 1;
+                $totalAmount += $vars['final'];
             }
-
-            $this->products = $exProduct;
-
+            $this->products = $products;
             $this->totalAmount = currency_format(
                 $totalAmount,
                 $default_currency,

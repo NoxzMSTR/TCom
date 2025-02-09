@@ -20,6 +20,7 @@
         qty: $wire.entangle('qty'),
         hasVariations: @js($hasVariations),
         validateVariation: @js($hasVariations),
+        variations: {{ json_encode($variations) }},
         price: 0,
         discount: 0,
         formatCurrency(amount, currencyCode = 'PKR') {
@@ -159,6 +160,31 @@
                 maximumFractionDigits: 2
             });
         },
+        afterAmount(selectedVars) {
+            var vars = {};
+            var self = this;
+            var amount = 0;
+            var final = this.processAmount();
+            $.each(this.variations, function(type, nVars) {
+                $.each(nVars, function(index, nvariation) {
+                    $.each(nvariation, function(index, variation) {
+                        if (selectedVars[variation.id] && variation.hasPrice) {
+                            vars[variation.id] = variation;
+                            amount += final / 100 * variation.hasPrice;
+                        }
+                    });
+                });
+            });
+
+            final = final + amount;
+            if (self.discount) {
+                self.discount = self.formatCurrency(final, self.default_currency);
+            } else {
+                self.price = self.formatCurrency(final, self.default_currency);
+            }
+
+            return final;
+        },
         selectedVars(event) {
             var classes = 'border border-primary border-width-3';
             var elem = $(event.target);
@@ -170,12 +196,15 @@
         },
         validateVars() {
             var i = 0;
+            var self = this;
             var variations = {};
+            var exVariations = {};
             $('[name*=\'variation-\']').each(function(index, element) {
                 if ($(element).find('option').is(':selected') || $(element).is(':checked')) {
                     var id = $(element).attr('name');
                     var val = $(element).val();
                     variations[id] = val;
+                    exVariations[val] = val;
                     i++
                 }
             });
@@ -187,6 +216,8 @@
                 $('.add-to-cart-btn').addClass('disabled')
                 this.validateVariation = true;
             }
+            var final = this.afterAmount(exVariations);
+            $wire.set('final', final, false);
         },
         async addToCart() {
             $('.add-to-cart-btn').addClass('disabled');
@@ -204,30 +235,36 @@
             });
 
             if (this.hasVariations) {
-                $('.add-to-cart-btn').addClass('disabled')
                 this.validateVariation = true;
             }
         },
-        init() {
+        processAmount() {
             this.price = this.formatCurrency(this.product.amount, this.default_currency);
             var discount = 0;
             var amount = this.product.amount;
             if (this.product.discountType == 1) {
                 discount = (amount / 100) * this.product.discountData;
                 discount = amount - discount;
-                discount = currency_format(discount, this.default_currency);
+                discount = this.formatCurrency(discount, this.default_currency);
             } else if (this.product.discountType == 2) {
                 discount = this.product.discountData;
-                discount = currency_format(discount, this.default_currency);
+                discount = this.formatCurrency(discount, this.default_currency);
             }
             this.discount = discount;
-
-            if (this.validateVariation) {
-                $('.add-to-cart-btn').addClass('disabled')
+            if (discount) {
+                return discount * this.qty;
             }
+            return amount * this.qty;
+        },
+        extractCurrency(amount) {
+            let number = amount.replace(/[^\d.-]/g, ''); // Remove non-numeric characters except dot and minus
+            return parseFloat(number);
+        },
+
+        init() {
+            this.processAmount();
         }
     }">
-
         <!-- Single Product Body -->
         <div class="mb-xl-14 mb-6">
             <div class="row">
@@ -316,13 +353,25 @@
                             </template>
                         </div>
 
-                        <div class="d-flex flex-wrap" style="gap: 20px" x-data="{ variations: {{ json_encode($variations) }} }">
+                        <div class="d-flex flex-wrap" style="gap: 20px">
                             <template x-for="(variation, type) in variations" :key="type">
                                 <div class="border-top border-bottom py-3 mb-4">
                                     <template x-if="variation.thumbs">
                                         <div>
                                             <h6 class="font-size-14 font-weight-bolder" x-text="type"></h6>
                                             <div class="d-flex flex-wrap" style="gap: 20px">
+                                                <label :for="'variation-0'" :class="'variation-' + type"
+                                                    class="media border border-primary border-width-3">
+
+                                                    <div class="width-75 height-75">
+                                                        <img class="img-fluid object-fit-cover" :src="product.thumbnail"
+                                                            alt="Image Description">
+                                                    </div>
+
+                                                    <input hidden :id="'variation-0'" type="radio" checked
+                                                        :value="0" :name="'variation-' + type"
+                                                        @change="selectedVars($event),validateVars()">
+                                                </label>
                                                 <template x-for="(value, key) in variation.thumbs"
                                                     :key="value.id">
                                                     <label :for="'variation-' + value.id" :class="'variation-' + type"
@@ -341,13 +390,13 @@
                                             </div>
                                         </div>
                                     </template>
-                                    <template x-if="!variation.thumbs">
+                                    <template x-if="variation.options">
                                         <div>
                                             <h6 class="font-size-14 font-weight-bolder" x-text="type"></h6>
                                             <select :name="'variation-' + type" @change="validateVars()"
                                                 class="js-select selectpicker dropdown-select"
                                                 data-style="btn-sm bg-white font-weight-normal py-2 border">
-                                                <option value="" disabled>None</option>
+                                                <option value="0">Stock</option>
                                                 <template x-for="(option, key) in variation.options"
                                                     :key="key">
                                                     <option :value="option.id" x-text="option.data"></option>
@@ -372,11 +421,11 @@
                                         </div>
                                         <div class="col-auto pr-1">
                                             <a class="js-minus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0"
-                                                href="javascript:;" @click="qty == 1?qty = 1:qty--">
+                                                href="javascript:;" @click="qty == 1?qty = 1:qty--;validateVars()">
                                                 <small class="fas fa-minus btn-icon__inner"></small>
                                             </a>
                                             <a class="js-plus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0"
-                                                href="javascript:;" @click="qty++">
+                                                href="javascript:;" @click="qty++;validateVars()">
                                                 <small class="fas fa-plus btn-icon__inner"></small>
                                             </a>
                                         </div>

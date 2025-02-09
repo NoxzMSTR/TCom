@@ -5,6 +5,7 @@ namespace App\Livewire\Public;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Product\Products;
+use App\Models\Product\ProductVariations;
 use Livewire\Attributes\Renderless;
 use Spatie\Activitylog\Models\Activity;
 
@@ -13,6 +14,7 @@ class Product extends Component
     public $id;
     public $title;
     public $qty = 1;
+    public $final = 0;
     public $variations = [];
     public $breadCrumb = 'Home.Product';
 
@@ -25,7 +27,28 @@ class Product extends Component
     #[Renderless]
     public function addToCart()
     {
-        dump($this);
+        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->where('id', $this->id)->first();
+
+        $variations = [];
+
+        foreach ($this->variations as $key => $value) {
+            $variation = ProductVariations::find($value);
+            $variations[$key] = $variation;
+        }
+
+        $cart = ['product' => $product, 'qty' => $this->qty, 'variations' => $variations, 'final' => $this->final];
+
+        $products = getSharedProperty('add-to-cart');
+
+        if ($products == null) {
+            $products = [];
+        }
+
+        $products[] = $cart;
+
+        sharedProperty('add-to-cart', $products);
+
+        $this->dispatch('add-to-cart');
     }
 
     public function render()
