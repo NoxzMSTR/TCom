@@ -60,7 +60,8 @@
                                                     class="">{{ isset($discount[1]) ? $discount[1] : '00' }}</sup>
                                             </div>
                                         </div>
-                                        <a href="{{ route('public.product', [$product->name]) }}" target="_blank"
+                                        <a href="{{ route('public.product', [$product->id, $product->name]) }}"
+                                            target="_blank"
                                             class="btn btn-primary transition-3d-hover rounded-lg font-weight-normal py-2 px-md-7 px-3 font-size-16"
                                             data-scs-animation-in="fadeInUp" data-scs-animation-delay="400">
                                             Start Buying

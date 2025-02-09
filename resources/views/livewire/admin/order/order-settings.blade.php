@@ -1,4 +1,10 @@
-<div>
+<div x-data="{
+    availableCities: $wire.entangle('availableCities'),
+    deliveryOn: $wire.entangle('deliveryOn'),
+    deliveryTime: $wire.entangle('deliveryTime'),
+    deliveryCities: [],
+    sameDayDelivery: $wire.entangle('sameDayDelivery'),
+}">
     <!--begin::Navbar-->
     @include('livewire.admin.order.partials.settings.header')
     <!--end::Navbar-->

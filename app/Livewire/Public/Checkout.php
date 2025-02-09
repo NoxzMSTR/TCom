@@ -50,7 +50,8 @@ class Checkout extends Component
     public $billing = [];
 
     public $shipping = [];
-    public $sameDayProducts;
+    public $sameDayProducts = [];
+    public $slots = [];
 
     public $shippingdiffrentAddress = 0;
     public $note;
@@ -213,35 +214,87 @@ class Checkout extends Component
             'notes' => $this->note,
         ]);
 
-        foreach ($this->products as $key => $product) {
-            $qty = count($product);
-            $product = $product[0];
-            $discount = $product->amount;
+        $sameData = [];
+        $productsByCType = [];
 
-            $discount = 0;
-            $amount = $product->amount;
-            if ($product->discountType == 1) {
-                $discount =
-                    ($amount / 100) * $product->discountData;
-                $discount = $amount - $discount;
-            } elseif ($product->discountType == 2) {
-                $discount = $product->discountData;
-            } else {
-                $discount = $product->amount;
+        foreach ($this->slots as $key => $value) {
+            $data = explode('_', $value);
+            if (isset($data[2])) {
+                $sameData[$data[0]] = ['city' => $data[0], 'date' => $data[1], 'slot' => $data[2]];
             }
-            if ($product->shippingType == 1) {
-                OrderItems::create([
-                    'orderID' => $order->id,
-                    'productID' => $product->id,
-                    'name' => $product->name,
-                    'amount' => $discount,
-                    'qty' => $qty,
-                    'discountType' => $product->discountType,
-                    'discountData' => $product->discountData,
-                    'sameDaySlot' => $this->sameDayProducts,
-                    'variationID' => isset($product->variationID) ? $product->variationID : 0,
-                ]);
+        }
+
+        foreach ($this->products as $key => $product) {
+            if ($product[0]->vendor) {
+                $productsByCType[$product[0]->vendor->city][] = $product;
             } else {
+                $productsByCType[0][] = $product;
+            }
+        }
+
+
+        foreach ($productsByCType as $city => $nProducts) {
+            if ($city !== 0) {
+                foreach ($nProducts as $key => $product) {
+                    $qty = count($product);
+                    $product = $product[0];
+                    $discount = $product->amount;
+
+                    $discount = 0;
+                    $amount = $product->amount;
+                    if ($product->discountType == 1) {
+                        $discount =
+                            ($amount / 100) * $product->discountData;
+                        $discount = $amount - $discount;
+                    } elseif ($product->discountType == 2) {
+                        $discount = $product->discountData;
+                    } else {
+                        $discount = $product->amount;
+                    }
+                    if ($product->shippingType == 1) {
+                        OrderItems::create([
+                            'orderID' => $order->id,
+                            'productID' => $product->id,
+                            'name' => $product->name,
+                            'amount' => $discount,
+                            'qty' => $qty,
+                            'discountType' => $product->discountType,
+                            'discountData' => $product->discountData,
+                            'from' => isset($sameData[$city]) ? $sameData[$city]['city'] : '',
+                            'sameDate' => isset($sameData[$city]) ? $sameData[$city]['date'] : '',
+                            'sameDaySlot' => isset($sameData[$city]) ? $sameData[$city]['slot'] : '',
+                            'variationID' => isset($product->variationID) ? $product->variationID : 0,
+                        ]);
+                    } else {
+                        OrderItems::create([
+                            'orderID' => $order->id,
+                            'productID' => $product->id,
+                            'name' => $product->name,
+                            'amount' => $discount,
+                            'qty' => $qty,
+                            'discountType' => $product->discountType,
+                            'discountData' => $product->discountData,
+                            'variationID' => isset($product->variationID) ? $product->variationID : 0,
+                        ]);
+                    }
+                }
+            } else {
+                $qty = count($product);
+                $product = $product[0];
+                $discount = $product->amount;
+
+                $discount = 0;
+                $amount = $product->amount;
+                if ($product->discountType == 1) {
+                    $discount =
+                        ($amount / 100) * $product->discountData;
+                    $discount = $amount - $discount;
+                } elseif ($product->discountType == 2) {
+                    $discount = $product->discountData;
+                } else {
+                    $discount = $product->amount;
+                }
+
                 OrderItems::create([
                     'orderID' => $order->id,
                     'productID' => $product->id,
@@ -254,6 +307,8 @@ class Checkout extends Component
                 ]);
             }
         }
+
+        forgetSharedProperties(['add-to-cart']);
 
         return redirect()->route('public.checkout.success', [$order->trackingNo, 'type' => 'success']);
     }

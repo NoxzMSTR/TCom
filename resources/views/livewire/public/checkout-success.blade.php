@@ -87,27 +87,29 @@
                         <div class="border-bottom border-color-1 mb-5">
                             <h3 class="section-title mb-0 pb-2 font-size-25">Order Item</h3>
                         </div>
-                        <div class="mr-xl-6">
+                        <div>
                             <ul class="list-unstyled px-3 pt-3">
                                 @php
                                     $total = 0;
                                 @endphp
                                 <li class="border-bottom pb-3 mb-3">
                                     <div class="">
-                                        <ul class="list-unstyled row mx-n2">
+                                        <ul class="list-unstyled ">
                                             @foreach ($order->items as $key => $item)
-                                                <li class="px-2 col-auto">
-                                                    <img class="img-fluid" src="{{ $item->product->thumbnail }}"
-                                                        alt="Image Description" style="width: 55px;">
-                                                </li>
-                                                <li class="px-2 col">
-                                                    <h5 class="text-blue font-size-14 font-weight-bold">
-                                                        {{ $item->name ?: $item->product->name }}</h5>
-                                                    @php
-                                                        $total += $item->amount * $item->qty;
-                                                    @endphp
-                                                    <span class="font-size-14">{{ $item->qty }} ×
-                                                        {{ currency_format($item->amount, default_currency) }}</span>
+                                                <li class="row mx-n2 mb-2">
+                                                    <div class="px-2 col-auto">
+                                                        <img class="img-fluid" src="{{ $item->product->thumbnail }}"
+                                                            alt="Image Description" style="width: 55px;">
+                                                    </div>
+                                                    <div class="px-2 col">
+                                                        <h5 class="text-blue font-size-14 font-weight-bold">
+                                                            {{ $item->name ?: $item->product->name }}</h5>
+                                                        @php
+                                                            $total += $item->amount * $item->qty;
+                                                        @endphp
+                                                        <span class="font-size-14">{{ $item->qty }} ×
+                                                            {{ currency_format($item->amount, default_currency) }}</span>
+                                                    </div>
                                                 </li>
                                             @endforeach
 

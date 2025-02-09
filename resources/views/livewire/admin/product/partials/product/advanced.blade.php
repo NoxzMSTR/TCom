@@ -114,8 +114,9 @@
                                 previewThumbnail: null,
                             };
                         },
-                        deleteVariation(index) {
+                        deleteVariation(index, id = null) {
                             this.variations.splice(index, 1);
+                            $wire.deleteVariations(this.variations, id);
                         },
                         previewImage(event, index) {
                             const file = event.target.files[0];
@@ -138,7 +139,7 @@
                                     previewThumbnail: null,
                                 };
                             }
-                    
+
                         }
                     }">
                         <!--begin::Form group-->
@@ -176,9 +177,9 @@
                                                     placeholder="Variation">
                                                 <!--end::Input-->
 
-                                                <button type="button" @click="deleteVariation(index)"
-                                                    class="bg-transparent btn btn-flush btn-icon btn-light-danger btn-sm">
-                                                    <i class="ki-duotone ki-cross fs-1"><span
+                                                <button type="button" @click="deleteVariation(index,variation.id)"
+                                                    class="bg-transparent btn btn-sm">
+                                                    <i class="ki-duotone ki-cross fs-1 text-dark text-hover-danger"><span
                                                             class="path1"></span><span class="path2"></span></i>
                                                 </button>
                                             </div>

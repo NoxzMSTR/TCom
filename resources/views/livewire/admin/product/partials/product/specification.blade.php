@@ -8,15 +8,17 @@
                 data: [{ name: '', value: '' }]
             };
         },
-        deleteSpecification(index) {
+        deleteSpecification(index, title) {
             this.specification.splice(index, 1);
+            $wire.deleteSpecification(this.specification, title);
         },
         addField(index) {
             var dIndex = this.specification[index].data.length;
             this.specification[index].data[dIndex] = { name: '', value: '' };
         },
-        deleteField(index, dIndex) {
+        deleteField(index, dIndex, id = null) {
             this.specification[index].data.splice(dIndex, 1);
+            $wire.deleteField(this.specification, id);
         },
         init() {
             if (this.specification.length == 0) {
@@ -25,7 +27,7 @@
                     data: [{ name: '', value: '' }]
                 };
             }
-    
+
         }
     }">
         <!--begin::Media-->
@@ -88,7 +90,7 @@
                                                         x-model="data.value" placeholder="Value">
                                                     <!--end::Input-->
 
-                                                    <button type="button" @click="deleteField(index,dIndex)"
+                                                    <button type="button" @click="deleteField(index,dIndex,data.id)"
                                                         class="btn btn-sm btn-icon btn-light-danger">
                                                         <i class="ki-duotone ki-cross fs-1"><span
                                                                 class="path1"></span><span class="path2"></span></i>
@@ -104,7 +106,7 @@
                                             @click="addField(index)">
                                             <i class="ki-duotone ki-plus fs-2"></i> Add another field
                                         </button>
-                                        <button type="button" @click="deleteSpecification(index)"
+                                        <button type="button" @click="deleteSpecification(index,spec.title)"
                                             class="btn btn-sm btn-light-danger">
                                             Delete
                                         </button>

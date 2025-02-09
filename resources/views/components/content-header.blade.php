@@ -20,15 +20,28 @@
                             <li
                                 class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
                                 <!-- Account Sidebar Toggle Button -->
-                                <a id="sidebarNavToggler" href="javascript:;" role="button"
-                                    class="u-header-topbar__nav-link" aria-controls="sidebarContent"
-                                    aria-haspopup="true" aria-expanded="false" data-unfold-event="click"
-                                    data-unfold-hide-on-scroll="false" data-unfold-target="#sidebarContent"
-                                    data-unfold-type="css-animation" data-unfold-animation-in="fadeInRight"
-                                    data-unfold-animation-out="fadeOutRight" data-unfold-duration="500">
-                                    <i class="ec ec-user mr-1"></i> Register <span class="text-gray-50">or</span> Sign
-                                    in
-                                </a>
+                                @if (Auth::check())
+                                    <a class="font-weight-bold text-primary u-header-topbar__nav-link"
+                                        href="{{ route('public.account') }}">
+                                        <i class="ec ec-user mr-1"></i>{{ Auth::user()->name }}
+                                    </a>
+                                    <span class="text-gray-50"> - </span>
+                                    <a href="{{ route('public.logout') }}" class="u-header-topbar__nav-link">Sign out
+                                    </a>
+                                @else
+                                    <!-- Account Sidebar Toggle Button -->
+                                    <a id="sidebarNavToggler" href="javascript:;" role="button" wire:ignore.self
+                                        class="u-header-topbar__nav-link" aria-controls="sidebarContent"
+                                        aria-haspopup="true" aria-expanded="false" data-unfold-event="click"
+                                        data-unfold-hide-on-scroll="false" data-unfold-target="#sidebarContent"
+                                        data-unfold-type="css-animation" data-unfold-animation-in="fadeInRight"
+                                        data-unfold-animation-out="fadeOutRight" data-unfold-duration="500">
+                                        <i class="ec ec-user mr-1"></i> Register <span class="text-gray-50">or</span>
+                                        Sign
+                                        in
+                                    </a>
+                                    <!-- End Account Sidebar Toggle Button -->
+                                @endif
                                 <!-- End Account Sidebar Toggle Button -->
                             </li>
                         </ul>
@@ -177,10 +190,33 @@
                                 <li class="col d-none d-xl-block"><a href="../shop/wishlist.html"
                                         class="text-gray-90" data-toggle="tooltip" data-placement="top"
                                         title="Favorites"><i class="font-size-22 ec ec-favorites"></i></a></li> --}}
-                                <li class="col d-xl-none px-2 px-sm-3"><a href="../shop/my-account.html"
-                                        class="text-gray-90" data-toggle="tooltip" data-placement="top"
-                                        title="My Account"><i class="font-size-22 ec ec-user"></i></a></li>
+                                <li class="col d-xl-none px-2 px-sm-3">
+                                    @if (Auth::check())
+                                        <a class="text-gray-90" href="{{ route('public.account') }}">
+                                            <i class="font-size-22 ec ec-user"></i>
+                                        </a>
+                                    @else
+                                        <!-- Account Sidebar Toggle Button -->
+                                        <a class="text-gray-90" data-toggle="tooltip" data-placement="top"
+                                            title="My Account" id="sidebarNavToggler" href="javascript:;"
+                                            role="button" wire:ignore.self aria-controls="sidebarContent"
+                                            aria-haspopup="true" aria-expanded="false" data-unfold-event="click"
+                                            data-unfold-hide-on-scroll="false" data-unfold-target="#sidebarContent"
+                                            data-unfold-type="css-animation" data-unfold-animation-in="fadeInRight"
+                                            data-unfold-animation-out="fadeOutRight" data-unfold-duration="500"><i
+                                                class="font-size-22 ec ec-user"></i>
 
+                                        </a>
+                                        <!-- End Account Sidebar Toggle Button -->
+                                    @endif
+                                </li>
+                                @auth
+                                    <li class="col d-xl-none px-2 px-sm-3">
+                                        <a href="{{ route('public.logout') }}" class="text-gray-90"> <i
+                                                class="font-size-22 fa-sign-out-alt fas"></i>
+                                        </a>
+                                    </li>
+                                @endauth
                                 @livewire('public.cart.global-cart', ['placement' => 'content-header'])
 
 

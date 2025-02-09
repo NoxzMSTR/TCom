@@ -223,6 +223,21 @@
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                <!--begin:Menu link-->
+                                <a wire:navigate
+                                    class="menu-link {{ url()->current() == route('admin.contact.list') ? 'active' : '' }}"
+                                    href="{{ route('admin.contact.list') }}">
+                                    <span class="menu-icon">
+                                        <i class="ki-solid ki-parcel fs-2"></i>
+                                    </span>
+                                    <span class="menu-title">Contacts</span>
+                                </a>
+                                <!--end:Menu link-->
+
+                            </div>
+                            <!--end:Menu item-->
+                            <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click"
                                 class="menu-item menu-accordion {{ in_array(url()->current(), [route('admin.settings.account'), route('admin.settings.system'), route('admin.settings.customization')]) ? 'here show' : '' }}">
                                 <!--begin:Menu link-->

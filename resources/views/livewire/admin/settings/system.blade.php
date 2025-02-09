@@ -283,6 +283,19 @@
                         <!--begin::Input group-->
                         <div class="row col-12 mb-6">
                             <!--begin::Label-->
+                            <label class="col-lg-12 col-form-label required fw-semibold fs-6">Refund
+                                Policy</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-12 fv-row">
+                                <livewire:quill-text-editor wire:model="system.refundPolicy" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row col-12 mb-6">
+                            <!--begin::Label-->
                             <label class="col-lg-12 col-form-label required fw-semibold fs-6">Terms &
                                 Conditions</label>
                             <!--end::Label-->

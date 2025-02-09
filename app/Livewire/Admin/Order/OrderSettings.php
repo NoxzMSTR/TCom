@@ -18,7 +18,11 @@ class OrderSettings extends Component
 
     public $availableCities = [];
 
-    public $sameDayDelivery = [['from' => '00:00', 'to' => '00:00']];
+    public $deliveryOn = [];
+
+    public $deliveryTime = [];
+
+    public $sameDayDelivery = [];
 
     public $standardDelivery;
 
@@ -32,11 +36,37 @@ class OrderSettings extends Component
                     $this->defaultCurrency = $currency[0];
                 }
             }
+
+            if ($value->type == 'available_for') {
+                $availableCities = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+                if (isset($availableCities)) {
+                    $this->availableCities = [];
+                    $this->availableCities = $availableCities;
+                }
+            }
+            $hasSameDayDelivery = false;
             if ($value->type == 'same_day_delivery') {
                 $sameDayDelivery = json_validate($value['data']) ? json_decode($value['data'], true) : [];
                 if (isset($sameDayDelivery)) {
                     $this->sameDayDelivery = [];
                     $this->sameDayDelivery = $sameDayDelivery;
+                }
+                $hasSameDayDelivery = true;
+            }
+
+            if ($value->type == 'delivery_time') {
+                $deliveryTime = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+                if (isset($deliveryTime)) {
+                    $this->deliveryTime = [];
+                    $this->deliveryTime = $deliveryTime;
+                }
+            }
+
+            if ($value->type == 'delivery_on') {
+                $deliveryOn = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+                if (isset($deliveryOn)) {
+                    $this->deliveryOn = [];
+                    $this->deliveryOn = $deliveryOn;
                 }
             }
             if ($value->type == 'standard_delivery') {
@@ -117,7 +147,7 @@ class OrderSettings extends Component
     public function saveGeneral()
     {
 
-        $settings = oSettings::whereIn('type', ['default_currency', 'available_for'])->get();
+        $settings = oSettings::whereIn('type', ['default_currency', 'available_for', 'delivery_on'])->get();
         $hasType = [];
 
         foreach ($settings as $key => $value) {
@@ -131,6 +161,12 @@ class OrderSettings extends Component
                 $hasType[] = $value->type;
                 $value->update([
                     'data' => json_encode($this->availableCities),
+                ]);
+            }
+            if ($value->type == 'delivery_on') {
+                $hasType[] = $value->type;
+                $value->update([
+                    'data' => json_encode($this->deliveryOn),
                 ]);
             }
         }
@@ -148,13 +184,20 @@ class OrderSettings extends Component
                 'data' => json_encode($this->availableCities),
             ]);
         }
+
+        if (!in_array('delivery_on', $hasType)) {
+            oSettings::create([
+                'type' => 'delivery_on',
+                'data' => json_encode($this->deliveryOn),
+            ]);
+        }
         $this->dispatch('hide-loader');
     }
 
     public function saveShipping()
     {
 
-        $settings = oSettings::whereIn('type', ['same_day_delivery', 'standard_delivery'])->get();
+        $settings = oSettings::whereIn('type', ['same_day_delivery', 'standard_delivery', 'delivery_time'])->get();
 
         $hasType = [];
 
@@ -168,6 +211,11 @@ class OrderSettings extends Component
             if ($value->type == 'standard_delivery') {
                 $value->update([
                     'data' => json_encode([$this->standardDelivery]),
+                ]);
+            }
+            if ($value->type == 'delivery_time') {
+                $value->update([
+                    'data' => json_encode($this->deliveryTime),
                 ]);
             }
         }
@@ -186,6 +234,12 @@ class OrderSettings extends Component
             ]);
         }
 
+        if (!in_array('delivery_time', $hasType)) {
+            oSettings::create([
+                'type' => 'delivery_time',
+                'data' => json_encode($this->deliveryTime),
+            ]);
+        }
         $this->dispatch('hide-loader');
     }
 

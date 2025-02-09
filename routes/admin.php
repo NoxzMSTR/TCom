@@ -14,6 +14,8 @@ require __DIR__ . '/admin/buyer.php';
 
 require __DIR__ . '/admin/vendor.php';
 
+require __DIR__ . '/admin/contact.php';
+
 require __DIR__ . '/admin/account.php';
 
 require __DIR__ . '/admin/system.php';

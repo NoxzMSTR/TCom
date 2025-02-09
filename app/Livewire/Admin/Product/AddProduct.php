@@ -14,6 +14,7 @@ use App\Models\Product\ProductSpecification;
 use App\Models\Product\ProductTags;
 use App\Models\Product\ProductVariations;
 use App\Models\Vendors;
+use Livewire\Attributes\Renderless;
 use Monarobase\CountryList\CountryListFacade;
 
 class AddProduct extends Component
@@ -130,7 +131,7 @@ class AddProduct extends Component
                 $specification = [];
                 foreach ($product->specification as $key => $value) {
                     $specification[$value['title']]['title'] = $value['title'];
-                    $specification[$value['title']]['data'][] = ['name' => $value['key'], 'value' => $value['value']];
+                    $specification[$value['title']]['data'][] = ['id' => $value['id'], 'name' => $value['key'], 'value' => $value['value']];
                 }
                 $this->specification = array_values($specification);
                 if ($product->vendor) {
@@ -196,25 +197,34 @@ class AddProduct extends Component
         $this->dispatch('hide-loader');
     }
 
-    public function deleteVariations($index)
+    #[Renderless]
+    public function deleteVariations($variations, $id = null)
     {
-        if (isset($this->variations[$index])) {
-            if (isset($this->variations[$index]['id'])) {
-                ProductVariations::where('id', $this->variations[$index]['id'])->delete();
-            }
-            unset($this->variations[$index]);
-        }
-        $variations = [];
-
-        foreach ($this->variations as $key => $value) {
-            $variations[] = $value;
-        }
+        ProductVariations::where('id', $id)->delete();
 
         $this->variations = $variations;
 
         $this->dispatch('hide-loader');
     }
 
+    #[Renderless]
+    public function deleteSpecification($specs, $title = null)
+    {
+        ProductSpecification::where('title', $title)->delete();
+
+        $this->specification = $specs;
+
+        $this->dispatch('hide-loader');
+    }
+    #[Renderless]
+    public function deleteField($specs, $id = null)
+    {
+        ProductSpecification::where('id', $id)->delete();
+
+        $this->specification = $specs;
+
+        $this->dispatch('hide-loader');
+    }
     public function setDefaultAsset($id)
     {
         $asset = ProductAssets::find($id);
@@ -266,7 +276,7 @@ class AddProduct extends Component
                 'city' => $this->vendor['city'],
                 'state' => $this->vendor['state'],
                 'postalCode' => $this->vendor['postalCode'],
-                'country' => $this->vendor['country'],
+                'country' => $this->vendor['country'] ?? 'Pakistan',
             ]);
             $hasVendor = $vendor->id;
         }
@@ -380,17 +390,38 @@ class AddProduct extends Component
 
                         $path = $file->storeAs('products', $name, ['disk' => 'public']);
                     }
-                    ProductVariations::create([
-                        'type' => $value['type'],
-                        'data' => $value['data'],
-                        'hasPrice' => $value['hasPrice'] ?: 0,
-                        'thumbnail' => isset($path) && !empty($path) ? asset($path) : '',
-                        'productID' => $this->product->id,
-                    ]);
+                    if (isset($value['id']) && $value['id']) {
+                        $variation = ProductVariations::find($value['id']);
+                        if ($variation) {
+                            if (isset($path)) {
+                                $variation->update([
+                                    'type' => $value['type'],
+                                    'data' => $value['data'],
+                                    'hasPrice' => $value['hasPrice'] ?: 0,
+                                    'thumbnail' => asset($path),
+                                    'productID' => $this->product->id,
+                                ]);
+                            } else {
+                                $variation->update([
+                                    'type' => $value['type'],
+                                    'data' => $value['data'],
+                                    'hasPrice' => $value['hasPrice'] ?: 0,
+                                    'productID' => $this->product->id,
+                                ]);
+                            }
+                        }
+                    } else {
+                        ProductVariations::create([
+                            'type' => $value['type'],
+                            'data' => $value['data'],
+                            'hasPrice' => $value['hasPrice'] ?: 0,
+                            'thumbnail' => isset($path) && !empty($path) ? asset($path) : '',
+                            'productID' => $this->product->id,
+                        ]);
+                    }
+
                     $excludedTypes[] = $value['type'];
                 }
-
-                ProductVariations::whereNotIn('type', $excludedTypes)->where('productID', $this->product->id)->delete();
             }
             if ($this->specification) {
                 $excludedSpecs = [];
@@ -398,19 +429,38 @@ class AddProduct extends Component
                     foreach ($this->specification as $key => $specification) {
                         if (isset($specification['data']) && is_array($specification['data'])) {
                             foreach ($specification['data'] as $key => $value) {
-                                ProductSpecification::create([
-                                    'title' => $specification['title'],
-                                    'key' => $value['name'],
-                                    'value' => $value['value'],
-                                    'productID' => $this->product->id,
-                                ]);
-                                $excludedSpecs[] = $value['name'];
+                                if (isset($value['id']) && $value['id']) {
+                                    $spec = ProductSpecification::find($value['id']);
+                                    if ($spec) {
+                                        $spec->update([
+                                            'title' => $specification['title'],
+                                            'key' => $value['name'],
+                                            'value' => $value['value']
+                                        ]);
+                                    }
+                                } else {
+                                    ProductSpecification::create([
+                                        'title' => $specification['title'],
+                                        'key' => $value['name'],
+                                        'value' => $value['value'],
+                                        'productID' => $this->product->id,
+                                    ]);
+                                }
                             }
                         }
                     }
-                    ProductSpecification::whereNotIn('key', $excludedSpecs)->where('productID', $this->product->id)->delete();
                 }
             }
+            $this->variations = [];
+            foreach (ProductVariations::where('productID', $this->product->id)->get() as $key => $value) {
+                $this->variations[] = ['id' => $value['id'], 'type' => $value['type'], 'data' => $value['data'], 'hasPrice' => $value['hasPrice'], 'previewThumbnail' => $value['thumbnail']];
+            }
+            $specification = [];
+            foreach (ProductSpecification::where('productID', $this->product->id)->get() as $key => $value) {
+                $specification[$value['title']]['title'] = $value['title'];
+                $specification[$value['title']]['data'][] = ['id' => $value['id'], 'name' => $value['key'], 'value' => $value['value']];
+            }
+            $this->specification = array_values($specification);
         }
     }
 

@@ -29,6 +29,7 @@ class System extends Component
             $this->system['aLogoDark'] = isset($system['logoDark']) ?  $system['logoDark']->value : '';
             $this->system['aFavicon'] = isset($system['favconLogo']) ?  $system['favconLogo']->value : '';
             $this->system['privacyPolicy'] = isset($system['privacyPolicy']) ?  $system['privacyPolicy']->value : '';
+            $this->system['refundPolicy'] = isset($system['refundPolicy']) ?  $system['refundPolicy']->value : '';
             $this->system['termNCondition'] = isset($system['termsNCondition']) ? $system['termsNCondition']->value : '';
             $this->system['aboutUs'] = isset($system['aboutUs']) ?  $system['aboutUs']->value : '';
             $this->system['facebook'] = isset($system['facebook']) ?  $system['facebook']->value : '';
@@ -45,6 +46,7 @@ class System extends Component
             'email' => $this->system['email'],
             'phone' => $this->system['phone'],
             'privacyPolicy' => $this->system['privacyPolicy'],
+            'refundPolicy' => $this->system['refundPolicy'],
             'termsNCondition' => $this->system['termNCondition'],
             'aboutUs' => $this->system['aboutUs'],
             'facebook' => $this->system['facebook'],

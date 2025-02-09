@@ -1,4 +1,36 @@
-<div class="card mb-5 mb-xl-10">
+<div class="card mb-5 mb-xl-10" x-data="{
+
+    init() {
+        var self = this;
+
+        $('#availableCities').val(self.availableCities).trigger('change');
+
+        self.deliveryCities = self.availableCities;
+
+        $('#availableCities').on('select2:select', function(e) {
+            self.deliveryCities = $(this).val();
+
+            $.each(self.deliveryCities, function(index, city) {
+                if (!self.sameDayDelivery[city]) {
+                    self.sameDayDelivery[city] = {};
+                    self.sameDayDelivery[city][0] = new Proxy({ 'from': '00:00', 'to': '00:00' }, {});
+                }
+                if (!self.deliveryTime[city]) {
+                    self.deliveryTime[city] = new Proxy({ 'from': '00:00', 'to': '00:00' }, {});
+                }
+            });
+        });
+        $('#availableCities').on('select2:unselect', function(e) {
+            var city = e.params.data.id;
+            self.deliveryCities = $(this).val();
+
+            if (self.deliveryTime[city]) {
+                delete self.sameDayDelivery[city];
+                delete self.deliveryTime[city];
+            }
+        });
+    }
+}">
     <!--begin::Card header-->
     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
         data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
@@ -23,10 +55,10 @@
                 <!--end::Label-->
 
                 <!--begin::Col-->
-                <div class="col-lg-8 fv-row">
-                    <select wire:model.fill='availableCities' aria-label="Select cities" data-control="select2"
-                        data-placeholder="Select cities.." class="form-select form-select-solid form-select-lg cities"
-                        tabindex="-1" multiple>
+                <div class="col-lg-8 fv-row" wire:ignore>
+                    <select x-model='availableCities' aria-label="Select cities" id="availableCities"
+                        data-control="select2" data-placeholder="Select cities.."
+                        class="form-select form-select-solid form-select-lg cities" tabindex="-1" multiple>
                         <option value="">Select
                             cities..</option>
                         @foreach ($this->cities as $key => $value)
@@ -35,6 +67,17 @@
                                 {{ $value->name }}</option>
                         @endforeach
                     </select>
+                    <div class="mt-3 d-flex gap-3 flex-wrap">
+                        <template x-for="(city, index) in deliveryCities" :key="index">
+                            <div class="form-check">
+                                <input x-model="deliveryOn" class="form-check-input" type="checkbox"
+                                    :value="city" :id="'select-' + city" />
+                                <label class="form-check-label" :for="'select-' + city" x-text="'Delivery On '+city">
+
+                                </label>
+                            </div>
+                        </template>
+                    </div>
                 </div>
                 <!--end::Col-->
             </div>

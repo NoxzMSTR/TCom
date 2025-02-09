@@ -2,10 +2,11 @@
     @php
         $cities = [];
         $standard_delivery = 48;
-        $slot = null;
+        $slot = [];
+        $deliveryTime = [];
         if (defined('order_settings')) {
             foreach (order_settings as $key => $value) {
-                if ($value['type'] == 'available_for') {
+                if ($value['type'] == 'delivery_on') {
                     $cities = json_decode($value['data'], true);
                 }
                 if ($value['type'] == 'standard_delivery') {
@@ -14,11 +15,14 @@
                 if ($value['type'] == 'same_day_delivery') {
                     $slot = json_decode($value['data'], true);
                 }
+                if ($value['type'] == 'delivery_time') {
+                    $deliveryTime = json_decode($value['data'], true);
+                }
             }
         }
     @endphp
-    <div class="container" x-data='{ slot: @json($slot)}'>
-        <script></script>
+    <div class="container" x-data='{ slot: @json($slot),deliveryTime: @json($deliveryTime)}'>
+
         <div x-data="{
             latitude: '',
             longitude: '',
@@ -27,6 +31,12 @@
             userIP: $wire.entangle('userIP'),
             currentSlot: {},
             sameDayProducts: $wire.entangle('sameDayProducts'),
+            formatDate(date) {
+                var year = date.getFullYear();
+                var month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero
+                var day = ('0' + date.getDate()).slice(-2); // Add leading zero
+                return year + '-' + month + '-' + day;
+            },
             init() {
                 if (!navigator.geolocation) {
                     alert('Geolocation is not supported by your browser.');
@@ -56,17 +66,65 @@
                     });
             },
             setTimeSlot() {
+                var self = this;
                 var now = new Date();
                 var currentHours = now.getHours();
+                var currentMinutes = now.getMinutes();
+                var expireHours = currentHours;
                 currentHours = (currentHours + 2) % 24;
+        
                 var currentMinutes = now.getMinutes();
                 var i = 0;
                 var currentSlot = {};
-                $.each(this.slot, function(index, elem) {
-                    var [slotHours, slotMinutes] = elem.to.split(':');
-                    if (slotHours >= currentHours) {
-                        currentSlot[i] = elem;
-                        i++;
+        
+                $.each(this.slot, function(city, cityData) {
+                    if (deliveryTime[city]) {
+                        var [fromHours, fromMinutes] = deliveryTime[city].from.split(':');
+                        var [toHours, toMinutes] = deliveryTime[city].to.split(':');
+        
+                        let givenFromDate = new Date();
+                        let givenToDate = new Date();
+        
+                        givenFromDate.setHours(fromHours, fromMinutes, 0, 0);
+                        givenToDate.setHours(toHours, toMinutes, 0, 0);
+        
+                        let diffFrom = givenFromDate - now;
+        
+                        let diffTo = givenToDate - now;
+        
+                        if (diffFrom < 0 && diffTo > 0) {
+                            $.each(cityData, function(index, elem) {
+                                if (!currentSlot[city]) {
+                                    currentSlot[city] = {};
+                                }
+                                var [slotHours, slotMinutes] = elem.to.split(':');
+        
+                                if (slotHours > currentHours) {
+                                    var slotHr = (slotHours - 2) % 24;
+                                    self.startCountdown(slotHours + '_' + self.formatDate(now) + '_' + city, now.getDate(), slotHr);
+                                    currentSlot[city][slotHours + '_' + self.formatDate(now) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(now), futureDates: false };
+        
+                                }
+                            });
+                        } else {
+        
+                            for (var i = 1; i <= 2; i++) { // Loop for next 2 days
+                                var futureDate = new Date();
+                                futureDate.setDate(now.getDate() + i); // Add i days
+                                $.each(cityData, function(index, elem) {
+                                    if (!currentSlot[city]) {
+                                        currentSlot[city] = {};
+                                    }
+                                    var [slotHours, slotMinutes] = elem.to.split(':');
+        
+        
+                                    var slotHr = (slotHours - 2) % 24;
+                                    self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
+                                    currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
+        
+                                });
+                            }
+                        }
                     }
                 });
         
@@ -84,7 +142,67 @@
                     console.error('Unable to fetch IP address:', error);
                     this.userIP = 'error';
                 }
-            }
+            },
+            now: new Date(),
+            currentTime: '',
+            expireTime: '',
+            interval: '',
+            timeLeft: {},
+            hasExpired: false,
+            startCountdown(index, expDate, expireHours) {
+                // Set the expiration time
+                const now = new Date();
+                var expireDate = new Date(now);
+                expireDate.setDate(expDate);
+                expireDate.setHours(expireHours);
+                expireDate.setMinutes(0);
+                expireDate.setSeconds(0);
+        
+                // Display formatted times
+                this.updateTimeDisplay(expireHours);
+        
+                // Update the countdown every second
+                this.interval = setInterval(() => {
+                    this.now = new Date();
+                    this.updateTimeDisplay(expireHours);
+                    this.calculateTimeLeft(index, expireDate);
+                }, 1000);
+            },
+        
+            updateTimeDisplay(expireHours) {
+                this.currentTime = this.formatTime(this.now);
+                const current = new Date();
+                current.setHours(expireHours);
+                this.expireTime = this.formatTime(current);
+            },
+        
+            calculateTimeLeft(index, expireDate) {
+                const difference = expireDate - this.now;
+        
+                if (difference <= 0) {
+                    this.hasExpired = true;
+                    this.timeLeft[index] = '00:00:00';
+                    clearInterval(this.interval);
+                    this.setTimeSlot();
+                } else {
+                    const hours = String(
+                        Math.floor(difference / (1000 * 60 * 60))
+                    ).padStart(2, '0');
+                    const minutes = String(
+                        Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+                    ).padStart(2, '0');
+                    const seconds = String(
+                        Math.floor((difference % (1000 * 60)) / 1000)
+                    ).padStart(2, '0');
+                    this.timeLeft[index] = `${hours}:${minutes}:${seconds}`;
+                }
+        
+            },
+        
+            formatTime(date) {
+                return date.toTimeString().split(' ')[0];
+            },
+        
         }">
             <div class="mb-5">
                 <h1 class="text-center">Checkout</h1>

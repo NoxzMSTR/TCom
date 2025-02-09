@@ -2,23 +2,35 @@
 
 namespace App\Livewire\Public;
 
-use App\Models\Product\Products;
 use Livewire\Component;
+use Livewire\Attributes\On;
+use App\Models\Product\Products;
+use Livewire\Attributes\Renderless;
 use Spatie\Activitylog\Models\Activity;
 
 class Product extends Component
 {
+    public $id;
     public $title;
+    public $qty = 1;
+    public $variations = [];
     public $breadCrumb = 'Home.Product';
 
-    public function mount($name)
+    public function mount($id, $name)
     {
+        $this->id = $id;
         $this->title = $name;
+    }
+
+    #[Renderless]
+    public function addToCart()
+    {
+        dump($this);
     }
 
     public function render()
     {
-        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->first();
+        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->where('id', $this->id)->first();
 
         $hasActivity = Activity::whereJsonContains('properties->ip_address', request()->ip())->whereJsonContains('properties->session_id', request()->session()->getId())->whereJsonContains('properties->product_id', $product->id)->whereDate('created_at', now()->format('Y-m-d'))->where('log_name', 'product_click')->first();
 

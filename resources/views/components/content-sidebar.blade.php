@@ -39,7 +39,6 @@
 
                                                                 <!-- Nav Item - Mega Menu -->
                                                                 <div class="hs-mega-menu vmm-tfw u-header__sub-menu"
-                                                                    style="min-height: 300px; overflow-y: scroll;"
                                                                     aria-labelledby="basicMegaMenu">
                                                                     @if ($category['thumbnail'])
                                                                         <div class="vmm-bg">
@@ -49,28 +48,35 @@
                                                                         </div>
                                                                     @endif
 
-                                                                    <div class="row u-header__mega-menu-wrapper">
+                                                                    <div class="row u-header__mega-menu-wrapper"
+                                                                        style="padding-right: 12rem;">
                                                                         <div class="col mb-3 mb-sm-0">
                                                                             <span
                                                                                 class="u-header__sub-menu-title">{{ $category['name'] }}</span>
                                                                             <ul
-                                                                                class="u-header__sub-menu-nav-group mb-3">
+                                                                                class="u-header__sub-menu-nav-group d-flex justify-content-between mb-3">
                                                                                 @foreach ($category['descendants'] as $key => $subCategories)
-                                                                                    <li><a class="nav-link u-header__sub-menu-nav-link"
-                                                                                            href="#">{{ $subCategories['name'] }}</a>
-                                                                                    </li>
-                                                                                    @if (count($subCategories['descendants']))
-                                                                                        <li>
-                                                                                            @include(
-                                                                                                'components.sidebar-sub',
-                                                                                                [
-                                                                                                    'subCategories' => $subCategories,
-                                                                                                ]
-                                                                                            )
+                                                                                    <ul
+                                                                                        class="u-header__sub-menu-nav-group mb-3">
+                                                                                        <li><a class="nav-link u-header__sub-menu-nav-link"
+                                                                                                href="{{ route('public.shop', ['category' => $subCategories['name']]) }}">{{ $subCategories['name'] }}</a>
                                                                                         </li>
-                                                                                    @else
-                                                                                    @endif
+                                                                                        @if (count($subCategories['descendants']))
+                                                                                            <li>
+                                                                                                @include(
+                                                                                                    'components.sidebar-sub',
+                                                                                                    [
+                                                                                                        'subCategories' => $subCategories,
+                                                                                                    ]
+                                                                                                )
+                                                                                            </li>
+                                                                                        @endif
+                                                                                    </ul>
                                                                                 @endforeach
+
+                                                                            </ul>
+                                                                            <ul
+                                                                                class="u-header__sub-menu-nav-group mb-3">
                                                                                 <li>
                                                                                     <a class="nav-link u-header__sub-menu-nav-link u-nav-divider border-top pt-2 flex-column align-items-start"
                                                                                         href="{{ route('public.shop', ['category' => $category['name']]) }}">

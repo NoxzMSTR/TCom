@@ -1,5 +1,233 @@
 <div>
-    <div class="container">
+    @php
+        $variations = [];
+        $hasVariations = false;
+        foreach ($product->variations as $key => $variation) {
+            if ($variation->type !== '') {
+                if ($variation->thumbnail) {
+                    $variations[PRODUCT_VARIATIONS[$variation->type]]['thumbs'][] = $variation;
+                } else {
+                    $variations[PRODUCT_VARIATIONS[$variation->type]]['options'][] = $variation;
+                }
+            }
+        }
+        $hasVariations = count($variations);
+    @endphp
+
+    <div class="container" x-data="{
+        default_currency: @js($default_currency),
+        product: @js($product),
+        qty: $wire.entangle('qty'),
+        hasVariations: @js($hasVariations),
+        validateVariation: @js($hasVariations),
+        price: 0,
+        discount: 0,
+        formatCurrency(amount, currencyCode = 'PKR') {
+            const currencySymbols = {
+                AED: 'د.إ', // UAE Dirham
+                AFN: '؋', // Afghan Afghani
+                ALL: 'L', // Albanian Lek
+                AMD: '֏', // Armenian Dram
+                ANG: 'ƒ', // Netherlands Antillean Guilder
+                AOA: 'Kz', // Angolan Kwanza
+                ARS: '$', // Argentine Peso
+                AUD: 'A$', // Australian Dollar
+                AWG: 'ƒ', // Aruban Florin
+                AZN: '₼', // Azerbaijani Manat
+                BAM: 'KM', // Bosnia-Herzegovina Convertible Mark
+                BBD: 'Bds$', // Barbadian Dollar
+                BDT: '৳', // Bangladeshi Taka
+                BGN: 'лв', // Bulgarian Lev
+                BHD: '.د.ب', // Bahraini Dinar
+                BIF: 'FBu', // Burundian Franc
+                BMD: 'BD$', // Bermudian Dollar
+                BND: 'B$', // Brunei Dollar
+                BOB: 'Bs.', // Bolivian Boliviano
+                BRL: 'R$', // Brazilian Real
+                BSD: 'B$', // Bahamian Dollar
+                BTN: 'Nu.', // Bhutanese Ngultrum
+                BWP: 'P', // Botswana Pula
+                BYN: 'Br', // Belarusian Ruble
+                BZD: 'BZ$', // Belize Dollar
+                CAD: 'C$', // Canadian Dollar
+                CDF: 'FC', // Congolese Franc
+                CHF: 'CHF', // Swiss Franc
+                CLP: '$', // Chilean Peso
+                CNY: '¥', // Chinese Yuan
+                COP: '$', // Colombian Peso
+                CRC: '₡', // Costa Rican Colón
+                CUP: '₱', // Cuban Peso
+                CVE: 'Esc', // Cape Verdean Escudo
+                CZK: 'Kč', // Czech Koruna
+                DJF: 'Fdj', // Djiboutian Franc
+                DKK: 'kr', // Danish Krone
+                DOP: 'RD$', // Dominican Peso
+                DZD: 'دج', // Algerian Dinar
+                EGP: 'E£', // Egyptian Pound
+                ERN: 'Nfk', // Eritrean Nakfa
+                ETB: 'Br', // Ethiopian Birr
+                EUR: '€', // Euro
+                FJD: 'FJ$', // Fijian Dollar
+                FKP: '£', // Falkland Islands Pound
+                GBP: '£', // British Pound
+                GEL: '₾', // Georgian Lari
+                GHS: 'GH₵', // Ghanaian Cedi
+                GIP: '£', // Gibraltar Pound
+                GMD: 'D', // Gambian Dalasi
+                GNF: 'FG', // Guinean Franc
+                GTQ: 'Q', // Guatemalan Quetzal
+                GYD: 'GY$', // Guyanese Dollar
+                HKD: 'HK$', // Hong Kong Dollar
+                HNL: 'L', // Honduran Lempira
+                HRK: 'kn', // Croatian Kuna
+                HTG: 'G', // Haitian Gourde
+                HUF: 'Ft', // Hungarian Forint
+                IDR: 'Rp', // Indonesian Rupiah
+                ILS: '₪', // Israeli New Shekel
+                INR: '₹', // Indian Rupee
+                IQD: 'ع.د', // Iraqi Dinar
+                IRR: '﷼', // Iranian Rial
+                ISK: 'kr', // Icelandic Króna
+                JMD: 'J$', // Jamaican Dollar
+                JOD: 'JD', // Jordanian Dinar
+                JPY: '¥', // Japanese Yen
+                KES: 'KSh', // Kenyan Shilling
+                KGS: 'с', // Kyrgyzstani Som
+                KHR: '៛', // Cambodian Riel
+                KMF: 'CF', // Comorian Franc
+                KPW: '₩', // North Korean Won
+                KRW: '₩', // South Korean Won
+                KWD: 'KD', // Kuwaiti Dinar
+                KYD: 'CI$', // Cayman Islands Dollar
+                KZT: '₸', // Kazakhstani Tenge
+                LAK: '₭', // Lao Kip
+                LBP: 'ل.ل', // Lebanese Pound
+                LKR: 'Rs', // Sri Lankan Rupee
+                LRD: 'L$', // Liberian Dollar
+                LSL: 'L', // Lesotho Loti
+                LYD: 'LD', // Libyan Dinar
+                MAD: 'د.م.', // Moroccan Dirham
+                MDL: 'L', // Moldovan Leu
+                MGA: 'Ar', // Malagasy Ariary
+                MKD: 'ден', // Macedonian Denar
+                MMK: 'K', // Myanmar Kyat
+                MNT: '₮', // Mongolian Tögrög
+                MOP: 'MOP$', // Macanese Pataca
+                MUR: '₨', // Mauritian Rupee
+                MVR: 'Rf', // Maldivian Rufiyaa
+                MWK: 'MK', // Malawian Kwacha
+                MXN: '$', // Mexican Peso
+                MYR: 'RM', // Malaysian Ringgit
+                MZN: 'MT', // Mozambican Metical
+                NAD: 'N$', // Namibian Dollar
+                NGN: '₦', // Nigerian Naira
+                NIO: 'C$', // Nicaraguan Córdoba
+                NOK: 'kr', // Norwegian Krone
+                NPR: 'Rs', // Nepalese Rupee
+                NZD: 'NZ$', // New Zealand Dollar
+                OMR: '﷼', // Omani Rial
+                PAB: 'B/.', // Panamanian Balboa
+                PEN: 'S/.', // Peruvian Sol
+                PGK: 'K', // Papua New Guinean Kina
+                PHP: '₱', // Philippine Peso
+                PKR: '₨', // Pakistani Rupee
+                PLN: 'zł', // Polish Złoty
+                PYG: '₲', // Paraguayan Guaraní
+                QAR: '﷼', // Qatari Riyal
+                RON: 'lei', // Romanian Leu
+                RSD: 'дин', // Serbian Dinar
+                RUB: '₽', // Russian Ruble
+                RWF: 'FRw', // Rwandan Franc
+                SAR: '﷼', // Saudi Riyal
+                SBD: 'SI$', // Solomon Islands Dollar
+                SCR: '₨', // Seychellois Rupee
+                SDG: 'ج.س', // Sudanese Pound
+                SEK: 'kr', // Swedish Krona
+                SGD: 'S$', // Singapore Dollar
+                SYP: '£', // Syrian Pound
+                THB: '฿', // Thai Baht
+                TRY: '₺', // Turkish Lira
+                TWD: 'NT$', // New Taiwan Dollar
+                USD: '$', // US Dollar
+                VND: '₫', // Vietnamese Đồng
+                ZAR: 'R' // South African Rand
+            };
+
+            let symbol = currencySymbols[currencyCode] || currencyCode;
+            return symbol + Number(amount).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        },
+        selectedVars(event) {
+            var classes = 'border border-primary border-width-3';
+            var elem = $(event.target);
+            var hasClass = $(event.target).attr('name');
+            $('.' + hasClass).removeClass(classes);
+            if (elem.is(':checked')) {
+                elem.parent().addClass(classes);
+            }
+        },
+        validateVars() {
+            var i = 0;
+            var variations = {};
+            $('[name*=\'variation-\']').each(function(index, element) {
+                if ($(element).find('option').is(':selected') || $(element).is(':checked')) {
+                    var id = $(element).attr('name');
+                    var val = $(element).val();
+                    variations[id] = val;
+                    i++
+                }
+            });
+            if (i == this.hasVariations) {
+                $('.add-to-cart-btn').removeClass('disabled')
+                this.validateVariation = false;
+                $wire.set('variations', variations, false);
+            } else {
+                $('.add-to-cart-btn').addClass('disabled')
+                this.validateVariation = true;
+            }
+        },
+        async addToCart() {
+            $('.add-to-cart-btn').addClass('disabled');
+
+            await $wire.addToCart();
+
+            $('.add-to-cart-btn').removeClass('disabled');
+
+            this.qty = 1;
+
+            $('[class*=\'variation-\']').each(function(index, element) {
+                var classes = 'border border-primary border-width-3';
+                $(element).prop('checked', false);
+                $(element).removeClass(classes);
+            });
+
+            if (this.hasVariations) {
+                $('.add-to-cart-btn').addClass('disabled')
+                this.validateVariation = true;
+            }
+        },
+        init() {
+            this.price = this.formatCurrency(this.product.amount, this.default_currency);
+            var discount = 0;
+            var amount = this.product.amount;
+            if (this.product.discountType == 1) {
+                discount = (amount / 100) * this.product.discountData;
+                discount = amount - discount;
+                discount = currency_format(discount, this.default_currency);
+            } else if (this.product.discountType == 2) {
+                discount = this.product.discountData;
+                discount = currency_format(discount, this.default_currency);
+            }
+            this.discount = discount;
+
+            if (this.validateVariation) {
+                $('.add-to-cart-btn').addClass('disabled')
+            }
+        }
+    }">
+
         <!-- Single Product Body -->
         <div class="mb-xl-14 mb-6">
             <div class="row">
@@ -74,78 +302,81 @@
                         </div>
 
                         <p><strong>SKU</strong>: {{ $product->sku }}</p>
-                        @php
-                            $price = currency_format($product->amount, $default_currency);
-                            $discount = 0;
-                            $amount = $product->amount;
-                            if ($product->discountType == 1) {
-                                $discount = ($amount / 100) * $product->discountData;
-                                $discount = $amount - $discount;
-                                $discount = currency_format($discount, $default_currency);
-                            } elseif ($product->discountType == 2) {
-                                $discount = $product->discountData;
-                                $discount = currency_format($discount, $default_currency);
-                            }
-                        @endphp
                         <div class="mb-4">
-                            @if ($discount)
+                            <template x-if="discount">
                                 <div class="d-flex align-items-baseline">
-                                    <ins class="font-size-36 text-decoration-none">{{ $discount }}</ins>
-                                    <del class="font-size-20 ml-2 text-gray-6">{{ $price }}</del>
+                                    <ins class="font-size-36 text-decoration-none" x-text="discount"></ins>
+                                    <del class="font-size-20 ml-2 text-gray-6" x-text="price"></del>
                                 </div>
-                            @else
+                            </template>
+                            <template x-if="!discount">
                                 <div class="d-flex align-items-baseline">
-                                    <ins class="font-size-36 text-decoration-none">{{ $price }}</ins>
+                                    <ins class="font-size-36 text-decoration-none" x-text="price"></ins>
                                 </div>
-                            @endif
-
+                            </template>
                         </div>
-                        @php
-                            $variations = [];
-                            foreach ($product->variations as $key => $variation) {
-                                if ($variation->type) {
-                                    $variations[PRODUCT_VARIATIONS[$variation->type]][] = $variation;
-                                }
-                            }
-                        @endphp
-                        <div class="d-flex flex-wrap" style="gap: 20px">
-                            @foreach ($variations as $type => $variation)
-                                <div class="border-top border-bottom py-3 mb-4">
-                                    <div class="d-flex align-items-center">
-                                        <h6 class="font-size-14 mb-0">{{ $type }}</h6>
-                                        <!-- Select -->
-                                        <select class="js-select selectpicker dropdown-select ml-3"
-                                            data-style="btn-sm bg-white font-weight-normal py-2 border">
-                                            <option value="">None</option>
-                                            @foreach ($variation as $key => $value)
-                                                <option value="{{ $value->data }}">{{ $value->data }}</option>
-                                            @endforeach
 
-                                        </select>
-                                        <!-- End Select -->
-                                    </div>
+                        <div class="d-flex flex-wrap" style="gap: 20px" x-data="{ variations: {{ json_encode($variations) }} }">
+                            <template x-for="(variation, type) in variations" :key="type">
+                                <div class="border-top border-bottom py-3 mb-4">
+                                    <template x-if="variation.thumbs">
+                                        <div>
+                                            <h6 class="font-size-14 font-weight-bolder" x-text="type"></h6>
+                                            <div class="d-flex flex-wrap" style="gap: 20px">
+                                                <template x-for="(value, key) in variation.thumbs"
+                                                    :key="value.id">
+                                                    <label :for="'variation-' + value.id" :class="'variation-' + type"
+                                                        class="media">
+
+                                                        <div class="width-75 height-75">
+                                                            <img class="img-fluid object-fit-cover"
+                                                                :src="value.thumbnail" alt="Image Description">
+                                                        </div>
+
+                                                        <input hidden :id="'variation-' + value.id" type="radio"
+                                                            :value="value.id" :name="'variation-' + type"
+                                                            @change="selectedVars($event),validateVars()">
+                                                    </label>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template x-if="!variation.thumbs">
+                                        <div>
+                                            <h6 class="font-size-14 font-weight-bolder" x-text="type"></h6>
+                                            <select :name="'variation-' + type" @change="validateVars()"
+                                                class="js-select selectpicker dropdown-select"
+                                                data-style="btn-sm bg-white font-weight-normal py-2 border">
+                                                <option value="" disabled>None</option>
+                                                <template x-for="(option, key) in variation.options"
+                                                    :key="key">
+                                                    <option :value="option.id" x-text="option.data"></option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </template>
                                 </div>
-                            @endforeach
+                            </template>
                         </div>
 
                         <div class="d-md-flex align-items-end mb-3">
                             <div class="max-width-150 mb-4 mb-md-0">
-                                <h6 class="font-size-14">Quantity</h6>
+                                <h6 class="font-size-14 font-weight-bolder">Quantity</h6>
                                 <!-- Quantity -->
                                 <div class="border rounded-pill py-2 px-3 border-color-1">
                                     <div class="js-quantity row align-items-center">
                                         <div class="col">
-                                            <input
+                                            <input x-model="qty"
                                                 class="js-result form-control h-auto border-0 rounded p-0 shadow-none"
                                                 type="text" value="1">
                                         </div>
                                         <div class="col-auto pr-1">
                                             <a class="js-minus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0"
-                                                href="javascript:;">
+                                                href="javascript:;" @click="qty == 1?qty = 1:qty--">
                                                 <small class="fas fa-minus btn-icon__inner"></small>
                                             </a>
                                             <a class="js-plus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0"
-                                                href="javascript:;">
+                                                href="javascript:;" @click="qty++">
                                                 <small class="fas fa-plus btn-icon__inner"></small>
                                             </a>
                                         </div>
@@ -154,8 +385,8 @@
                                 <!-- End Quantity -->
                             </div>
                             <div class="ml-md-3">
-                                <a wire:click="$dispatchTo('public.cart.global-cart', 'add-to-cart', { product: {{ $product->id }} })"
-                                    href="javascript:;" class="btn px-5 btn-primary-dark transition-3d-hover"><i
+                                <a @click="addToCart()" href="javascript:;"
+                                    class="btn px-5 btn-primary-dark transition-3d-hover add-to-cart-btn"><i
                                         class="ec ec-add-to-cart cursor-pointer-on  mr-2 font-size-20"></i> Add to
                                     Cart</a>
                             </div>

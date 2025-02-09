@@ -1,5 +1,14 @@
 <div class="pl-lg-3 ">
-    <div class="bg-gray-1 rounded-lg">
+    <div class="bg-gray-1 rounded-lg" x-data="{
+        setSameDay() {
+            var sameDay = {};
+            $('.sameDayProducts:checked').each(function(index, element) {
+                sameDay[index] = $(element).val();
+            });
+            $wire.set('slots', sameDay, false);
+        }
+    }">
+
         <!-- Order Summary -->
         @if (count($products))
             <div class="p-4 mb-4 checkout-table">
@@ -9,17 +18,137 @@
                 </div>
                 <!-- End Title -->
                 @php
+                    $productsByCType = [];
                     $productsByType = [];
                     foreach ($products as $key => $product) {
-                        $productsByType[$product[0]['shippingType']][] = $product;
+                        if ($product[0]->vendor) {
+                            $productsByCType[$product[0]->vendor->city][$product[0]['shippingType']][] = $product;
+                        } else {
+                            $productsByType[0][] = $product;
+                        }
                     }
                 @endphp
 
-                @foreach ($productsByType as $key => $nProducts)
+                @foreach ($productsByCType as $city => $cityData)
+                    @foreach ($cityData as $sType => $nProducts)
+                        <div class="card mb-3" x-data="{
+                            city: @js($city),
+                            init() {
+                                if (!sameDayProducts[this.city]) {
+                                    sameDayProducts[this.city] = null;
+                                }
+                            }
+                        }">
+                            <div class="card-body">
+                                @php
+                                    if ($sType == 1) {
+                                        $title = 'Same Day Delivery';
+                                        $desciption =
+                                            'Please select a time slot which you want to delivery the product on.';
+                                    } else {
+                                        $title = 'Standard Delivery';
+                                        $desciption =
+                                            'We will delivery the product within or after ' .
+                                            $standard_delivery .
+                                            'hrs.';
+                                    }
+
+                                @endphp
+                                <h5 class="card-title font-weight-bold mb-1">{{ $title }}</h5>
+                                <p class="card-text mb-1">{{ $desciption }}</p>
+                                <!-- Product Content -->
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="product-name">Product</th>
+                                            <th class="product-total">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($nProducts as $key => $product)
+                                            @php
+                                                $qty = count($product);
+                                                $amount = 0;
+                                                $product = $product[0];
+                                                if (isset($default_currency)) {
+                                                    $price = currency_format($product->amount, $default_currency);
+                                                    $discount = 0;
+                                                    $amount = $product->amount;
+                                                    if ($product->discountType == 1) {
+                                                        $discount = ($amount / 100) * $product->discountData;
+                                                        $discount = $amount - $discount;
+                                                        $amount = $discount;
+                                                        $discount = currency_format($discount, $default_currency);
+                                                    } elseif ($product->discountType == 2) {
+                                                        $discount = $product->discountData;
+                                                        $amount = $discount;
+                                                        $discount = currency_format($discount, $default_currency);
+                                                    }
+                                                } else {
+                                                    $discount = 0;
+                                                    $price = $product->amount;
+                                                    $amount = $price;
+                                                }
+                                            @endphp
+                                            <tr class="cart_item">
+                                                <td>{{ $product->name }}<strong class="product-quantity"> ×
+                                                        {{ $qty }}</strong>
+                                                </td>
+                                                <td>{{ $discount ? $discount : $price }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <!-- End Product Content -->
+                                <div>
+                                    @if ($sType == 1)
+                                        <template x-for="(slot, index) in currentSlot[city]">
+                                            <div
+                                                class="border border-primary border-width-3 custom-control custom-radio d-flex py-2 px-3 mb-3 rounded-left-pill rounded-right-pill justify-content-between">
+                                                <label :for="'slot-' + index"
+                                                    class="custom-control custom-radio m-0 pl-3">
+                                                    <input @click="setSameDay" type="radio"
+                                                        x-model="sameDayProducts[city]"
+                                                        class="custom-control-input sameDayProducts"
+                                                        :id="'slot-' + index" :name="'sameDaySlot-' + city"
+                                                        :value="city + '_' + slot.date + '_' + slot.from + ' - ' + slot.to">
+                                                    <label :for="'slot-' + index"
+                                                        class="custom-control-label form-label left-3"
+                                                        x-text="slot.futureDates ?slot.date+' '+slot.from + ' - ' + slot.to:slot.from + ' - ' + slot.to">
+                                                        -
+                                                    </label>
+                                                </label>
+                                                <div>
+                                                    <label class="form-label m-0">
+                                                        Expired in: <span class="text-primary"
+                                                            x-text="timeLeft[index]"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="!Object.keys(currentSlot[city]).length">
+                                            <div
+                                                class="border border-primary border-width-3 custom-control custom-radio d-flex py-2 px-3 mb-3 rounded-left-pill rounded-right-pill justify-content-between">
+                                                <div>
+                                                    <label class="form-label text-primary m-0">
+                                                        Notice: same day is converted to "Standard Delivery" We will
+                                                        delivery the product within or after {{ $standard_delivery }}
+                                                        hrs.
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endforeach
+                @foreach ($productsByType as $sType => $nProducts)
                     <div class="card mb-3">
                         <div class="card-body">
                             @php
-                                if ($key == 1) {
+                                if ($sType == 1) {
                                     $title = 'Same Day Delivery';
                                     $desciption =
                                         'Please select a time slot which you want to delivery the product on.';
@@ -76,22 +205,7 @@
                                 </tbody>
                             </table>
                             <!-- End Product Content -->
-                            <div>
-                                @if ($key == 1)
-                                    <template x-for="(slot, index) in currentSlot">
-                                        <label :for="'slot-' + index"
-                                            class="border border-primary border-width-3 custom-control custom-radio d-flex p-3 rounded-left-pill rounded-right-pill">
-                                            <input type="radio" x-model="sameDayProducts" class="custom-control-input"
-                                                :id="'slot-' + index" name="sameDaySlot"
-                                                :value="slot.from + ' - ' + slot.to">
-                                            <label :for="'slot-' + index" class="custom-control-label form-label left-3"
-                                                x-text="slot.from + ' - ' + slot.to">
-                                                -
-                                            </label>
-                                        </label>
-                                    </template>
-                                @endif
-                            </div>
+
                         </div>
                     </div>
                 @endforeach

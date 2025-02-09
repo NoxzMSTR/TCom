@@ -43,11 +43,12 @@
                                     <div class="mb-2"><a href="../shop/product-categories-7-column-full-width.html"
                                             class="font-size-12 text-gray-5">{{ $product->categories->name }}</a></div>
                                     <h5 class="mb-1 product-item__title"><a wire:navigate
-                                            href="{{ route('public.product', [$product->name]) }}"
+                                            href="{{ route('public.product', [$product->id, $product->name]) }}"
                                             class="text-blue font-weight-bold">{{ $product->name }}</a></h5>
                                     @if ($product->thumbnail)
                                         <div class="mb-2">
-                                            <a wire:navigate href="{{ route('public.product', [$product->name]) }}"
+                                            <a wire:navigate
+                                                href="{{ route('public.product', [$product->id, $product->name]) }}"
                                                 class="d-block text-center"><img class="img-fluid"
                                                     src="{{ $product->thumbnail }}" alt="Image Description"></a>
                                         </div>

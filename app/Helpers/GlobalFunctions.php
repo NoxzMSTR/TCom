@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 
 define('PRODUCT_STATUS', ['Draft', 'Published', 'OnHold', 'Disabled']);
 
-define('PRODUCT_VARIATIONS', ['Color', 'Size', 'Material', 'Style']);
+define('PRODUCT_VARIATIONS', ['Color', 'Size', 'Material', 'Style', 'Piece']);
 
 define('ORDER_PAYMENT_METHOD', ['cod' => 'Cash on delivery', 'credit' => 'Credit / Debit Card', 'bank' => 'Bank']);
 

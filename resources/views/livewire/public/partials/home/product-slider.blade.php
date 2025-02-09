@@ -48,7 +48,8 @@
                                 <div class="product-item__inner p-md-3 row no-gutters">
                                     @if ($product->thumbnail)
                                         <div class="col col-lg-auto product-media-left">
-                                            <a wire:navigate href="{{ route('public.product', [$product->name]) }}"
+                                            <a wire:navigate
+                                                href="{{ route('public.product', [$product->id, $product->name]) }}"
                                                 class="max-width-150 d-block"><img class="img-fluid"
                                                     src="{{ $product->thumbnail }}" alt="Image Description"></a>
                                         </div>
@@ -78,7 +79,7 @@
                                                     class="font-size-12 text-gray-5">{{ $product->categories->name }}</a>
                                             </div>
                                             <h5 class="product-item__title"><a wire:navigate
-                                                    href="{{ route('public.product', [$product->name]) }}"
+                                                    href="{{ route('public.product', [$product->id, $product->name]) }}"
                                                     class="text-blue font-weight-bold">{{ $product->name }}</a>
                                             </h5>
                                         </div>
