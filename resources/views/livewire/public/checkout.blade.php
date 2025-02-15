@@ -129,6 +129,7 @@
                 });
         
                 this.currentSlot = currentSlot;
+                $wire.set('hasSlots', currentSlot, false);
             },
             async getIpAddress() {
                 try {

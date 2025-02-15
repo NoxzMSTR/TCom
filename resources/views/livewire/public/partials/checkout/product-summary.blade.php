@@ -221,9 +221,9 @@
                 </div>
                 <div class="form-group d-flex align-items-center justify-content-between px-3 mb-5">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck10" required
-                            data-msg="Please agree terms and conditions." data-error-class="u-has-error"
-                            data-success-class="u-has-success">
+                        <input wire:model='termCondtions' class="form-check-input" type="checkbox" value=""
+                            id="defaultCheck10" required data-msg="Please agree terms and conditions."
+                            data-error-class="u-has-error" data-success-class="u-has-success">
                         <label class="form-check-label form-label" for="defaultCheck10">
                             I have read and agree to the website <a href="#" class="text-blue">terms and
                                 conditions </a>
@@ -231,6 +231,12 @@
                         </label>
                     </div>
                 </div>
+                @error('termCondtions')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+                @error('hasSlots')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
                 <button type="submit" class="btn btn-primary-dark-w btn-block btn-pill font-size-20 mb-3 py-3">Place
                     order</button>
             </div>

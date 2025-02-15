@@ -56,7 +56,7 @@
                             $qty = $product['qty'];
                             $variations = $product['variations'];
                             $amount = $product['final'];
-                            if (isset($default_currency)) {
+                            if (isset($default_currency) && is_numeric($amount)) {
                                 $amount = currency_format($amount, $default_currency);
                             }
                             $product = $product['product'];
@@ -136,7 +136,7 @@
                             $qty = $product['qty'];
                             $variations = $product['variations'];
                             $amount = $product['final'];
-                            if (isset($default_currency)) {
+                            if (isset($default_currency) && is_numeric($amount)) {
                                 $amount = currency_format($amount, $default_currency);
                             }
                             $product = $product['product'];

@@ -22,9 +22,9 @@ class Shop extends Component
 
     public $filter = [];
 
-    public function setFilter()
+    public function setFilter($reset = false)
     {
-        $products = Products::with(['assets', 'variations', 'categories', 'feedback'])->where('status', 1)->orderBy('created_at', 'DESC');
+        $products = Products::with(['assets', 'variations', 'categories', 'feedback'])->where('status', 1);
 
         if (request('category')) {
             $products = $products->whereHas('categories', function ($query) {
@@ -80,22 +80,26 @@ class Shop extends Component
 
         if (isset($this->filter['sort'])) {
             $sortType = (int)$this->filter['sort'];
-            if ($sortType == 1) {
-                $products = $products->whereHas('feedback');
-            }
-            if ($sortType == 3) {
-                $products = $products->orderBy('created_at', 'DESC');
-            }
             if ($sortType == 4) {
                 $products = $products->orderBy('amount', 'ASC');
             }
             if ($sortType == 5) {
                 $products = $products->orderBy('amount', 'DESC');
             }
+            if ($sortType == 1) {
+                $products = $products->whereHas('feedback');
+            }
+            if ($sortType == 3) {
+                $products = $products->orderBy('created_at', 'DESC');
+            }
         }
 
         if (isset($this->filter['totalPages'])) {
             $this->totalPages = $this->filter['totalPages'];
+        }
+
+        if ($reset) {
+            $this->resetPage('shop-page');
         }
 
         return $products;
@@ -109,7 +113,6 @@ class Shop extends Component
             $products = $this->setFilter()
                 ->paginate($this->totalPages, pageName: 'shop-page');
         }
-
 
         $brands = Brands::withCount('products')->get();
 

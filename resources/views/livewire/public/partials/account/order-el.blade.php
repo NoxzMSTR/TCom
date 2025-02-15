@@ -1,5 +1,5 @@
 @if (isset($type) && $type == 'order_action')
-    <a href="{{ route('public.checkout.success', [$data->trackingNo]) }}" class="btn btn-sm btn-dark" wire:navigate>
+    <a href="{{ route('public.checkout.success', [$data->trackingNo]) }}" class="btn btn-sm btn-dark">
         <span class="indicator-label">
             View
         </span>

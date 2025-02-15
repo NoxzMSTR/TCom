@@ -9,6 +9,7 @@ use App\Models\Order\OrderItems;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
 use Aaqib\GeoPakistan\Models\District;
+use Illuminate\Validation\ValidationException;
 use Stevebauman\Location\Facades\Location;
 
 class Checkout extends Component
@@ -52,8 +53,12 @@ class Checkout extends Component
     public $shipping = [];
     public $sameDayProducts = [];
     public $slots = [];
+    public $hasSlots = [];
 
     public $shippingdiffrentAddress = 0;
+
+    #[Validate('required', message: 'Please make that you agreed to our terms & conditions')]
+    public $termCondtions;
     public $note;
     public $userIP;
 
@@ -145,6 +150,10 @@ class Checkout extends Component
 
         $this->validateShipping();
 
+        if (count($this->hasSlots) !== count($this->slots)) {
+            throw ValidationException::withMessages(['hasSlots' => 'Please select slots to proceed with order!']);
+        }
+
         $billing = DB::table('pakistan_districts')->select(['pakistan_districts.name as city', 'pakistan_provinces.name as state'])->join('pakistan_provinces', 'pakistan_districts.province_id', '=', 'pakistan_provinces.id')->where('pakistan_districts.name', $this->billing['city'])->first();
         if ($this->shippingdiffrentAddress) {
             $shipping = DB::table('pakistan_districts')->select(['pakistan_districts.name as city', 'pakistan_provinces.name as state'])->join('pakistan_provinces', 'pakistan_districts.province_id', '=', 'pakistan_provinces.id')->where('pakistan_districts.name', $this->shipping['city'])->first();
@@ -205,11 +214,39 @@ class Checkout extends Component
             }
         }
 
-        foreach ($this->products as $key => $product) {
-            if ($product[0]->vendor) {
-                $productsByCType[$product[0]->vendor->city][] = $product;
+        foreach ($this->products as $key => $exProduct) {
+            $product = $exProduct['product'];
+            if ($product->vendor) {
+                $city = $product->vendor->city;
+            }
+            $qty = $exProduct['qty'];
+            $discount = $exProduct['final'];
+            $variations = $exProduct['variations'];
+            if ($product->shippingType == 1 && isset($city)) {
+                OrderItems::create([
+                    'orderID' => $order->id,
+                    'productID' => $product->id,
+                    'name' => $product->name,
+                    'amount' => $discount,
+                    'qty' => $qty,
+                    'discountType' => $product->discountType,
+                    'discountData' => $product->discountData,
+                    'from' => isset($sameData[$city]) ? $sameData[$city]['city'] : '',
+                    'sameDate' => isset($sameData[$city]) ? $sameData[$city]['date'] : '',
+                    'sameDaySlot' => isset($sameData[$city]) ? $sameData[$city]['slot'] : '',
+                    'variationData' => json_encode($variations),
+                ]);
             } else {
-                $productsByCType[0][] = $product;
+                OrderItems::create([
+                    'orderID' => $order->id,
+                    'productID' => $product->id,
+                    'name' => $product->name,
+                    'amount' => $discount,
+                    'qty' => $qty,
+                    'discountType' => $product->discountType,
+                    'discountData' => $product->discountData,
+                    'variationData' => json_encode($variations),
+                ]);
             }
         }
 

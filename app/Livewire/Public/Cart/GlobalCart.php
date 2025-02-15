@@ -42,11 +42,14 @@ class GlobalCart extends Component
                 $exProducts[$vars['product']->id] = 1;
                 $totalAmount += $vars['final'];
             }
+
             $this->total = count($exProducts);
-            $this->totalAmount = currency_format(
-                $totalAmount,
-                $default_currency,
-            );
+            if ($totalAmount) {
+                $this->totalAmount = currency_format(
+                    $totalAmount,
+                    $default_currency,
+                );
+            }
         }
     }
 

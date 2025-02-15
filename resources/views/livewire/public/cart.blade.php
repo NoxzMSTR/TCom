@@ -26,7 +26,7 @@
                                 $variations = $product['variations'];
                                 $amount = $product['final'];
                                 $totalAmount += $amount;
-                                if (isset($default_currency)) {
+                                if (isset($default_currency) && is_numeric($amount)) {
                                     $amount = currency_format($amount, $default_currency);
                                 }
                                 $product = $product['product'];
@@ -34,7 +34,8 @@
                             @endphp
                             <tr class="">
                                 <td class="text-center">
-                                    <a href="#" class="text-gray-32 font-size-26">×</a>
+                                    <a wire:click='deleteItem({{ $key }})'
+                                        class="cursor-pointer-on font-size-26 text-gray-32">×</a>
                                 </td>
                                 <td class="d-none d-md-table-cell">
                                     <a href="#"><img class="img-fluid max-width-100 p-1 border border-color-1"
@@ -56,19 +57,9 @@
                                     <div class="border rounded-pill py-1 width-122 w-xl-80 px-3 border-color-1">
                                         <div class="js-quantity row align-items-center">
                                             <div class="col">
-                                                <input
+                                                <input readonly
                                                     class="js-result form-control h-auto border-0 rounded p-0 shadow-none"
                                                     type="text" value="{{ $qty }}">
-                                            </div>
-                                            <div class="col-auto pr-1">
-                                                <a class="js-minus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0"
-                                                    href="javascript:;">
-                                                    <small class="fas fa-minus btn-icon__inner"></small>
-                                                </a>
-                                                <a class="js-plus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0"
-                                                    href="javascript:;">
-                                                    <small class="fas fa-plus btn-icon__inner"></small>
-                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -132,7 +123,7 @@
                             <tr class="cart-subtotal">
                                 <th>Subtotal</th>
                                 <td data-title="Subtotal"><span
-                                        class="amount">{{ currency_format($totalAmount, $default_currency) }}</span>
+                                        class="amount">{{ is_numeric($totalAmount) ? currency_format($totalAmount, $default_currency) : 0 }}</span>
                                 </td>
                             </tr>
                             <tr class="shipping">
@@ -153,7 +144,7 @@
                             <tr class="order-total">
                                 <th>Total</th>
                                 <td data-title="Total"><strong><span
-                                            class="amount">{{ currency_format($totalAmount, $default_currency) }}</span></strong>
+                                            class="amount">{{ is_numeric($totalAmount) ? currency_format($totalAmount, $default_currency) : 0 }}</span></strong>
                                 </td>
                             </tr>
                         </tbody>

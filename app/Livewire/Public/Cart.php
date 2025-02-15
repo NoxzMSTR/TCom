@@ -10,6 +10,7 @@ class Cart extends Component
     public $breadCrumb = 'Home.Cart';
     public $products = [];
     public $totalAmount = 0;
+    public $default_currency;
 
     public function mount()
     {
@@ -24,7 +25,7 @@ class Cart extends Component
             $products = [];
         }
 
-        $default_currency = default_currency;
+        $this->default_currency = default_currency;
 
         if (is_array($products)) {
 
@@ -39,8 +40,33 @@ class Cart extends Component
 
             $this->totalAmount = currency_format(
                 $totalAmount,
-                $default_currency,
+                $this->default_currency,
             );
+        }
+    }
+
+    public function deleteItem($index)
+    {
+        if (isset($this->products[$index])) {
+            unset($this->products[$index]);
+            $products = [];
+
+            $this->default_currency = default_currency;
+
+            $totalAmount = 0;
+            $exProducts = [];
+            foreach ($this->products as $key => $vars) {
+                $products[] = $vars;
+                $exProducts[$vars['product']->id] = 1;
+                $totalAmount += $vars['final'];
+            }
+
+            $this->totalAmount = currency_format(
+                $totalAmount,
+                $this->default_currency,
+            );
+
+            sharedProperty('add-to-cart', $products);
         }
     }
 

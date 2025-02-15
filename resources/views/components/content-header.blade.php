@@ -107,14 +107,14 @@
                                     <!-- Home -->
 
                                     <li class="nav-item u-header__nav-item">
-                                        <a class="nav-link u-header__nav-link" wire:navigate
+                                        <a class="nav-link u-header__nav-link"
                                             href="{{ route('public.home') }}">Home</a>
                                     </li>
                                     <!-- End Home -->
 
                                     <!-- Pages -->
                                     <li class="nav-item u-header__nav-item">
-                                        <a class="nav-link u-header__nav-link" wire:navigate
+                                        <a class="nav-link u-header__nav-link"
                                             href="{{ route('public.shop') }}">Shop</a>
                                     </li>
                                     <!-- End Pages -->

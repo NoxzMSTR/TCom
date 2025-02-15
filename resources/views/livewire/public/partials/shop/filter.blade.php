@@ -66,13 +66,16 @@
         @php
             $exVariations = [];
             foreach ($variations as $key => $value) {
-                if ($key > 3) {
-                    $exVariations[$value->type][1][] = $value;
-                } else {
-                    $exVariations[$value->type][0][] = $value;
+                if ($value->type !== '') {
+                    if ($key > 3) {
+                        $exVariations[$value->type][1][] = $value;
+                    } else {
+                        $exVariations[$value->type][0][] = $value;
+                    }
                 }
             }
         @endphp
+
         @foreach ($exVariations as $type => $typeData)
             <div class="border-bottom pb-4 mb-4">
                 <h4 class="font-size-14 mb-3 font-weight-bold">
@@ -158,7 +161,7 @@
 
 
         </div>
-        <button type="button" wire:click='setFilter()'
+        <button type="button" wire:click='setFilter(true)'
             class="btn px-4 btn-primary-dark-w py-2 rounded-lg">Filter</button>
     </div>
 </div>

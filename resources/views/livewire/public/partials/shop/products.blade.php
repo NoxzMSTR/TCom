@@ -1,8 +1,11 @@
+@php
+    $default_currency = default_currency;
+@endphp
 <div class="col-xl-9 col-wd-9gdot5">
     <!-- Shop-control-bar Title -->
     <div class="flex-center-between mb-3">
         <h3 class="font-size-25 mb-0">Shop</h3>
-        <p class="font-size-14 text-gray-90 mb-0">Showing 1–25 of 56 results</p>
+
     </div>
     <!-- End shop-control-bar Title -->
     <!-- Shop-control-bar -->
@@ -120,7 +123,7 @@
 
                                         </div>
                                         <div class="d-none d-xl-block prodcut-add-cart">
-                                            <a wire:click="$dispatchTo('public.cart.global-cart', 'add-to-cart', { product: {{ $product->id }} })"
+                                            <a href="{{ route('public.product', [$product->id, $product->name]) }}"
                                                 class="btn-add-cart btn-primary transition-3d-hover"><i
                                                     class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                         </div>

@@ -42,13 +42,12 @@
                                 <div class="product-item__body pb-xl-2">
                                     <div class="mb-2"><a href="../shop/product-categories-7-column-full-width.html"
                                             class="font-size-12 text-gray-5">{{ $product->categories->name }}</a></div>
-                                    <h5 class="mb-1 product-item__title"><a wire:navigate
+                                    <h5 class="mb-1 product-item__title"><a
                                             href="{{ route('public.product', [$product->id, $product->name]) }}"
                                             class="text-blue font-weight-bold">{{ $product->name }}</a></h5>
                                     @if ($product->thumbnail)
                                         <div class="mb-2">
-                                            <a wire:navigate
-                                                href="{{ route('public.product', [$product->id, $product->name]) }}"
+                                            <a href="{{ route('public.product', [$product->id, $product->name]) }}"
                                                 class="d-block text-center"><img class="img-fluid"
                                                     src="{{ $product->thumbnail }}" alt="Image Description"></a>
                                         </div>
@@ -84,7 +83,7 @@
                                             </div>
                                         </div>
                                         <div class="d-none d-xl-block prodcut-add-cart">
-                                            <a wire:click="$dispatchTo('public.cart.global-cart', 'add-to-cart', { product: {{ $product->id }} })"
+                                            <a href="{{ route('public.product', [$product->id, $product->name]) }}"
                                                 class="btn-add-cart btn-primary transition-3d-hover"><i
                                                     class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                         </div>

@@ -153,7 +153,7 @@
                 VND: '₫', // Vietnamese Đồng
                 ZAR: 'R' // South African Rand
             };
-
+    
             let symbol = currencySymbols[currencyCode] || currencyCode;
             return symbol + Number(amount).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
@@ -165,6 +165,7 @@
             var self = this;
             var amount = 0;
             var final = this.processAmount();
+    
             $.each(this.variations, function(type, nVars) {
                 $.each(nVars, function(index, nvariation) {
                     $.each(nvariation, function(index, variation) {
@@ -175,14 +176,15 @@
                     });
                 });
             });
-
+    
             final = final + amount;
+    
             if (self.discount) {
                 self.discount = self.formatCurrency(final, self.default_currency);
             } else {
                 self.price = self.formatCurrency(final, self.default_currency);
             }
-
+    
             return final;
         },
         selectedVars(event) {
@@ -216,41 +218,41 @@
                 $('.add-to-cart-btn').addClass('disabled')
                 this.validateVariation = true;
             }
+    
             var final = this.afterAmount(exVariations);
             $wire.set('final', final, false);
         },
         async addToCart() {
             $('.add-to-cart-btn').addClass('disabled');
-
+    
             await $wire.addToCart();
-
+    
             $('.add-to-cart-btn').removeClass('disabled');
-
+    
             this.qty = 1;
-
+    
             $('[class*=\'variation-\']').each(function(index, element) {
                 var classes = 'border border-primary border-width-3';
                 $(element).prop('checked', false);
                 $(element).removeClass(classes);
             });
-
+    
             if (this.hasVariations) {
                 this.validateVariation = true;
             }
         },
         processAmount() {
-            this.price = this.formatCurrency(this.product.amount, this.default_currency);
+            this.price = this.product.amount * this.qty;
+            this.price = this.formatCurrency(this.price, this.default_currency);
             var discount = 0;
             var amount = this.product.amount;
             if (this.product.discountType == 1) {
                 discount = (amount / 100) * this.product.discountData;
                 discount = amount - discount;
-                discount = this.formatCurrency(discount, this.default_currency);
             } else if (this.product.discountType == 2) {
                 discount = this.product.discountData;
-                discount = this.formatCurrency(discount, this.default_currency);
             }
-            this.discount = discount;
+            this.discount = this.formatCurrency(discount, this.default_currency);;
             if (discount) {
                 return discount * this.qty;
             }
@@ -260,9 +262,9 @@
             let number = amount.replace(/[^\d.-]/g, ''); // Remove non-numeric characters except dot and minus
             return parseFloat(number);
         },
-
+    
         init() {
-            this.processAmount();
+            this.validateVars();
         }
     }">
         <!-- Single Product Body -->
