@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->integer('wQty')->default(0)->after('qty');
-            $table->float('vat')->default(0)->after('price');
+            $table->float('vat')->default(0)->after('amount');
             $table->float('weight')->default(0)->after('height');
             $table->text('thumbnail')->nullable()->after('id');
             $table->integer('status')->default(0)->after('thumbnail');
