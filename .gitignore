@@ -20,7 +20,6 @@ yarn-error.log
 /.idea
 /.vscode
 /storage
-/bootstrap
 !/public/
 !/public/client/*
 /public/mAssets
