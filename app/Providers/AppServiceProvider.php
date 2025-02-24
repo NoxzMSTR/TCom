@@ -34,17 +34,19 @@ class AppServiceProvider extends ServiceProvider
             if (!defined('order_settings')) {
                 define('order_settings', $orderSettings);
             }
+            $currency = 'PKR';
+            $symbol = '-';
             foreach ($orderSettings as $key => $value) {
                 if ($value['type'] == 'default_currency') {
                     $currency = json_validate($value['data']) ? json_decode($value['data'])[0] : 'PKR';
-                    if (!defined('default_currency')) {
-                        define('default_currency', $currency);
-                        $symbol = isset(currency()->getCurrencies()[$currency])
-                            ? currency()->getCurrencies()[$currency]['symbol']
-                            : '-';
-                        define('default_currency_symbol', $symbol);
-                    }
+                    $symbol = isset(currency()->getCurrencies()[$currency])
+                        ? currency()->getCurrencies()[$currency]['symbol']
+                        : '-';
                 }
+            }
+            if (!defined('default_currency')) {
+                define('default_currency', $currency);
+                define('default_currency_symbol', $symbol);
             }
         }
     }
