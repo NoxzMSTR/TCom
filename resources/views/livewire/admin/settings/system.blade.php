@@ -34,7 +34,9 @@
                             <!--end::Col-->
                         </div>
                         <!--end::Input group-->
-
+                        @error('system.name')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="row">
                         <!--begin::Input group-->
@@ -47,11 +49,17 @@
                                 <input type="text" wire:model='system.email'
                                     class="form-control form-control-lg form-control-solid " placeholder="Enter email "
                                     value="" />
+                                @error('system.email')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="col-lg-6 fv-row">
                                 <input type="text" wire:model='system.phone'
                                     class="form-control form-control-lg form-control-solid " placeholder="Enter phone"
                                     value="" />
+                                @error('system.phone')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <!--end::Col-->
                         </div>
@@ -69,6 +77,9 @@
                                 <input type="text" wire:model='system.address'
                                     class="form-control form-control-lg form-control-solid "
                                     placeholder="Enter Address " value="" />
+                                @error('system.address')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <!--end::Col-->
                         </div>

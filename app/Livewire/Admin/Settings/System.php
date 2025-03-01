@@ -2,9 +2,10 @@
 
 namespace App\Livewire\Admin\Settings;
 
-use App\Models\Settings\System as SettingsSystem;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
+use App\Models\Settings\System as SettingsSystem;
 
 class System extends Component
 {
@@ -14,6 +15,17 @@ class System extends Component
 
     public $breadCrumb = 'Home.Settings.System';
 
+    #[Validate([
+        'system.name' => ['required'],
+        'system.email' => ['required'],
+        'system.phone' => ['required'],
+        'system.address' => ['required'],
+    ], message: [
+        'system.name' => 'System name is required',
+        'system.email' => 'System email is required',
+        'system.phone' => 'System phone is required',
+        'system.address' => 'System address is required',
+    ])]
     public $system = [];
 
     public function mount()
@@ -40,6 +52,8 @@ class System extends Component
 
     public function update()
     {
+        $this->validate();
+
         $data = [
             'name' => $this->system['name'],
             'address' => $this->system['address'],

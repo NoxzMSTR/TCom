@@ -272,7 +272,7 @@ class AddProduct extends Component
                 'phone' => $this->vendor['phone'],
                 'email' => $this->vendor['email'],
                 'address' => $this->vendor['address'],
-                'address2' => $this->vendor['address2'],
+                'address2' => isset($this->vendor['address2']) ? $this->vendor['address2'] : '',
                 'city' => $this->vendor['city'],
                 'state' => $this->vendor['state'],
                 'postalCode' => $this->vendor['postalCode'],
