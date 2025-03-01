@@ -3,15 +3,35 @@
 namespace App\Livewire\Public;
 
 use App\Models\Brands;
+use App\Models\Contacts;
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Models\Order\Orders;
 use App\Models\Product\Products;
+use Livewire\Attributes\Renderless;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 
 class Home extends Component
 {
     public $title = 'Home';
+
+    #[Renderless]
+    #[On('newsletter-sign-up')]
+    public function signUp($email)
+    {
+        $existed = Contacts::where('email', $email)->first();
+        if (!$existed) {
+            Contacts::create([
+                'name' => '',
+                'phone' => '',
+                'subject' => 'Signed Up For News Letter',
+                'message' => '',
+                'email' => $email,
+                'fromNewsLetter' => true,
+            ]);
+        }
+    }
 
     public function render()
     {

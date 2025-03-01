@@ -79,7 +79,8 @@
                         <div class="product-item__outer h-100">
                             <div class="product-item__inner px-xl-4 p-3">
                                 <div class="product-item__body pb-xl-2">
-                                    <div class="mb-2"><a href="../shop/product-categories-7-column-full-width.html"
+                                    <div class="mb-2"><a
+                                            href="{{ route('public.shop', ['category' => $product->categories->name]) }}"
                                             class="font-size-12 text-gray-5">{{ $product->categories->name }}</a></div>
                                     <h5 class="mb-1 product-item__title"><a
                                             href="{{ route('public.product', [$product->id, $product->name]) }}"

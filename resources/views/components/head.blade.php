@@ -34,6 +34,6 @@
 
     <!-- CSS Electro Template -->
     <link rel="stylesheet" href="{{ url('/theme-dynamic-css') }}">
-
+    @livewireStyles
     @stack('css')
 </head>

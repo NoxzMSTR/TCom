@@ -4,7 +4,7 @@
     <span class="fas fa-arrow-up u-go-to__inner"></span>
 </a>
 <!-- End Go to Top -->
-
+@livewireScripts
 <!-- JS Global Compulsory -->
 <script src="{{ asset('pAssets/vendor/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('pAssets/vendor/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
@@ -24,6 +24,7 @@
 <script src="{{ asset('pAssets/vendor/typed.js/lib/typed.min.js') }}"></script>
 <script src="{{ asset('pAssets/vendor/slick-carousel/slick/slick.js') }}"></script>
 <script src="{{ asset('pAssets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- JS Electro -->
 <script src="{{ asset('pAssets/js/hs.core.js') }}"></script>

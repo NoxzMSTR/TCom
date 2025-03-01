@@ -10,26 +10,69 @@
                             <h2 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h2>
                         </div>
                         <div class="col my-4 my-md-0">
-                            <h5 class="font-size-15 ml-4 mb-0">...and receive <strong>$20 coupon for first
+                            <h5 class="font-size-15 ml-4 mb-0">...and receive <strong>coupon for first
                                     shopping.</strong></h5>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-5">
                     <!-- Subscribe Form -->
-                    <form class="js-validate js-form-message">
+                    <div x-data="{
+                        email: null,
+                        isValid: true,
+                        async signUp() {
+                    
+                            $('#subscribeButton').attr('disabled', true);
+                    
+                            if (this.email == '' || this.email == null || this.isValid == false) {
+                                Swal.fire({
+                                    title: 'Oops! Invalid Email Address',
+                                    text: 'It looks like you entered an invalid email address or left the field empty. 📧 Please double-check and enter a valid email to continue. Let’s get you signed up the right way! ✅',
+                                    icon: 'error'
+                                });
+                                $('#subscribeButton').attr('disabled', false);
+                                return;
+                            }
+                    
+                            try {
+                                await Livewire.getByName('public.home')[0].signUp('newsletter-sign-up', { email: this.email });
+                    
+                                Swal.fire({
+                                    title: 'Thank You for Subscribing!',
+                                    text: 'Welcome to our newsletter! 🎉 You’re now part of our community, where you`ll receive the latest updates, exclusive offers, and exciting content straight to your inbox. Stay tuned! 🚀',
+                                    icon: 'success'
+                                });
+                            } catch (error) {
+                                console.log(error)
+                                Swal.fire({
+                                    title: 'Oops! Something Went Wrong',
+                                    text: 'There was an issue signing you up. Please try again later.',
+                                    icon: 'error'
+                                });
+                            }
+                            this.email = null;
+                            this.isValid = true;
+                            $('#subscribeButton').attr('disabled', false);
+                        }
+                    }">
                         <label class="sr-only" for="subscribeSrEmail">Email address</label>
                         <div class="input-group input-group-pill">
-                            <input type="email" class="form-control border-0 height-40" name="email"
-                                id="subscribeSrEmail" placeholder="Email address" aria-label="Email address"
+                            <input type="email" class="form-control border-0 height-40" x-model="email"
+                                :class="{ 'border-red-500': !isValid }"
+                                @input="isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)" id="subscribeSrEmail"
+                                placeholder="Email address" aria-label="Email address"
                                 aria-describedby="subscribeButton" required
                                 data-msg="Please enter a valid email address.">
+
                             <div class="input-group-append">
-                                <button type="submit" class="btn btn-dark btn-sm-wide height-40 py-2"
+                                <button type="button" @click="signUp" class="btn btn-dark btn-sm-wide height-40 py-2"
                                     id="subscribeButton">Sign Up</button>
                             </div>
                         </div>
-                    </form>
+                        <p x-show="!isValid" class="font-weight-bolder mb-0 mt-1 text-gray-110 text-sm">Please enter a
+                            valid email address.
+                        </p>
+                    </div>
                     <!-- End Subscribe Form -->
                 </div>
             </div>
@@ -111,17 +154,18 @@
                             <h6 class="mb-3 font-weight-bold">Customer Care</h6>
                             <!-- List Group -->
                             <ul class="list-group list-group-flush list-group-borderless mb-0 list-group-transparent">
-                                <li><a class="list-group-item list-group-item-action" href="../shop/my-account.html">My
-                                        Account</a></li>
+                                {{--
                                 <li><a class="list-group-item list-group-item-action"
-                                        href="../shop/track-your-order.html">Order Tracking</a></li>
-                                <li><a class="list-group-item list-group-item-action" href="../shop/wishlist.html">Terms
+                                        href="../shop/track-your-order.html">Order Tracking</a></li> --}}
+                                <li><a class="list-group-item list-group-item-action"
+                                        href="{{ route('public.terms-n-conditions') }}">Terms
                                         & Conditions</a></li>
                                 <li><a class="list-group-item list-group-item-action"
-                                        href="../home/terms-and-conditions.html">Contact Us</a></li>
+                                        href="{{ route('public.contact-us') }}">Contact Us</a></li>
                                 <li><a class="list-group-item list-group-item-action"
-                                        href="../home/terms-and-conditions.html">About us</a></li>
-                                <li><a class="list-group-item list-group-item-action" href="../home/faq.html">Privacy
+                                        href="{{ route('public.about-us') }}">About us</a></li>
+                                <li><a class="list-group-item list-group-item-action"
+                                        href="{{ route('public.privacy-policy') }}">Privacy
                                         Policy</a>
                                 </li>
 

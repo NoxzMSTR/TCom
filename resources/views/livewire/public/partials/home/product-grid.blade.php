@@ -1,17 +1,29 @@
 @php
     $proArray = [];
+    $exPro = [];
     foreach ($products as $key => $product) {
-        if ($key <= 3) {
-            $proArray[$product->categories->name][0][] = $product;
-        } elseif ($key === 4) {
-            $proArray[$product->categories->name][1][] = $product;
-        } elseif ($key <= 8) {
-            $proArray[$product->categories->name][2][] = $product;
+        $exPro[$product->categories->name][] = $product;
+    }
+    foreach ($exPro as $category => $productData) {
+        foreach ($productData as $key => $product) {
+            if ($key <= 3) {
+                $proArray[$product->categories->name][0][] = $product;
+            } elseif ($key === 4) {
+                $proArray[$product->categories->name][1][] = $product;
+            } elseif ($key <= 8) {
+                $proArray[$product->categories->name][2][] = $product;
+            }
         }
     }
+
 @endphp
 
-<div class="products-group-4-1-4 space-1 bg-gray-7">
+<div class="products-group-4-1-4 space-1 bg-gray-7" x-data="{
+    showTab(id) {
+        $('.productGrid').removeClass('show').removeClass('active');
+        $('#' + id).addClass('show').addClass('active');
+    }
+}">
     <h2 class="sr-only">Products Grid</h2>
     <div class="container">
         <!-- Nav Classic -->
@@ -23,8 +35,8 @@
                 @endphp
                 @foreach ($proArray as $category => $value)
                     <li class="nav-item flex-shrink-0 flex-lg-shrink-1">
-                        <a class="nav-link {{ $i === 0 ? 'active' : '' }} " id="Tpills-one-example1-tab"
-                            data-toggle="pill" href="#Tpills-one-example1" role="tab"
+                        <a @click="showTab('{{ md5($category) }}')" class="nav-link {{ $i === 0 ? 'active' : '' }} "
+                            id="" data-toggle="pill" href="#{{ md5($category) }}" role="tab"
                             aria-controls="Tpills-one-example1" aria-selected="true">
                             <div class="d-md-flex justify-content-md-center align-items-md-center">
                                 {{ $category }}
@@ -45,12 +57,12 @@
                 $i = 0;
             @endphp
             @foreach ($proArray as $category => $productData)
-                <div class="tab-pane fade pt-2 {{ $i === 0 ? 'show active' : '' }} " id="Tpills-one-example1"
-                    role="tabpanel" aria-labelledby="Tpills-one-example1-tab">
+                <div class="tab-pane productGrid fade pt-2 {{ $i === 0 ? 'show active' : '' }} "
+                    id="{{ md5($category) }}" role="tabpanel" aria-labelledby="Tpills-one-example1-tab">
                     <div class="row no-gutters">
                         @if (isset($productData[0]))
                             <div class="col-md-3 col-wd-4 d-md-flex d-wd-block">
-                                <ul class="row list-unstyled products-group no-gutters mb-0 flex-wd-row">
+                                <ul class="h-100 row list-unstyled products-group no-gutters mb-0 flex-wd-row">
 
                                     @php
                                         $isfeat = 1;
@@ -67,10 +79,10 @@
                                         <li
                                             class="col-xl-6 product-item max-width-xl-100 remove-divider {{ $class }}">
                                             <div class="product-item__outer h-100 w-100 prodcut-box-shadow">
-                                                <div class="product-item__inner bg-white p-3">
+                                                <div class="product-item__inner bg-white p-3 h-100">
                                                     <div class="product-item__body pb-xl-2">
                                                         <div class="mb-2"><a
-                                                                href="../shop/product-categories-7-column-full-width.html"
+                                                                href="{{ route('public.shop', ['category' => $product->categories->name]) }}"
                                                                 class="font-size-12 text-gray-5">{{ $product->categories->name }}</a>
                                                         </div>
                                                         <h5 class="mb-1 product-item__title"><a
@@ -165,7 +177,7 @@
                                                 <div class="product-item__body d-flex flex-column">
                                                     <div class="mb-1">
                                                         <div class="mb-2"><a
-                                                                href="../shop/product-categories-7-column-full-width.html"
+                                                                href="{{ route('public.shop', ['category' => $product->categories->name]) }}"
                                                                 class="font-size-12 text-gray-5">{{ $product->categories->name }}</a>
                                                         </div>
                                                         <h5 class="mb-0 product-item__title"><a
@@ -298,7 +310,7 @@
                                                 <div class="product-item__inner bg-white p-3">
                                                     <div class="product-item__body pb-xl-2">
                                                         <div class="mb-2"><a
-                                                                href="../shop/product-categories-7-column-full-width.html"
+                                                                href="{{ route('public.shop', ['category' => $product->categories->name]) }}"
                                                                 class="font-size-12 text-gray-5">{{ $product->categories->name }}</a>
                                                         </div>
                                                         <h5 class="mb-1 product-item__title"><a
