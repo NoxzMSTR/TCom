@@ -59,13 +59,13 @@ class System extends Component
             'address' => $this->system['address'],
             'email' => $this->system['email'],
             'phone' => $this->system['phone'],
-            'privacyPolicy' => $this->system['privacyPolicy'],
-            'refundPolicy' => $this->system['refundPolicy'],
-            'termsNCondition' => $this->system['termNCondition'],
-            'aboutUs' => $this->system['aboutUs'],
-            'facebook' => $this->system['facebook'],
-            'instagram' => $this->system['instagram'],
-            'google' => $this->system['google'],
+            'privacyPolicy' => isset($this->system['privacyPolicy']) ? $this->system['privacyPolicy'] : '',
+            'refundPolicy' => isset($this->system['refundPolicy']) ? $this->system['privacyPolicy'] : '',
+            'termsNCondition' => isset($this->system['termNCondition']) ? $this->system['privacyPolicy'] : '',
+            'aboutUs' => isset($this->system['aboutUs']) ? $this->system['privacyPolicy'] : '',
+            'facebook' => isset($this->system['facebook']) ? $this->system['privacyPolicy'] : '',
+            'instagram' => isset($this->system['instagram']) ? $this->system['privacyPolicy'] : '',
+            'google' => isset($this->system['google']) ? $this->system['privacyPolicy'] : '',
         ];
 
         if (isset($this->system['logoLight'])) {
