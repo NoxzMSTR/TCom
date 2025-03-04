@@ -60,12 +60,12 @@ class System extends Component
             'email' => $this->system['email'],
             'phone' => $this->system['phone'],
             'privacyPolicy' => isset($this->system['privacyPolicy']) ? $this->system['privacyPolicy'] : '',
-            'refundPolicy' => isset($this->system['refundPolicy']) ? $this->system['privacyPolicy'] : '',
-            'termsNCondition' => isset($this->system['termNCondition']) ? $this->system['privacyPolicy'] : '',
-            'aboutUs' => isset($this->system['aboutUs']) ? $this->system['privacyPolicy'] : '',
-            'facebook' => isset($this->system['facebook']) ? $this->system['privacyPolicy'] : '',
-            'instagram' => isset($this->system['instagram']) ? $this->system['privacyPolicy'] : '',
-            'google' => isset($this->system['google']) ? $this->system['privacyPolicy'] : '',
+            'refundPolicy' => isset($this->system['refundPolicy']) ? $this->system['refundPolicy'] : '',
+            'termsNCondition' => isset($this->system['termNCondition']) ? $this->system['termNCondition'] : '',
+            'aboutUs' => isset($this->system['aboutUs']) ? $this->system['aboutUs'] : '',
+            'facebook' => isset($this->system['facebook']) ? $this->system['facebook'] : '',
+            'instagram' => isset($this->system['instagram']) ? $this->system['instagram'] : '',
+            'google' => isset($this->system['google']) ? $this->system['google'] : '',
         ];
 
         if (isset($this->system['logoLight'])) {
