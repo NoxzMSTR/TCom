@@ -1,5 +1,8 @@
 <div>
     @php
+        if (!isset($default_currency)) {
+            $default_currency = null;
+        }
         $variations = [];
         $hasVariations = false;
         foreach ($product->variations as $key => $variation) {
