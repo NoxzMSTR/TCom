@@ -6,7 +6,7 @@
     }
 @endphp
 <div class="mb-5">
-    <div class="row">
+    <div class="row" id="featuredProducts">
         <!-- Deal -->
         <div class="col-md-auto mb-6 mb-md-0">
             @if (isset($hasOfferedProduct))

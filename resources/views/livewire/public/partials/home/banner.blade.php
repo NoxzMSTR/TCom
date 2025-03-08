@@ -1,4 +1,4 @@
-<div class="mb-5">
+<div class="mb-5" id="featuredCategories">
     <div class="row">
         @foreach ($categories as $key => $category)
             @if ($category['isFeatured'])

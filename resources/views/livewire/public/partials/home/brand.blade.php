@@ -1,4 +1,4 @@
-<div class="mb-8">
+<div class="mb-8" id="featuredBrands">
     <div class="py-2 border-top border-bottom">
         <div class="js-slick-carousel u-slick my-1" data-slides-show="5" data-slides-scroll="1"
             data-arrows-classes="d-none d-lg-inline-block u-slick__arrow-normal u-slick__arrow-centered--y"

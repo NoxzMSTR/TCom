@@ -124,26 +124,27 @@
 
                             <!-- Featured Brands --> <!-- Featured Brands -->
                             <li class="nav-item u-header__nav-item">
-                                <a class="nav-link u-header__nav-link text-sale" href="#" aria-haspopup="true"
-                                    aria-expanded="false" aria-labelledby="pagesSubMenu">Featured Products</a>
+                                <a class="nav-link u-header__nav-link text-sale" href="#featuredProducts"
+                                    aria-haspopup="true" aria-expanded="false" aria-labelledby="pagesSubMenu">Featured
+                                    Products</a>
                             </li>
                             <!-- End Featured Brands -->
                             <li class="nav-item u-header__nav-item">
-                                <a class="nav-link u-header__nav-link" href="#" aria-haspopup="true"
+                                <a class="nav-link u-header__nav-link" href="#featuredCategories" aria-haspopup="true"
                                     aria-expanded="false" aria-labelledby="pagesSubMenu">Featured Categories</a>
                             </li>
                             <!-- End Featured Brands -->
 
                             <!-- Trending Styles -->
                             <li class="nav-item u-header__nav-item">
-                                <a class="nav-link u-header__nav-link" href="#" aria-haspopup="true"
+                                <a class="nav-link u-header__nav-link" href="#featuredBrands" aria-haspopup="true"
                                     aria-expanded="false" aria-labelledby="blogSubMenu">Featured Brands</a>
                             </li>
                             <!-- End Trending Styles -->
 
                             <!-- Gift Cards -->
                             <li class="nav-item u-header__nav-item">
-                                <a class="nav-link u-header__nav-link" href="#" aria-haspopup="true"
+                                <a class="nav-link u-header__nav-link" href="#recentViewed" aria-haspopup="true"
                                     aria-expanded="false">Recently Viewed </a>
                             </li>
                             <!-- End Gift Cards -->

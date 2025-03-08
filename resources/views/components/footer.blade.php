@@ -43,7 +43,7 @@
                                     icon: 'success'
                                 });
                             } catch (error) {
-                                console.log(error)
+                    
                                 Swal.fire({
                                     title: 'Oops! Something Went Wrong',
                                     text: 'There was an issue signing you up. Please try again later.',

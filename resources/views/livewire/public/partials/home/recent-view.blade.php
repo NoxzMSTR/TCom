@@ -1,4 +1,4 @@
-<div class="mb-6">
+<div class="mb-6" id="recentViewed">
     <div class="position-relative">
         <div class="border-bottom border-color-1 mb-2">
             <h3 class="section-title mb-0 pb-2 font-size-22">Recently Viewed</h3>
