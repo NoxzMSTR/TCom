@@ -15,7 +15,8 @@
 
         $overallRating = $totalReviews > 0 ? $totalWeightedScore / $totalReviews : 0;
         krsort($feedbackChart);
-        $maxRatedReview = count(max($feedbackChart));
+
+        $maxRatedReview = count($feedbackChart) ? count(max($feedbackChart)) : 0;
     @endphp
     <div class="row mb-8">
         <div class="col-md-6">
