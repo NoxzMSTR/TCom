@@ -87,7 +87,7 @@
                 <!--begin::Label-->
                 <label class="col-lg-4 col-form-label required fw-semibold fs-6">Default Currency</label>
                 <!--end::Label-->
-
+                @dump($this->currencies)
                 <!--begin::Col-->
                 <div class="col-lg-8 fv-row">
                     <select wire:model.fill='defaultCurrency' aria-label="Select a Currency" data-control="select2"
