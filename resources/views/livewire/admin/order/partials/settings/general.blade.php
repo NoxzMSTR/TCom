@@ -12,8 +12,8 @@
 
             console.log($(this).val());
 
-            {{-- $wire.set('availableCities', $(this).val(), false); --}}
-            {{-- $.each(self.deliveryCities, function(index, city) {
+            $wire.set('availableCities', $(this).val(), false);
+            $.each(self.deliveryCities, function(index, city) {
                 if (!self.sameDayDelivery[city]) {
                     self.sameDayDelivery[city] = {};
                     self.sameDayDelivery[city][0] = new Proxy({ 'from': '00:00', 'to': '00:00' }, {});
@@ -21,7 +21,7 @@
                 if (!self.deliveryTime[city]) {
                     self.deliveryTime[city] = new Proxy({ 'from': '00:00', 'to': '00:00' }, {});
                 }
-            }); --}}
+            });
         });
         $('#availableCities').on('select2:unselect', function(e) {
             var city = e.params.data.id;
