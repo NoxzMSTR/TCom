@@ -10,9 +10,8 @@
         $('#availableCities').on('select2:select', function(e) {
             self.deliveryCities = $(this).val();
 
-            console.log($(this).val());
-
             $wire.set('availableCities', $(this).val(), false);
+
             $.each(self.deliveryCities, function(index, city) {
                 if (!self.sameDayDelivery[city]) {
                     self.sameDayDelivery[city] = {};
@@ -59,9 +58,9 @@
 
                 <!--begin::Col-->
                 <div class="col-lg-8 fv-row" wire:ignore>
-                    <select x-model='availableCities' aria-label="Select cities" id="availableCities"
-                        data-control="select2" data-placeholder="Select cities.."
-                        class="form-select form-select-solid form-select-lg cities" tabindex="-1" multiple>
+                    <select aria-label="Select cities" id="availableCities" data-control="select2"
+                        data-placeholder="Select cities.." class="form-select form-select-solid form-select-lg cities"
+                        tabindex="-1" multiple>
                         <option value="">Select
                             cities..</option>
                         @foreach ($this->cities as $key => $value)
