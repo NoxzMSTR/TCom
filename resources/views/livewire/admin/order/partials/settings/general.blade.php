@@ -3,13 +3,13 @@
     init() {
         var self = this;
 
-        $('#availableCities').val(self.availableCities).trigger('change');
+        $('#availableCities').val($wire.availableCities).trigger('change');
 
         self.deliveryCities = self.availableCities;
 
         $('#availableCities').on('select2:select', function(e) {
             self.deliveryCities = $(this).val();
-
+            $wire.set('availableCities', self.deliveryCities, false);
             $.each(self.deliveryCities, function(index, city) {
                 if (!self.sameDayDelivery[city]) {
                     self.sameDayDelivery[city] = {};
@@ -23,7 +23,7 @@
         $('#availableCities').on('select2:unselect', function(e) {
             var city = e.params.data.id;
             self.deliveryCities = $(this).val();
-
+            $wire.set('availableCities', self.deliveryCities, false);
             if (self.deliveryTime[city]) {
                 delete self.sameDayDelivery[city];
                 delete self.deliveryTime[city];

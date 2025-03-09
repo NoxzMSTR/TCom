@@ -26,7 +26,7 @@ class OrderSettings extends Component
 
     public $standardDelivery;
 
-    public function mount()
+    public function boot()
     {
         $settings = oSettings::all();
         foreach ($settings as $key => $value) {
@@ -74,6 +74,13 @@ class OrderSettings extends Component
                 if (isset($standardDelivery[0])) {
                     $this->standardDelivery = $standardDelivery[0];
                 }
+            }
+        }
+
+        if (isset($hasSameDayDelivery) && !$hasSameDayDelivery) {
+            $this->sameDayDelivery = [];
+            foreach ($this->availableCities as $key => $city) {
+                $this->sameDayDelivery[$city][0] = ['from' => '00:00', 'to' => '00:00'];
             }
         }
     }
@@ -191,6 +198,15 @@ class OrderSettings extends Component
                 'data' => json_encode($this->deliveryOn),
             ]);
         }
+
+        if (count($this->sameDayDelivery) == 0) {
+            $this->sameDayDelivery = [];
+            foreach ($this->availableCities as $key => $city) {
+                $this->sameDayDelivery[$city][0] = ['from' => '00:00', 'to' => '00:00'];
+            }
+        }
+
+
         $this->dispatch('hide-loader');
     }
 

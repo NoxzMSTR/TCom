@@ -56,6 +56,7 @@
 
                 });
             });
+
             $.each(self.deliveryCities, function(index, city) {
                 if (!self.sameDayDelivery[city]) {
                     self.sameDayDelivery[city] = {};
@@ -66,6 +67,22 @@
                 }
                 $wire.set(`deliveryTime.${city}`, self.deliveryTime[city], false);
             });
+
+            $nextTick(() => {
+                $.each(self.deliveryCities, function(index, city) {
+                    if (!self.sameDayDelivery[city]) {
+                        self.sameDayDelivery[city] = {};
+                        self.sameDayDelivery[city][0] = new Proxy({ 'from': '00:00', 'to': '00:00' }, {});
+                    }
+                    if (!self.deliveryTime[city]) {
+                        self.deliveryTime[city] = new Proxy({ 'from': '00:00', 'to': '00:00' }, {});
+                    }
+                    $wire.set(`deliveryTime.${city}`, self.deliveryTime[city], false);
+                });
+            });
+
+            console.log(self.deliveryTime);
+
             window.slf = this;
         }
 }">
@@ -83,10 +100,10 @@
     <!--begin::Content-->
     <div class="collapse show">
         <!--begin::Card body-->
-        <div class="card-body border-top p-9">
-            <template x-for="(sameData, city) in sameDayDelivery" :key="city">
+        <div class="card-body border-top p-9" x-init="console.log(sameDayDelivery);">
+            <template x-for="(sameData, city) in sameDayDelivery">
                 <!--begin::Input group-->
-                <div class="row mb-6">
+                <div class="row mb-6 gap-2">
                     <!--begin::Label-->
                     <div class="col-lg-4">
                         <label class="w-100 col-form-label required fw-semibold fs-6"
@@ -110,15 +127,15 @@
 
                             </div>
                         </template>
-                        <a href="javascript:;" @click='addMoreSameDay(city)' class="btn btn-light-primary">
+                        <a href="javascript:;" @click='addMoreSameDay(city)' class="btn btn-sm btn-light-primary">
                             <i class="ki-duotone ki-plus fs-3"></i>
-                            Add
+                            Add Slot
                         </a>
                     </div>
                     <!--end::Label-->
 
                     <!--begin::Col-->
-                    <div class="col-lg-8">
+                    <div class="border border-2 col-lg p-11">
                         <!--begin::Row-->
                         <div class="row">
                             <!--begin::Col-->
