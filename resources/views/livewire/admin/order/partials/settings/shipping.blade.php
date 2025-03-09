@@ -81,8 +81,6 @@
                 });
             });
 
-            console.log(self.deliveryTime);
-
             window.slf = this;
         }
 }">
@@ -100,7 +98,7 @@
     <!--begin::Content-->
     <div class="collapse show">
         <!--begin::Card body-->
-        <div class="card-body border-top p-9" x-init="console.log(sameDayDelivery);">
+        <div class="card-body border-top p-9">
             <template x-for="(sameData, city) in sameDayDelivery">
                 <!--begin::Input group-->
                 <div class="row mb-6 gap-2">

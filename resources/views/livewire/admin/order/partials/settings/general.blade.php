@@ -9,6 +9,9 @@
 
         $('#availableCities').on('select2:select', function(e) {
             self.deliveryCities = $(this).val();
+
+            console.log(self.deliveryCities);
+
             $wire.set('availableCities', self.deliveryCities, false);
             $.each(self.deliveryCities, function(index, city) {
                 if (!self.sameDayDelivery[city]) {
