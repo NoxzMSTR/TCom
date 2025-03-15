@@ -28,8 +28,7 @@
                                     ? system_config['logoDark']['value']
                                     : asset('mAssets/media/logos/logo.jpg');
                             @endphp
-                            <img alt="Logo" src="{{ $logoLight }}" class="h-35px theme-light-show"
-                                style="width:110px" />
+                            <img alt="Logo" src="{{ $logoLight }}" class="h-55px h-md-110px theme-light-show" />
                         </a>
                         <!-- End Logo -->
 
@@ -61,13 +60,15 @@
             <footer id="SVGwaveWithDots" class="svg-preloader u-header-sidebar__footer">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item pr-3">
-                        <a class="u-header-sidebar__footer-link text-gray-90" href="#">Privacy</a>
+                        <a class="u-header-sidebar__footer-link text-gray-90"
+                            href="{{ route('public.privacy-policy') }}">Privacy</a>
                     </li>
                     <li class="list-inline-item pr-3">
-                        <a class="u-header-sidebar__footer-link text-gray-90" href="#">Terms</a>
+                        <a class="u-header-sidebar__footer-link text-gray-90"
+                            href="{{ route('public.terms-n-conditions') }}">Terms</a>
                     </li>
                     <li class="list-inline-item">
-                        <a class="u-header-sidebar__footer-link text-gray-90" href="#">
+                        <a class="u-header-sidebar__footer-link text-gray-90" href="{{ route('public.about-us') }}">
                             <i class="fas fa-info-circle"></i>
                         </a>
                     </li>

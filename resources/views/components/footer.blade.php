@@ -94,8 +94,7 @@
                 <div class="col-lg-10">
                     <div class="mb-6">
                         <a href="{{ route('public.home') }}" class="d-inline-block">
-                            <img alt="Logo" src="{{ $logoLight }}" class="h-35px theme-light-show"
-                                style="width:110px " />
+                            <img alt="Logo" src="{{ $logoLight }}" class="h-55px h-md-110px theme-light-show" />
                         </a>
                     </div>
                     <div class="mb-4">

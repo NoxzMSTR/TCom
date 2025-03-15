@@ -71,8 +71,8 @@
                             @endphp
                             <a class="order-1 order-xl-0 navbar-brand u-header__navbar-brand u-header__navbar-brand-center"
                                 href="{{ route('public.home') }}" aria-label="Electro">
-                                <img alt="Logo" src="{{ $logoLight }}" class="h-35px theme-light-show"
-                                    style="width:110px" />
+                                <img alt="Logo" src="{{ $logoLight }}"
+                                    class="h-55px h-md-110px theme-light-show" />
                             </a>
                             <!-- End Logo -->
 
@@ -121,14 +121,16 @@
 
                                     <!-- About us -->
                                     <li class="nav-item u-header__nav-item">
-                                        <a class="nav-link u-header__nav-link" href="../home/about.html">About us</a>
+                                        <a class="nav-link u-header__nav-link"
+                                            href="{{ route('public.about-us') }}">About us</a>
                                     </li>
                                     <!-- End About us -->
 
 
                                     <!-- Contact Us -->
                                     <li class="nav-item u-header__nav-item">
-                                        <a class="nav-link u-header__nav-link" href="../home/contact-v1.html">Contact
+                                        <a class="nav-link u-header__nav-link"
+                                            href="{{ route('public.contact-us') }}">Contact
                                             Us</a>
                                     </li>
                                     <!-- End Contact Us -->
