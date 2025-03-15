@@ -83,7 +83,7 @@
             <div class="border-bottom pb-4 mb-4">
                 <h4 class="font-size-14 mb-3 font-weight-bold">
                     {{ isset(PRODUCT_VARIATIONS[$type]) ? PRODUCT_VARIATIONS[$type] : '-' }}</h4>
-                @if (isset($typeData[1]))
+                @if (isset($typeData[0]))
                     <!-- Checkboxes -->
                     @foreach ($typeData[0] as $key => $value)
                         <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
