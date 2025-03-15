@@ -159,7 +159,7 @@ class AddOrder extends Component
 
                         $product['qty'] = $value['qty'];
 
-                        $product['variationID'] = $value['variationID'];
+                        $product['variationData'] = $value['variationData'];
 
                         $this->setProduct($product);
                     }
@@ -282,7 +282,7 @@ class AddOrder extends Component
                 'qty' => $product['qty'],
                 'discountType' => $product['discountType'],
                 'discountData' => $product['discountData'],
-                'variationID' => isset($product['variationID']) ? $product['variationID'] : 0,
+                'variationData' => isset($product['variationData']) ? json_encode($product['variationData']) : json_encode([]),
             ]);
         }
 
@@ -337,7 +337,7 @@ class AddOrder extends Component
                     'qty' => $product['qty'],
                     'discountType' => $product['discountType'],
                     'discountData' => $product['discountData'],
-                    'variationID' => isset($product['variationID']) ? $product['variationID'] : 0,
+                    'variationData' => isset($product['variationData']) ? json_encode($product['variationData']) : json_encode([]),
                 ]);
             }
         }
