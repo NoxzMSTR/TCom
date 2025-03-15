@@ -55,6 +55,10 @@ class Product extends Component
     {
         $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->where('id', $this->id)->first();
 
+        if (!$product) {
+            return redirect()->route('public.home');
+        }
+
         $hasActivity = Activity::whereJsonContains('properties->ip_address', request()->ip())->whereJsonContains('properties->session_id', request()->session()->getId())->whereJsonContains('properties->product_id', $product->id)->whereDate('created_at', now()->format('Y-m-d'))->where('log_name', 'product_click')->first();
 
         if (! $hasActivity) {
