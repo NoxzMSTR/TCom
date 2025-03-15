@@ -52,7 +52,7 @@
         <!-- End Topbar -->
 
         <!-- Logo and Menu -->
-        <div class="py-2 py-xl-4 bg-primary-down-lg">
+        <div class="py-2 py-xl-4">
             <div class="container my-0dot5 my-xl-0">
                 <div class="row align-items-center">
                     <!-- Logo-offcanvas-menu -->
@@ -72,7 +72,7 @@
                             <a class="order-1 order-xl-0 navbar-brand u-header__navbar-brand u-header__navbar-brand-center"
                                 href="{{ route('public.home') }}" aria-label="Electro">
                                 <img alt="Logo" src="{{ $logoLight }}" class="h-35px theme-light-show"
-                                    style="width:175.748px" />
+                                    style="width:110px" />
                             </a>
                             <!-- End Logo -->
 

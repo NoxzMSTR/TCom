@@ -34,6 +34,21 @@
 
     <!-- CSS Electro Template -->
     <link rel="stylesheet" href="{{ url('/theme-dynamic-css') }}">
+
+    <style>
+        .h-55px {
+            height: 50px !important;
+            width: auto !important;
+        }
+
+        @media (min-width: 768px) {
+            .h-md-110px {
+                height: 90px !important;
+                width: auto !important;
+            }
+        }
+    </style>
+
     @livewireStyles
     @stack('css')
 </head>

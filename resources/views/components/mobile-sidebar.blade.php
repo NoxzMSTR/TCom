@@ -29,7 +29,7 @@
                                     : asset('mAssets/media/logos/logo.jpg');
                             @endphp
                             <img alt="Logo" src="{{ $logoLight }}" class="h-35px theme-light-show"
-                                style="width:175.748px" />
+                                style="width:110px" />
                         </a>
                         <!-- End Logo -->
 

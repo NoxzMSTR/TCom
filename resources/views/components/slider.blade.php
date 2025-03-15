@@ -1,3 +1,9 @@
+<style>
+    .u-slick.slick-initialized .js-slide,
+    .u-slick.slick-initialized .js-thumb {
+        overflow: hidden !important;
+    }
+</style>
 <div class="mb-5">
     <div class="bg-img-hero" style="background-image: url({{ asset('pAssets/img/img1.jpg') }});">
         <div class="container min-height-420 overflow-hidden">
@@ -17,7 +23,7 @@
                 @foreach ($sliders as $key => $slider)
                     <div class="js-slide bg-img-hero-center">
                         <div class="row min-height-564 py-7 py-md-0"
-                            style="{{ isset($slider['showImage']) && isset($slider['setBackground']) && $slider['setBackground'] == true ? "background-image: url('" . $slider['showImage'] . "');background-size: cover;background-repeat: no-repeat;background-position: center;" : '' }}">
+                            style="{{ isset($slider['showImage']) && isset($slider['setBackground']) && $slider['setBackground'] == true ? "background-image: url('" . $slider['showImage'] . "');background-size: cover;background-repeat: no-repeat;background-position: center;background-color: rgb(255 255 255 / 56%);background-blend-mode: lighten;" : '' }}">
                             <div class="offset-xl-3 col-xl-4 col-6 mt-md-8">
                                 <h1 class="font-size-64 text-lh-57 font-weight-light" data-scs-animation-in="fadeInUp">
                                     {{ $slider['title'] }}

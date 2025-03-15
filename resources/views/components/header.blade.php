@@ -50,7 +50,7 @@
         <!-- End Topbar -->
 
         <!-- Logo-Search-header-icons -->
-        <div class="py-2 py-xl-5 bg-primary-down-lg">
+        <div class="py-2 py-xl-5">
             <div class="container my-0dot5 my-xl-0">
                 <div class="row align-items-center">
                     <!-- Logo-offcanvas-menu -->
@@ -69,8 +69,8 @@
                                         ? system_config['logoDark']['value']
                                         : asset('mAssets/media/logos/logo.jpg');
                                 @endphp
-                                <img alt="Logo" src="{{ $logoLight }}" class="h-35px theme-light-show"
-                                    style="width:175.748px" />
+                                <img alt="Logo" src="{{ $logoLight }}"
+                                    class="h-55px h-md-110px theme-light-show" />
                             </a>
                             <!-- End Logo -->
 
