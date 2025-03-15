@@ -83,23 +83,25 @@
             <div class="border-bottom pb-4 mb-4">
                 <h4 class="font-size-14 mb-3 font-weight-bold">
                     {{ isset(PRODUCT_VARIATIONS[$type]) ? PRODUCT_VARIATIONS[$type] : '-' }}</h4>
-
-                <!-- Checkboxes -->
-                @foreach ($typeData[0] as $key => $value)
-                    <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="category{{ md5($value->data) }}"
-                                wire:model='filter.variation.{{ $type }}.{{ $value->data }}'
-                                value="{{ $value->data }}">
-                            <label class="custom-control-label"
-                                for="category{{ md5($value->data) }}">{{ $value->data }}
-                                <span class="text-gray-25 font-size-12 font-weight-normal">
-                                    ({{ $value->products_count }})
-                                </span></label>
+                @if (isset($typeData[1]))
+                    <!-- Checkboxes -->
+                    @foreach ($typeData[0] as $key => $value)
+                        <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input"
+                                    id="category{{ md5($value->data) }}"
+                                    wire:model='filter.variation.{{ $type }}.{{ $value->data }}'
+                                    value="{{ $value->data }}">
+                                <label class="custom-control-label"
+                                    for="category{{ md5($value->data) }}">{{ $value->data }}
+                                    <span class="text-gray-25 font-size-12 font-weight-normal">
+                                        ({{ $value->products_count }})
+                                    </span></label>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-                <!-- End Checkboxes -->
+                    @endforeach
+                    <!-- End Checkboxes -->
+                @endif
                 @if (isset($typeData[1]))
                     <!-- View More - Collapse -->
                     <div class="collapse" id="collapse{{ PRODUCT_VARIATIONS[$type] }}">
