@@ -27,14 +27,12 @@ class ProductDatatable extends DataTableComponent
         return [
             Column::make("Id", "id")
                 ->sortable(),
-            ImageColumn::make('Thumbnail', 'thumbnail')
-                ->location(
-                    fn($row) => $row->thumbnail
-                )
-                ->attributes(fn($row) => [
-                    'class' => 'symbol w-40px',
-                    'alt' => $row->name . ' thumbnail',
-                ]),
+            Column::make('Thumbnail', 'thumbnail')
+                ->unclickable()
+                ->format(function ($value, $row, $col) {
+                    // Use a Blade view for custom actions
+                    return view('livewire.admin.product.product-el', ['type' => 'image', 'value' => $value, 'data' => $row]);
+                })->collapseOnMobile(),
             Column::make("Name", "name")
                 ->sortable(),
             Column::make("Category", "categories.name")
