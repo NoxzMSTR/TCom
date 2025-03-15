@@ -15,22 +15,25 @@
                     }
                 }
             @endphp
-            <!-- Checkboxes -->
-            @foreach ($exBrands[0] as $key => $value)
-                <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" wire:model='filter.brand.{{ $value->id }}'
-                            id="brand{{ $value->id }}" value="{{ $value->id }}">
-                        <label class="custom-control-label" for="brand{{ $value->id }}">{{ $value->name }}
-                            <span class="text-gray-25 font-size-12 font-weight-normal">
-                                ({{ $value->products_count }})
-                            </span>
-                        </label>
+            @if (isset($exBrands[1]))
+                <!-- Checkboxes -->
+                @foreach ($exBrands[0] as $key => $value)
+                    <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input"
+                                wire:model='filter.brand.{{ $value->id }}' id="brand{{ $value->id }}"
+                                value="{{ $value->id }}">
+                            <label class="custom-control-label" for="brand{{ $value->id }}">{{ $value->name }}
+                                <span class="text-gray-25 font-size-12 font-weight-normal">
+                                    ({{ $value->products_count }})
+                                </span>
+                            </label>
+                        </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+                <!-- End Checkboxes -->
+            @endif
 
-            <!-- End Checkboxes -->
             @if (isset($exBrands[1]))
                 <!-- View More - Collapse -->
                 <div class="collapse" id="collapseBrand">
