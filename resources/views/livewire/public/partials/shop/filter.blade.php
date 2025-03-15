@@ -15,7 +15,7 @@
                     }
                 }
             @endphp
-            @if (isset($exBrands[1]))
+            @if (isset($exBrands[0]))
                 <!-- Checkboxes -->
                 @foreach ($exBrands[0] as $key => $value)
                     <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
