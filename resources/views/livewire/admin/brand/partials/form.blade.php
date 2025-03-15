@@ -1,6 +1,44 @@
 <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
     <!--begin::Thumbnail settings-->
-    <div class="card card-flush py-4">
+    <div class="card card-flush py-4" x-data="{
+        showThumbnail: $wire.entangle('showThumbnail'),
+        async updateBrand() {
+            $('.btn').attr('disabled', true);
+            await $wire.updateBrand();
+            $('.btn').attr('disabled', false);
+    
+        },
+        async saveBrand() {
+            $('.btn').attr('disabled', true);
+            await $wire.saveBrand();
+            $('.btn').attr('disabled', false);
+    
+        },
+        async cancelThumb() {
+            $('.btn').attr('disabled', true);
+            await $wire.set('thumbnail', null, true);
+            $('.btn').attr('disabled', false);
+            $('.image-input-placeholder').removeAttr('style')
+        },
+        async deleteThumb() {
+            $('.btn').attr('disabled', true);
+            await $wire.deleteThumb();
+            $('.btn').attr('disabled', false);
+            $('.image-input-placeholder').removeAttr('style')
+        },
+        init() {
+            $wire.on('on-clear', (e) => {
+                $('.cancelThumb').click();
+            });
+            $wire.on('brand-notification', (e) => {
+                Swal.fire({
+                    title: e.title,
+                    text: e.message,
+                    icon: e.type
+                });
+            });
+        }
+    }">
         <!--begin::Card header-->
         <div class="card-header">
             <!--begin::Card title-->
@@ -26,11 +64,22 @@
             <!--end::Image input placeholder-->
 
             <!--begin::Image input-->
-            <div class="image-input image-input-empty" data-kt-image-input="true">
+            <div class="image-input image-input-empty" data-kt-image-input="true" wire:ignore>
                 <!--begin::Image preview wrapper-->
                 <div class="image-input-wrapper image-input-placeholder w-125px h-125px"></div>
                 <!--end::Image preview wrapper-->
-
+                <template x-if="showThumbnail">
+                    <span @click="deleteThumb"
+                        class="badge badge-circle cursor-pointer  h-25 position-absolute shadow start-0 text-gray-600 top-0 translate-middle w-25">
+                        <i class="ki-duotone ki-trash fs-6">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            <span class="path3"></span>
+                            <span class="path4"></span>
+                            <span class="path5"></span>
+                        </i>
+                    </span>
+                </template>
                 <!--begin::Edit button-->
                 <label
                     class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -46,22 +95,14 @@
                 <!--end::Edit button-->
 
                 <!--begin::Cancel button-->
-                <span
-                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                <span @click="cancelThumb"
+                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow cancelThumb"
                     data-kt-image-input-action="cancel" data-bs-toggle="tooltip" data-bs-dismiss="click"
                     title="Cancel avatar">
                     <i class="ki-outline ki-cross fs-3"></i>
                 </span>
                 <!--end::Cancel button-->
 
-                <!--begin::Remove button-->
-                <span
-                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                    data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                    title="Remove avatar">
-                    <i class="ki-outline ki-cross fs-3"></i>
-                </span>
-                <!--end::Remove button-->
             </div>
             <!--end::Image input-->
 
@@ -115,8 +156,7 @@
 
             @if ($brand)
                 <!--begin::Button-->
-                <button wire:click='updateBrand' onclick="KTApp.showPageLoading();" id="kt_ecommerce_add_product_submit"
-                    class="btn btn-primary">
+                <button @click='updateBrand' id="kt_ecommerce_add_product_submit" class="btn btn-primary">
                     <span class="indicator-label">
                         Update
                     </span>
@@ -127,8 +167,7 @@
                 <!--end::Button-->
             @else
                 <!--begin::Button-->
-                <button wire:click='saveBrand' onclick="KTApp.showPageLoading();" id="kt_ecommerce_add_product_submit"
-                    class="btn btn-primary">
+                <button @click="saveBrand" id="kt_ecommerce_add_product_submit" class="btn btn-primary">
                     <span class="indicator-label">
                         Save
                     </span>

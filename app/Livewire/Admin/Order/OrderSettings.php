@@ -29,6 +29,7 @@ class OrderSettings extends Component
     public function boot()
     {
         $settings = oSettings::all();
+        $hasSameDayDelivery = false;
         foreach ($settings as $key => $value) {
             if ($value->type == 'default_currency') {
                 $currency = json_validate($value['data']) ? json_decode($value['data'], true) : [];
@@ -44,7 +45,7 @@ class OrderSettings extends Component
                     $this->availableCities = $availableCities;
                 }
             }
-            $hasSameDayDelivery = false;
+
             if ($value->type == 'same_day_delivery') {
                 $sameDayDelivery = json_validate($value['data']) ? json_decode($value['data'], true) : [];
                 if (isset($sameDayDelivery)) {
@@ -206,7 +207,7 @@ class OrderSettings extends Component
             }
         }
 
-
+        $this->dispatch('os-notification', type: 'success', title: 'General Settings Saved Successfully', message: 'The general settings has been successfully saved. 🎉');
         $this->dispatch('hide-loader');
     }
 
@@ -256,6 +257,8 @@ class OrderSettings extends Component
                 'data' => json_encode($this->deliveryTime),
             ]);
         }
+
+        $this->dispatch('os-notification', type: 'success', title: 'Shipping Settings Saved Successfully', message: 'The shipping settings has been successfully saved. 🎉');
         $this->dispatch('hide-loader');
     }
 

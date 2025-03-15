@@ -45,22 +45,7 @@
         });
 
         function initEl() {
-            var metatags = document.querySelector("#metatags");
-            if (typeof metatags.__tagify !== 'undefined') {
-                delete metatags.__tagify
-            }
-            new Tagify(metatags, {
-                callbacks: {
-                    "change": (e) => $wire.set('tags', e.detail.value, false),
-                }
-            });
-            KTComponents.init();
-            $('.parentCategory').on('select2:select', function(e) {
-                $wire.set("parent", $(this).val(), false)
-            });
-            $('.parentCategory').on('select2:unselect', function(e) {
-                $wire.set("parent", $(this).val(), false)
-            });
+
         }
     </script>
 @endscript

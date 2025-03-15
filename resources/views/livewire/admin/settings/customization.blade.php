@@ -1,4 +1,23 @@
-<div>
+<div x-data="{
+    init() {
+
+        KTComponents.init();
+
+        $wire.on('set-field', (e) => {
+            $('.parentCategory').val(e.parent).trigger('change');
+        });
+        $wire.on('on-clear', (e) => {
+            $('.cancelThumb').click();
+        });
+        $wire.on('cus-notification', (e) => {
+            Swal.fire({
+                title: e.title,
+                text: e.message,
+                icon: e.type
+            });
+        });
+    }
+}">
     <!--begin::Navbar-->
     @include('livewire.admin.settings.partials.customization.header')
     <!--end::Navbar-->

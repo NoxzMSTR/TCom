@@ -102,6 +102,7 @@ class Customization extends Component
                 ]);
             }
         }
+        $this->dispatch('cus-notification', type: 'success', title: 'General Settings Saved Successfully', message: 'The general settings has been successfully saved. 🎉');
     }
 
     public function saveSlider()
@@ -120,6 +121,7 @@ class Customization extends Component
         foreach ($this->sliders as $index => $sliderData) {
             $system = System::where('key', 'sliders.' . $index)->where('type', 'customization')->first();
             $data = $sliderData;
+
             if (isset($sliderData['image']) && $sliderData['image'] !== null && $sliderData['image'] !== '') {
                 $file = $sliderData['image'];
 
@@ -127,9 +129,10 @@ class Customization extends Component
 
                 $path = $file->storeAs('customize', $name, ['disk' => 'public']);
             }
+
             unset($data['image']);
             if (isset($path)) {
-                $data += ['showImage' => isset($path) && !empty($path) ? asset($path) : ''];
+                $data['showImage'] =  isset($path) && !empty($path) ? asset($path) : '';
             }
 
             if ($system) {
@@ -147,7 +150,32 @@ class Customization extends Component
                 unset($path);
             }
         }
+        $this->dispatch('cus-notification', type: 'success', title: 'Slider Settings Saved Successfully', message: 'The slider settings has been successfully saved. 🎉');
     }
+
+    public function deleteThumb($index)
+    {
+        $system = System::where('key', $index)->where('type', 'customization')->first();
+        if ($system) {
+            if (json_validate($system->value)) {
+                $data = json_decode($system->value, true);
+                $data['showImage'] = null;
+                $system->update([
+                    'value' => json_encode($data)
+                ]);
+                $customizations = System::where('type', 'customization')->where('key', 'LIKE', 'sliders.%')->get();
+
+                foreach ($customizations as $key => $customization) {
+                    $field = explode('.', $customization->key);
+
+                    if ($field[0] == 'sliders') {
+                        $this->sliders[$field[1]] = json_validate($customization->value) ? json_decode($customization->value, true) : [];
+                    }
+                }
+            }
+        }
+    }
+
 
     public function selectProductForSlider($index, $product)
     {

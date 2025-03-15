@@ -21,7 +21,7 @@ class Category extends Component
     public $name = '';
     public $description = '';
     public $tags = '';
-    #[Validate('image|max:1024', message: 'Please add a category thumbnail')]
+
     public $thumbnail = '';
     public $showThumbnail = '';
     public $parent = 0;
@@ -61,6 +61,7 @@ class Category extends Component
             $this->featured = $this->category->isFeatured;
         }
 
+        $this->dispatch('set-field', parent: $this->parent);
         $this->dispatch('hide-loader');
     }
 
@@ -74,6 +75,7 @@ class Category extends Component
         if ($this->category) {
 
             if ($this->thumbnail) {
+                $this->validate(['thumbnail' => 'image|max:1024'], ['thumbnail' => 'Please add a category thumbnail']);
                 $file = $this->thumbnail;
 
                 $name = $file->getClientOriginalName();
@@ -98,6 +100,9 @@ class Category extends Component
         }
         $this->showThumbnail = '';
         $this->category = null;
+
+        $this->dispatch('cat-notification', type: 'success', title: 'Category Updated Successfully', message: 'The category has been successfully updated. 🎉');
+
         $this->clear();
     }
 
@@ -108,6 +113,7 @@ class Category extends Component
         $this->validate();
 
         if ($this->thumbnail) {
+            $this->validate(['thumbnail' => 'image|max:1024'], ['thumbnail' => 'Please add a category thumbnail']);
             $file = $this->thumbnail;
 
             $name = $file->getClientOriginalName();
@@ -125,6 +131,8 @@ class Category extends Component
         ]);
 
         $this->clear();
+
+        $this->dispatch('cat-notification', type: 'success', title: 'Category Saved Successfully', message: 'The category has been successfully saved. 🎉');
     }
 
     public function updated($property)
@@ -142,7 +150,20 @@ class Category extends Component
         $this->thumbnail = '';
         $this->parent = 0;
         $this->featured = 0;
+        $this->dispatch('on-clear');
+        $this->dispatch('refreshDatatable');
+    }
 
+    public function deleteThumb()
+    {
+        if ($this->category) {
+            $data = [
+                'thumbnail' => null,
+            ];
+            $this->category->update($data);
+        }
+        $this->showThumbnail = false;
+        $this->dispatch('on-clear');
         $this->dispatch('refreshDatatable');
     }
 

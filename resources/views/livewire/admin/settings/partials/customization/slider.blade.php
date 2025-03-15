@@ -11,7 +11,16 @@
     <!--begin::Card header-->
 
     <!--begin::Content-->
-    <div class="collapse show">
+    <div class="collapse show" x-data="{
+    
+        async deleteThumb(index) {
+                $('.btn').attr('disabled', true);
+                await $wire.deleteThumb(index);
+                $('.btn').attr('disabled', false);
+                $('.image-input-placeholder').removeAttr('style')
+            },
+    
+    }">
         <!--begin::Card body-->
         <div class="card-body border-top p-9">
 
@@ -39,9 +48,20 @@
                                             </label>
                                         </div>
                                     @elseif(isset($slider['showImage']))
-                                        <div>
+                                        <div class="position-relative">
+                                            <span @click="deleteThumb('sliders.{{ $key }}')"
+                                                class="badge badge-circle cursor-pointer  h-25px position-absolute shadow start-0 text-gray-600 top-0 translate-middle w-25px z-index-3">
+                                                <i class="ki-duotone ki-trash fs-6">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                    <span class="path3"></span>
+                                                    <span class="path4"></span>
+                                                    <span class="path5"></span>
+                                                </i>
+                                            </span>
                                             <label class="form-check-image">
                                                 <div class="form-check-wrapper">
+
                                                     <img class="h-175px" src="{{ $slider['showImage'] }}" />
                                                 </div>
                                             </label>

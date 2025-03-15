@@ -133,7 +133,7 @@
                     <!--end::Label-->
 
                     <!--begin::Col-->
-                    <div class="border border-2 col-lg p-11">
+                    <div class="border border-2 col-lg p-11" x-init="console.log(sameData)">
                         <!--begin::Row-->
                         <div class="row">
                             <!--begin::Col-->

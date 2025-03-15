@@ -21,7 +21,7 @@ class Brands extends Component
     public $name = '';
     public $description = '';
     public $tags = '';
-    #[Validate('image|max:1024', message: 'Please add a brand thumbnail')]
+
     public $thumbnail = '';
     public $showThumbnail = '';
     public $parent = 0;
@@ -68,10 +68,13 @@ class Brands extends Component
 
         $this->validate();
 
+
         $data = [];
+
         if ($this->brand) {
 
             if ($this->thumbnail) {
+                $this->validate(['thumbnail' => 'image|max:1024'], ['thumbnail' => 'Please add a brand thumbnail']);
                 $file = $this->thumbnail;
 
                 $name = $file->getClientOriginalName();
@@ -94,6 +97,7 @@ class Brands extends Component
         $this->showThumbnail = '';
         $this->brand = null;
         $this->clear();
+        $this->dispatch('brand-notification', type: 'success', title: 'Brand Updated Successfully', message: 'The brand has been successfully updated. 🎉');
     }
 
     public function saveBrand()
@@ -103,6 +107,7 @@ class Brands extends Component
         $this->validate();
 
         if ($this->thumbnail) {
+            $this->validate(['thumbnail' => 'image|max:1024'], ['thumbnail' => 'Please add a category thumbnail']);
             $file = $this->thumbnail;
 
             $name = $file->getClientOriginalName();
@@ -116,6 +121,7 @@ class Brands extends Component
             'thumbnail' => isset($path) && !empty($path) ? asset($path) : '',
         ]);
 
+        $this->dispatch('brand-notification', type: 'success', title: 'Brand Saved Successfully', message: 'The brand has been successfully saved. 🎉');
         $this->clear();
     }
 
@@ -126,6 +132,17 @@ class Brands extends Component
         }
     }
 
+    public function deleteThumb()
+    {
+        if ($this->brand) {
+            $data = [
+                'thumbnail' => null,
+            ];
+            $this->brand->update($data);
+        }
+        $this->showThumbnail = false;
+        $this->dispatch('refreshDatatable');
+    }
     public function clear()
     {
         $this->name = null;
@@ -133,6 +150,8 @@ class Brands extends Component
         $this->thumbnail = '';
 
         $this->dispatch('refreshDatatable');
+
+        $this->dispatch('on-clear');
     }
 
     public function render()

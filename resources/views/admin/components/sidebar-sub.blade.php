@@ -14,8 +14,7 @@
                             <div data-kt-menu-trigger="click"
                                 class="menu-item {{ url()->current() == route('admin.dashboard') ? 'here show' : '' }}  menu-accordion">
                                 <!--begin:Menu link-->
-                                <a wire:navigate
-                                    class="menu-link {{ url()->current() == route('admin.dashboard') ? 'active' : '' }}"
+                                <a class="menu-link {{ url()->current() == route('admin.dashboard') ? 'active' : '' }}"
                                     href="{{ route('admin.dashboard') }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-element-11 fs-2">
@@ -61,8 +60,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a wire:navigate
-                                            class="menu-link {{ url()->current() == route('admin.order.add') ? 'active' : '' }}"
+                                        <a class="menu-link {{ url()->current() == route('admin.order.add') ? 'active' : '' }}"
                                             href="{{ route('admin.order.add') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -75,8 +73,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a wire:navigate
-                                            class="menu-link {{ url()->current() == route('admin.order.list') ? 'active' : '' }}"
+                                        <a class="menu-link {{ url()->current() == route('admin.order.list') ? 'active' : '' }}"
                                             href="{{ route('admin.order.list') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -89,8 +86,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a wire:navigate
-                                            class="menu-link {{ url()->current() == route('admin.order.settings') ? 'active' : '' }}"
+                                        <a class="menu-link {{ url()->current() == route('admin.order.settings') ? 'active' : '' }}"
                                             href="{{ route('admin.order.settings') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -127,8 +123,7 @@
                                     <!--begin:Menu item-->
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                         <!--begin:Menu link-->
-                                        <a wire:navigate
-                                            class="menu-link {{ url()->current() == route('admin.product.categories') ? 'active' : '' }}"
+                                        <a class="menu-link {{ url()->current() == route('admin.product.categories') ? 'active' : '' }}"
                                             href="{{ route('admin.product.categories') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -142,8 +137,7 @@
                                     <!--begin:Menu item-->
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                         <!--begin:Menu link-->
-                                        <a wire:navigate
-                                            class="menu-link {{ url()->current() == route('admin.product.add') ? 'active' : '' }}"
+                                        <a class="menu-link {{ url()->current() == route('admin.product.add') ? 'active' : '' }}"
                                             href="{{ route('admin.product.add') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -157,8 +151,7 @@
                                     <!--begin:Menu item-->
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                         <!--begin:Menu link-->
-                                        <a wire:navigate
-                                            class="menu-link {{ url()->current() == route('admin.product.list') ? 'active' : '' }}"
+                                        <a class="menu-link {{ url()->current() == route('admin.product.list') ? 'active' : '' }}"
                                             href="{{ route('admin.product.list') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -176,8 +169,7 @@
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                 <!--begin:Menu link-->
-                                <a wire:navigate
-                                    class="menu-link {{ url()->current() == route('admin.brands') ? 'active' : '' }}"
+                                <a class="menu-link {{ url()->current() == route('admin.brands') ? 'active' : '' }}"
                                     href="{{ route('admin.brands') }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-abstract-44 fs-2">
@@ -195,8 +187,7 @@
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                 <!--begin:Menu link-->
-                                <a wire:navigate
-                                    class="menu-link {{ url()->current() == route('admin.buyer.list') ? 'active' : '' }}"
+                                <a class="menu-link {{ url()->current() == route('admin.buyer.list') ? 'active' : '' }}"
                                     href="{{ route('admin.buyer.list') }}">
                                     <span class="menu-icon">
                                         <i class="ki-solid ki-profile-user fs-2"></i>
@@ -210,8 +201,7 @@
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                 <!--begin:Menu link-->
-                                <a wire:navigate
-                                    class="menu-link {{ url()->current() == route('admin.vendor.list') ? 'active' : '' }}"
+                                <a class="menu-link {{ url()->current() == route('admin.vendor.list') ? 'active' : '' }}"
                                     href="{{ route('admin.vendor.list') }}">
                                     <span class="menu-icon">
                                         <i class="ki-solid ki-parcel fs-2"></i>
@@ -225,8 +215,7 @@
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                 <!--begin:Menu link-->
-                                <a wire:navigate
-                                    class="menu-link {{ url()->current() == route('admin.contact.list') ? 'active' : '' }}"
+                                <a class="menu-link {{ url()->current() == route('admin.contact.list') ? 'active' : '' }}"
                                     href="{{ route('admin.contact.list') }}">
                                     <span class="menu-icon">
                                         <i class="ki-solid ki-parcel fs-2"></i>
@@ -255,7 +244,7 @@
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
                                         <a class="menu-link {{ url()->current() == route('admin.settings.account') ? 'active' : '' }}"
-                                            wire:navigate href="{{ route('admin.settings.account') }}">
+                                            href="{{ route('admin.settings.account') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -268,7 +257,7 @@
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
                                         <a class="menu-link {{ url()->current() == route('admin.settings.system') ? 'active' : '' }}"
-                                            wire:navigate href="{{ route('admin.settings.system') }}">
+                                            href="{{ route('admin.settings.system') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -281,7 +270,7 @@
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
                                         <a class="menu-link {{ url()->current() == route('admin.settings.customization') ? 'active' : '' }}"
-                                            wire:navigate href="{{ route('admin.settings.customization') }}">
+                                            href="{{ route('admin.settings.customization') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>

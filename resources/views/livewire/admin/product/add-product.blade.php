@@ -1,4 +1,36 @@
-<div class="d-flex flex-md-nowrap flex-wrap">
+<div class="d-flex flex-md-nowrap flex-wrap" x-data="{
+    showThumbnail: $wire.entangle('showThumbnail'),
+    async cancelThumb() {
+        $('.btn').attr('disabled', true);
+        await $wire.set('thumbnail', null, true);
+        $('.btn').attr('disabled', false);
+        $('.image-input-placeholder').removeAttr('style')
+    },
+    async deleteThumb() {
+        $('.btn').attr('disabled', true);
+        await $wire.deleteThumb();
+        $('.btn').attr('disabled', false);
+        $('.image-input-placeholder').removeAttr('style')
+    },
+    init() {
+
+        KTComponents.init();
+
+        $wire.on('set-field', (e) => {
+            $('.parentCategory').val(e.parent).trigger('change');
+        });
+        $wire.on('on-clear', (e) => {
+            $('.cancelThumb').click();
+        });
+        $wire.on('pro-notification', (e) => {
+            Swal.fire({
+                title: e.title,
+                text: e.message,
+                icon: e.type
+            });
+        });
+    }
+}">
     <!--begin::Aside column-->
     <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
         <!--begin::Thumbnail settings-->
@@ -29,11 +61,22 @@
                 <!--end::Image input placeholder-->
 
                 <div class="image-input image-input-empty image-input-outline image-input-placeholder mb-3"
-                    data-kt-image-input="true">
+                    data-kt-image-input="true" wire:ignore>
                     <!--begin::Preview existing avatar-->
                     <div class="image-input-wrapper image-input-placeholder w-150px h-150px"></div>
                     <!--end::Preview existing avatar-->
-
+                    <template x-if="showThumbnail">
+                        <span @click="deleteThumb"
+                            class="badge badge-circle cursor-pointer  h-25 position-absolute shadow start-0 text-gray-600 top-0 translate-middle w-25">
+                            <i class="ki-duotone ki-trash fs-6">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                <span class="path3"></span>
+                                <span class="path4"></span>
+                                <span class="path5"></span>
+                            </i>
+                        </span>
+                    </template>
                     <!--begin::Label-->
                     <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
                         data-kt-image-input-action="change" data-bs-toggle="tooltip" aria-label="Change avatar"
@@ -48,20 +91,13 @@
                     <!--end::Label-->
 
                     <!--begin::Cancel-->
-                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip" aria-label="Cancel avatar"
-                        data-bs-original-title="Cancel avatar" data-kt-initialized="1">
-                        <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span class="path2"></span></i>
+                    <span @click="cancelThumb"
+                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip" data-bs-dismiss="click"
+                        title="Cancel avatar">
+                        <i class="ki-outline ki-cross fs-3"></i>
                     </span>
                     <!--end::Cancel-->
-
-                    <!--begin::Remove-->
-                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                        data-kt-image-input-action="remove" data-bs-toggle="tooltip" aria-label="Remove avatar"
-                        data-bs-original-title="Remove avatar" data-kt-initialized="1">
-                        <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span class="path2"></span></i>
-                    </span>
-                    <!--end::Remove-->
                 </div>
                 <!--end::Image input-->
 

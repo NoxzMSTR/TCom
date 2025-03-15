@@ -31,7 +31,7 @@ class AddProduct extends Component
     public $shortDescription = '';
     #[Validate('required', message: 'Please add a product price')]
     public $price = 0;
-    #[Validate('image|max:1024', message: 'Please add a product thumbnail')]
+
     public $thumbnail = '';
     public $showThumbnail = '';
     #[Validate('required', message: 'Please select a product category')]
@@ -296,6 +296,7 @@ class AddProduct extends Component
             $hasVendor = $this->hasVendor();
 
             if ($this->thumbnail) {
+                $this->validate(['thumbnail' => 'image|max:1024'], ['thumbnail' => 'Please add a category thumbnail']);
                 $file = $this->thumbnail;
 
                 $name = $file->getClientOriginalName();
@@ -461,6 +462,8 @@ class AddProduct extends Component
                 $specification[$value['title']]['data'][] = ['id' => $value['id'], 'name' => $value['key'], 'value' => $value['value']];
             }
             $this->specification = array_values($specification);
+            $this->dispatch('on-clear');
+            $this->dispatch('pro-notification', type: 'success', title: 'Product Updated Successfully', message: 'The product has been successfully updated. 🎉');
         }
     }
 
@@ -473,6 +476,7 @@ class AddProduct extends Component
         $hasVendor = $this->hasVendor();
 
         if ($this->thumbnail) {
+            $this->validate(['thumbnail' => 'image|max:1024'], ['thumbnail' => 'Please add a category thumbnail']);
             $file = $this->thumbnail;
 
             $name = $file->getClientOriginalName();
@@ -588,7 +592,22 @@ class AddProduct extends Component
             }
         }
 
+        $this->dispatch('pro-notification', type: 'success', title: 'Product Saved Successfully', message: 'The product has been successfully saved. 🎉');
+
         $this->clear();
+    }
+
+    public function deleteThumb()
+    {
+        if ($this->product) {
+            $data = [
+                'thumbnail' => null,
+            ];
+            $this->product->update($data);
+        }
+        $this->showThumbnail = false;
+        $this->dispatch('on-clear');
+        $this->dispatch('refreshDatatable');
     }
 
     public function clear()
@@ -619,7 +638,7 @@ class AddProduct extends Component
         $this->metaTags = null;
         $this->assets = [];
         $this->variations = [['type' => '', 'data' => '', 'hasPrice' => '', 'thumbnail' => '']];
-
+        $this->dispatch('on-clear');
         $this->vendor = [];
     }
 

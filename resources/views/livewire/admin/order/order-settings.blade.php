@@ -4,6 +4,24 @@
     deliveryTime: $wire.entangle('deliveryTime'),
     deliveryCities: [],
     sameDayDelivery: $wire.entangle('sameDayDelivery'),
+    init() {
+
+        KTComponents.init();
+
+        $wire.on('set-field', (e) => {
+            $('.parentCategory').val(e.parent).trigger('change');
+        });
+        $wire.on('on-clear', (e) => {
+            $('.cancelThumb').click();
+        });
+        $wire.on('os-notification', (e) => {
+            Swal.fire({
+                title: e.title,
+                text: e.message,
+                icon: e.type
+            });
+        });
+    }
 }">
     <!--begin::Navbar-->
     @include('livewire.admin.order.partials.settings.header')
