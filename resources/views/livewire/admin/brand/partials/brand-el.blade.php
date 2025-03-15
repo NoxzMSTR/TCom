@@ -6,3 +6,8 @@
         </span>
     </button>
 @endif
+@if (isset($type) && $type == 'image')
+    <div class="symbol symbol-50px">
+        <img src="{{ $value }}" alt="" />
+    </div>
+@endif
