@@ -93,7 +93,7 @@
                         let diffFrom = givenFromDate - now;
         
                         let diffTo = givenToDate - now;
-        
+                        console.log(diffFrom < 0 && diffTo > 0);
                         if (diffFrom < 0 && diffTo > 0) {
                             $.each(cityData, function(index, elem) {
                                 if (!currentSlot[city]) {
