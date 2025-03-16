@@ -93,11 +93,14 @@
         
                         let diffTo = givenToDate - now;
                         console.log(cityData);
+        
+                        if (!currentSlot[city]) {
+                            currentSlot[city] = {};
+                        }
+        
                         if (diffFrom < 0 && diffTo > 0) {
                             $.each(cityData, function(index, elem) {
-                                if (!currentSlot[city]) {
-                                    currentSlot[city] = {};
-                                }
+        
                                 var [slotHours, slotMinutes] = elem.to.split(':');
         
                                 if (slotHours > currentHours) {
@@ -113,9 +116,7 @@
                                 var futureDate = new Date();
                                 futureDate.setDate(now.getDate() + i); // Add i days
                                 $.each(cityData, function(index, elem) {
-                                    if (!currentSlot[city]) {
-                                        currentSlot[city] = {};
-                                    }
+        
                                     var [slotHours, slotMinutes] = elem.to.split(':');
         
                                     console.log(slotHours);
