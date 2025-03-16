@@ -109,13 +109,17 @@
                                     currentSlot[city][slotHours + '_' + self.formatDate(now) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(now), futureDates: false };
         
                                 } else {
-                                    var [slotHours, slotMinutes] = elem.to.split(':');
+                                    for (var i = 1; i <= 2; i++) { // Loop for next 2 days
+                                        var futureDate = new Date();
+                                        futureDate.setDate(now.getDate() + i); // Add i days
+                                        var [slotHours, slotMinutes] = elem.to.split(':');
         
-                                    console.log(slotHours);
-                                    var slotHr = (slotHours - 2) % 24;
-                                    self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
-                                    currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
-                                    console.log(currentSlot);
+                                        console.log(slotHours);
+                                        var slotHr = (slotHours - 2) % 24;
+                                        self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
+                                        currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
+                                        console.log(currentSlot);
+                                    }
                                 }
                             });
                         } else {
