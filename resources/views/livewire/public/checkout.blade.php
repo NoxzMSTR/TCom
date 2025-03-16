@@ -99,6 +99,7 @@
                         }
         
                         if (diffFrom < 0 && diffTo > 0) {
+                            var hasPassed = false;
                             $.each(cityData, function(index, elem) {
         
                                 var [slotHours, slotMinutes] = elem.to.split(':');
@@ -109,9 +110,16 @@
                                     currentSlot[city][slotHours + '_' + self.formatDate(now) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(now), futureDates: false };
         
                                 } else {
-                                    for (var i = 1; i <= 2; i++) { // Loop for next 2 days
-                                        var futureDate = new Date();
-                                        futureDate.setDate(now.getDate() + i); // Add i days
+                                    hasPassed = true;
+                                }
+                            });
+        
+                            if (hasPassed) {
+                                for (var i = 1; i <= 2; i++) { // Loop for next 2 days
+                                    var futureDate = new Date();
+                                    futureDate.setDate(now.getDate() + i); // Add i days
+                                    $.each(cityData, function(index, elem) {
+        
                                         var [slotHours, slotMinutes] = elem.to.split(':');
         
                                         console.log(slotHours);
@@ -119,9 +127,9 @@
                                         self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
                                         currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
                                         console.log(currentSlot);
-                                    }
+                                    });
                                 }
-                            });
+                            }
                         } else {
         
                             for (var i = 1; i <= 2; i++) { // Loop for next 2 days
