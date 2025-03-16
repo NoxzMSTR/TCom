@@ -52,7 +52,7 @@
                         const data = await response.json();
         
                         if (data.address) {
-                            console.log(data);
+        
                             data.display_name || 'Address not found';
                             data.address.country || 'Country not found';
                         } else {
@@ -92,7 +92,7 @@
                         let diffFrom = givenFromDate - now;
         
                         let diffTo = givenToDate - now;
-                        console.log(cityData);
+        
         
                         if (!currentSlot[city]) {
                             currentSlot[city] = {};
