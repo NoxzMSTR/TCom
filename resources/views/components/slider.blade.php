@@ -77,7 +77,7 @@
 
                             </div>
 
-                            @if (isset($slider['showImage']) && !isset($slider['setBackground']))
+                            @if (isset($slider['showImage']))
                                 <div class="col-xl-5 col-6  d-flex align-items-center" data-scs-animation-in="zoomIn"
                                     data-scs-animation-delay="500">
                                     <img class="img-fluid" src="{{ $slider['showImage'] }}" alt="Image Description">
