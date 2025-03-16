@@ -52,8 +52,9 @@
                         const data = await response.json();
         
                         if (data.address) {
-                            this.address = data.display_name || 'Address not found';
-                            this.country = data.address.country || 'Country not found';
+                            console.log(data);
+                            data.display_name || 'Address not found';
+                            data.address.country || 'Country not found';
                         } else {
                             this.address = 'Unable to fetch address.';
                             this.country = 'Unable to fetch country.';

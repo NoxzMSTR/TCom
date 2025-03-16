@@ -182,7 +182,10 @@
     
             final = final + amount;
     
-            if (self.discount) {
+            var discount = self.discount;
+            var discount = this.extractCurrency(discount);
+    
+            if (discount) {
                 self.discount = self.formatCurrency(final, self.default_currency);
             } else {
                 self.price = self.formatCurrency(final, self.default_currency);
@@ -259,6 +262,7 @@
             if (discount) {
                 return discount * this.qty;
             }
+    
             return amount * this.qty;
         },
         extractCurrency(amount) {
@@ -345,13 +349,13 @@
 
                         <p><strong>SKU</strong>: {{ $product->sku }}</p>
                         <div class="mb-4">
-                            <template x-if="discount">
+                            <template x-if="extractCurrency(discount)">
                                 <div class="d-flex align-items-baseline">
                                     <ins class="font-size-36 text-decoration-none" x-text="discount"></ins>
                                     <del class="font-size-20 ml-2 text-gray-6" x-text="price"></del>
                                 </div>
                             </template>
-                            <template x-if="!discount">
+                            <template x-if="!extractCurrency(discount)">
                                 <div class="d-flex align-items-baseline">
                                     <ins class="font-size-36 text-decoration-none" x-text="price"></ins>
                                 </div>
