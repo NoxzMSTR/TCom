@@ -105,7 +105,7 @@
                                     var slotHr = (slotHours - 2) % 24;
                                     self.startCountdown(slotHours + '_' + self.formatDate(now) + '_' + city, now.getDate(), slotHr);
                                     currentSlot[city][slotHours + '_' + self.formatDate(now) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(now), futureDates: false };
-        
+                                    console.log(currentSlot);
                                 }
                             });
                         } else {
