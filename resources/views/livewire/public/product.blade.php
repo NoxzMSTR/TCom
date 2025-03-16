@@ -247,6 +247,25 @@
                 this.validateVariation = true;
             }
         },
+        async buyNow() {
+            $('.add-to-cart-btn').addClass('disabled');
+    
+            await $wire.buyNow();
+    
+            $('.add-to-cart-btn').removeClass('disabled');
+    
+            this.qty = 1;
+    
+            $('[class*=\'variation-\']').each(function(index, element) {
+                var classes = 'border border-primary border-width-3';
+                $(element).prop('checked', false);
+                $(element).removeClass(classes);
+            });
+    
+            if (this.hasVariations) {
+                this.validateVariation = true;
+            }
+        },
         processAmount() {
             this.price = this.product.amount * this.qty;
             this.price = this.formatCurrency(this.price, this.default_currency);
@@ -447,6 +466,10 @@
                                     class="btn px-5 btn-primary-dark transition-3d-hover add-to-cart-btn"><i
                                         class="ec ec-add-to-cart cursor-pointer-on  mr-2 font-size-20"></i> Add to
                                     Cart</a>
+                                <a @click="buyNow()" href="javascript:;"
+                                    class="add-to-cart-btn btn btn-dark px-5 transition-3d-hover"><i
+                                        class="ec ec-shopping-bag cursor-pointer-on  mr-2 font-size-20"></i> Buy
+                                    now</a>
                             </div>
                         </div>
                     </div>

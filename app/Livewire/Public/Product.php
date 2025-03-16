@@ -51,6 +51,35 @@ class Product extends Component
         $this->dispatch('add-to-cart');
     }
 
+    #[Renderless]
+    public function buyNow()
+    {
+        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->where('id', $this->id)->first();
+
+        $variations = [];
+
+        foreach ($this->variations as $key => $value) {
+            $variation = ProductVariations::find($value);
+            $variations[$key] = $variation;
+        }
+
+        $cart = ['product' => $product, 'qty' => $this->qty, 'variations' => $variations, 'final' => $this->final];
+
+        $products = getSharedProperty('add-to-cart');
+
+        if ($products == null) {
+            $products = [];
+        }
+
+        $products[] = $cart;
+
+        sharedProperty('add-to-cart', $products);
+
+        $this->dispatch('add-to-cart');
+
+        $this->redirect(route('public.checkout'));
+    }
+
     public function render()
     {
         $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->where('id', $this->id)->first();
