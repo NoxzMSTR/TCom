@@ -108,6 +108,14 @@
                                     self.startCountdown(slotHours + '_' + self.formatDate(now) + '_' + city, now.getDate(), slotHr);
                                     currentSlot[city][slotHours + '_' + self.formatDate(now) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(now), futureDates: false };
         
+                                } else {
+                                    var [slotHours, slotMinutes] = elem.to.split(':');
+        
+                                    console.log(slotHours);
+                                    var slotHr = (slotHours - 2) % 24;
+                                    self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
+                                    currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
+                                    console.log(currentSlot);
                                 }
                             });
                         } else {
