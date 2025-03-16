@@ -595,6 +595,8 @@ class AddProduct extends Component
         $this->dispatch('pro-notification', type: 'success', title: 'Product Saved Successfully', message: 'The product has been successfully saved. 🎉');
 
         $this->clear();
+
+        $this->redirect(route('admin.product.add'));
     }
 
     public function deleteThumb()
@@ -608,6 +610,20 @@ class AddProduct extends Component
         $this->showThumbnail = false;
         $this->dispatch('on-clear');
         $this->dispatch('refreshDatatable');
+    }
+
+    public function deleteVThumb($index)
+    {
+        if (isset($this->variations[$index]['id'])) {
+            $vars = ProductVariations::where('id', $this->variations[$index]['id'])->first();
+            if ($vars) {
+                $data = [
+                    'thumbnail' => null,
+                ];
+                $vars->update($data);
+                unset($this->variations[$index]['previewThumbnail']);
+            }
+        }
     }
 
     public function clear()

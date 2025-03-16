@@ -129,6 +129,12 @@
                                 $wire.upload(`variations.${index}.thumbnail`, file); // Send the file to Livewire
                             }
                         },
+                        async deleteVThumb(index) {
+                            $('.btn').attr('disabled', true);
+                            await $wire.deleteVThumb(index);
+                            $('.btn').attr('disabled', false);
+                            $('.image-input-placeholder').removeAttr('style')
+                        },
                         init() {
                             if (this.variations.length == 0) {
                                 this.variations[0] = {
@@ -139,7 +145,7 @@
                                     previewThumbnail: null,
                                 };
                             }
-
+                    
                         }
                     }">
                         <!--begin::Form group-->
@@ -147,7 +153,18 @@
                             <div data-repeater-list="variations" class="d-flex flex-column gap-3">
                                 <template x-for="(variation, index) in variations" :key="index">
                                     <div class="align-items-center d-flex gap-2 justify-content-between">
-                                        <div x-show="variation.previewThumbnail" class="image-preview" wire:ignore>
+                                        <div x-show="variation.previewThumbnail" class="image-preview position-relative"
+                                            wire:ignore>
+                                            <span @click="deleteVThumb(index)"
+                                                class="badge badge-circle cursor-pointer  h-25px position-absolute shadow start-0 text-gray-600 top-0 translate-middle w-25px z-index-3">
+                                                <i class="ki-duotone ki-trash fs-6">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                    <span class="path3"></span>
+                                                    <span class="path4"></span>
+                                                    <span class="path5"></span>
+                                                </i>
+                                            </span>
                                             <label class="form-check-image">
                                                 <div class="form-check-wrapper">
                                                     <img class="w-100px" :src="variation.previewThumbnail" />
@@ -169,7 +186,7 @@
 
                                                 <!--begin::Input-->
                                                 <input type="text" class="form-control " x-model="variation.hasPrice"
-                                                    placeholder="Has Price">
+                                                    placeholder="Percentage %">
                                                 <!--end::Input-->
 
                                                 <!--begin::Input-->
