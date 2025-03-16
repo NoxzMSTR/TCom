@@ -93,7 +93,7 @@
                         let diffFrom = givenFromDate - now;
         
                         let diffTo = givenToDate - now;
-                        console.log(diffFrom < 0 && diffTo > 0);
+        
                         if (diffFrom < 0 && diffTo > 0) {
                             $.each(cityData, function(index, elem) {
                                 if (!currentSlot[city]) {
@@ -123,7 +123,7 @@
                                     var slotHr = (slotHours - 2) % 24;
                                     self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
                                     currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
-        
+                                    console.log(currentSlot);
                                 });
                             }
                         }
