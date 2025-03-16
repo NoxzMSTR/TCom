@@ -68,7 +68,7 @@ class AddProduct extends Component
         'max:21024',
     ]], message: [
         'assets.*.required' => 'Assets are required',
-        'assets.*' => 'Each asset must be an image not exceeding 20 MB',
+        'assets.*' => ' Each asset must be an image in PNG, JPG, JPEG, GIF, or BMP format and should not exceed 20 MB. 📁 Please upload a valid file to proceed. ',
     ])]
     public $assets = [];
     public $hasAssets = [];
