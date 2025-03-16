@@ -77,8 +77,7 @@
                 var currentMinutes = now.getMinutes();
                 var i = 0;
                 var currentSlot = {};
-                console.log(this.slot);
-                console.log(deliveryTime);
+        
                 $.each(this.slot, function(city, cityData) {
                     if (self.deliveryTime[city]) {
                         var [fromHours, fromMinutes] = self.deliveryTime[city].from.split(':');
@@ -105,7 +104,7 @@
                                     var slotHr = (slotHours - 2) % 24;
                                     self.startCountdown(slotHours + '_' + self.formatDate(now) + '_' + city, now.getDate(), slotHr);
                                     currentSlot[city][slotHours + '_' + self.formatDate(now) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(now), futureDates: false };
-                                    console.log(currentSlot);
+        
                                 }
                             });
                         } else {
@@ -119,7 +118,7 @@
                                     }
                                     var [slotHours, slotMinutes] = elem.to.split(':');
         
-        
+                                    console.log(slotHours);
                                     var slotHr = (slotHours - 2) % 24;
                                     self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
                                     currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
