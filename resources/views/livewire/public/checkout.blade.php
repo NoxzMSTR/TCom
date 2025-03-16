@@ -77,11 +77,12 @@
                 var currentMinutes = now.getMinutes();
                 var i = 0;
                 var currentSlot = {};
-        
+                console.log(this.slot);
+                console.log(deliveryTime);
                 $.each(this.slot, function(city, cityData) {
-                    if (deliveryTime[city]) {
-                        var [fromHours, fromMinutes] = deliveryTime[city].from.split(':');
-                        var [toHours, toMinutes] = deliveryTime[city].to.split(':');
+                    if (self.deliveryTime[city]) {
+                        var [fromHours, fromMinutes] = self.deliveryTime[city].from.split(':');
+                        var [toHours, toMinutes] = self.deliveryTime[city].to.split(':');
         
                         let givenFromDate = new Date();
                         let givenToDate = new Date();
