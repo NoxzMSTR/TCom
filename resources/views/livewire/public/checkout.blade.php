@@ -147,7 +147,7 @@
                         }
                     }
                 });
-                console.log(currentSlot);
+        
                 this.currentSlot = currentSlot;
                 $wire.set('hasSlots', currentSlot, false);
             },
