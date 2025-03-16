@@ -64,6 +64,7 @@ class AddProduct extends Component
     #[Validate(['assets.*' => [
         'required',
         'image',
+        'mimes:png,jpg,jpeg,gif,bmp',
         'max:21024',
     ]], message: [
         'assets.*.required' => 'Assets are required',
