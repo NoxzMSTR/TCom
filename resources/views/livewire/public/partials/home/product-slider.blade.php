@@ -48,7 +48,7 @@
                                 <div class="product-item__inner p-md-3 row no-gutters">
                                     @if ($product->thumbnail)
                                         <div class="col col-lg-auto product-media-left">
-                                            <a href="{{ route('public.product', [$product->id, $product->name]) }}"
+                                            <a href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
                                                 class="max-width-150 d-block"><img class="img-fluid"
                                                     src="{{ $product->thumbnail }}" alt="Image Description"></a>
                                         </div>
@@ -78,7 +78,7 @@
                                                     class="font-size-12 text-gray-5">{{ $product->categories->name }}</a>
                                             </div>
                                             <h5 class="product-item__title"><a
-                                                    href="{{ route('public.product', [$product->id, $product->name]) }}"
+                                                    href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
                                                     class="text-blue font-weight-bold">{{ $product->name }}</a>
                                             </h5>
                                         </div>
@@ -96,7 +96,7 @@
                                                 </div>
                                             </div>
                                             <div class="d-none d-xl-block prodcut-add-cart">
-                                                <a href="{{ route('public.product', [$product->id, $product->name]) }}"
+                                                <a href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
                                                     class="btn-add-cart btn-primary transition-3d-hover"><i
                                                         class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                             </div>

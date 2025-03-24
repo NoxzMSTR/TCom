@@ -40,7 +40,11 @@ class Login extends Component
 
             $user->update(['token' => $type . '-' . $id]);
 
+           try {
             Mail::to($this->email)->send(new AuthenticateMail('Welcome back to ' . $name, $user, $url));
+           } catch (\Throwable $th) {
+            throw ValidationException::withMessages(['email' => 'Ops! Something went wrong']);
+           }
         } else {
             throw ValidationException::withMessages(['email' => 'Ops user not found, Kindly click on signup to register on customer portal.']);
         }
@@ -76,7 +80,11 @@ class Login extends Component
 
             sharedProperty($type, $user);
 
-            Mail::to($this->email)->send(new RegistrationMail('Welcome to ' . $name, $user, $url));
+            try {
+                Mail::to($this->email)->send(new RegistrationMail('Welcome to ' . $name, $user, $url));
+            } catch (\Throwable $th) {
+                throw ValidationException::withMessages(['email' => 'Ops! Something went wrong']);
+            }
 
             $this->dispatch('mail-sent');
         }

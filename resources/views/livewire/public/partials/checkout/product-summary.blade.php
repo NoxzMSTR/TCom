@@ -225,7 +225,7 @@
                             id="defaultCheck10" required data-msg="Please agree terms and conditions."
                             data-error-class="u-has-error" data-success-class="u-has-success">
                         <label class="form-check-label form-label" for="defaultCheck10">
-                            I have read and agree to the website <a href="#" class="text-blue">terms and
+                            I have read and agree to the website <a href="{{ route('public.terms-n-conditions') }}" class="text-blue">terms and
                                 conditions </a>
                             <span class="text-danger">*</span>
                         </label>

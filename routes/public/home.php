@@ -17,7 +17,7 @@ use App\Livewire\Public\TermsConditions;
 
 Route::as('public.')->middleware([PublicActivities::class])->group(function () {
     Route::get('/', Home::class)->name('home');
-    Route::get('/product/{id}/{name}', Product::class)->name('product');
+    Route::get('/product/{id}-{name}', Product::class)->name('product');
     Route::get('/shop', Shop::class)->name('shop');
     Route::get('/shop/checkout', Checkout::class)->name('checkout');
     Route::get('/order/checkout/{trackingNo}/view', CheckoutSuccess::class)->name('checkout.success');

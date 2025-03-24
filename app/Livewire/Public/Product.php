@@ -82,7 +82,7 @@ class Product extends Component
 
     public function render()
     {
-        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->where('id', $this->id)->first();
+        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('id', $this->id)->where('status',1)->where('qty','!=',0)->first();
 
         if (!$product) {
             return redirect()->route('public.home');

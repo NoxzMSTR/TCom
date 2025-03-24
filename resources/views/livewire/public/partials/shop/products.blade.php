@@ -83,10 +83,10 @@
                                             href="{{ route('public.shop', ['category' => $product->categories->name]) }}"
                                             class="font-size-12 text-gray-5">{{ $product->categories->name }}</a></div>
                                     <h5 class="mb-1 product-item__title"><a
-                                            href="{{ route('public.product', [$product->id, $product->name]) }}"
+                                            href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
                                             class="text-blue font-weight-bold">{{ $product->name }}</a></h5>
                                     <div class="mb-2">
-                                        <a href="{{ route('public.product', [$product->id, $product->name]) }}"
+                                        <a href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
                                             class="d-block text-center"><img class="img-fluid"
                                                 src="{{ $product->thumbnail }}" alt="Image Description"></a>
                                     </div>
@@ -124,7 +124,7 @@
 
                                         </div>
                                         <div class="d-none d-xl-block prodcut-add-cart">
-                                            <a href="{{ route('public.product', [$product->id, $product->name]) }}"
+                                            <a href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
                                                 class="btn-add-cart btn-primary transition-3d-hover"><i
                                                     class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                         </div>
