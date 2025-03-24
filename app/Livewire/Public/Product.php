@@ -27,7 +27,7 @@ class Product extends Component
     #[Renderless]
     public function addToCart()
     {
-        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->where('id', $this->id)->first();
+        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('id', $this->id)->first();
 
         $variations = [];
 
@@ -54,7 +54,7 @@ class Product extends Component
     #[Renderless]
     public function buyNow()
     {
-        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('name', $this->title)->where('id', $this->id)->first();
+        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('id', $this->id)->first();
 
         $variations = [];
 
