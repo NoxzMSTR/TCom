@@ -156,7 +156,7 @@
                 VND: '₫', // Vietnamese Đồng
                 ZAR: 'R' // South African Rand
             };
-    
+
             let symbol = currencySymbols[currencyCode] || currencyCode;
             return symbol + Number(amount).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
@@ -168,7 +168,7 @@
             var self = this;
             var amount = 0;
             var final = this.processAmount();
-    
+
             $.each(this.variations, function(type, nVars) {
                 $.each(nVars, function(index, nvariation) {
                     $.each(nvariation, function(index, variation) {
@@ -179,18 +179,18 @@
                     });
                 });
             });
-    
+
             final = final + amount;
-    
+
             var discount = self.discount;
             var discount = this.extractCurrency(discount);
-    
+
             if (discount) {
                 self.discount = self.formatCurrency(final, self.default_currency);
             } else {
                 self.price = self.formatCurrency(final, self.default_currency);
             }
-    
+
             return final;
         },
         selectedVars(event) {
@@ -224,44 +224,44 @@
                 $('.add-to-cart-btn').addClass('disabled')
                 this.validateVariation = true;
             }
-    
+
             var final = this.afterAmount(exVariations);
             $wire.set('final', final, false);
         },
         async addToCart() {
             $('.add-to-cart-btn').addClass('disabled');
-    
+
             await $wire.addToCart();
-    
+
             $('.add-to-cart-btn').removeClass('disabled');
-    
+
             this.qty = 1;
-    
+
             $('[class*=\'variation-\']').each(function(index, element) {
                 var classes = 'border border-primary border-width-3';
                 $(element).prop('checked', false);
                 $(element).removeClass(classes);
             });
-    
+
             if (this.hasVariations) {
                 this.validateVariation = true;
             }
         },
         async buyNow() {
             $('.add-to-cart-btn').addClass('disabled');
-    
+
             await $wire.buyNow();
-    
+
             $('.add-to-cart-btn').removeClass('disabled');
-    
+
             this.qty = 1;
-    
+
             $('[class*=\'variation-\']').each(function(index, element) {
                 var classes = 'border border-primary border-width-3';
                 $(element).prop('checked', false);
                 $(element).removeClass(classes);
             });
-    
+
             if (this.hasVariations) {
                 this.validateVariation = true;
             }
@@ -281,14 +281,14 @@
             if (discount) {
                 return discount * this.qty;
             }
-    
+
             return amount * this.qty;
         },
         extractCurrency(amount) {
             let number = amount.replace(/[^\d.-]/g, ''); // Remove non-numeric characters except dot and minus
             return parseFloat(number);
         },
-    
+
         init() {
             this.validateVars();
         }
@@ -424,7 +424,7 @@
                                             <select :name="'variation-' + type" @change="validateVars()"
                                                 class="js-select selectpicker dropdown-select"
                                                 data-style="btn-sm bg-white font-weight-normal py-2 border">
-                                                <option value="0">Stock</option>
+                                                <option value="0">Default</option>
                                                 <template x-for="(option, key) in variation.options"
                                                     :key="key">
                                                     <option :value="option.id" x-text="option.data"></option>

@@ -108,7 +108,7 @@ class AddProduct extends Component
                 $this->discountData     = $product->discountData;
                 $this->status           = $product->status;
                 $this->sameDay          = $product->shippingType;
-                $this->vat              = $product->vat;
+                $this->vat              = $product->vat ?? 0;
                 $this->sku              = $product->sku;
                 $this->onSQty           = $product->qty;
                 $this->onWQty           = $product->wQty;
@@ -330,8 +330,8 @@ class AddProduct extends Component
                 'discountData'       => $this->discountData,
                 'status'             => $this->status,
                 'shippingType'       => $this->sameDay,
-                'vat'                => $this->vat,
-                'sku'                => $this->sku??'',
+                'vat'                => $this->vat ?? 0,
+                'sku'                => $this->sku ?? '',
                 'qty'                => $this->onSQty,
                 'wQty'               => $this->onWQty,
                 'backOrder'          => $this->backOrder,
@@ -516,9 +516,8 @@ class AddProduct extends Component
             'discountData'       => $this->discountData,
             'status'             => $this->status,
             'shippingType'       => $this->sameDay,
-            'vat'                => $this->vat,
-            'vat'                => $this->vat,
-            'sku'                => $sku??'',
+            'vat'                => $this->vat ?? 0,
+            'sku'                => $sku ?? '',
             'qty'                => $this->onSQty,
             'wQty'               => $this->onWQty,
             'backOrder'          => $this->backOrder,

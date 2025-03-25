@@ -1,26 +1,24 @@
 <?php
-
 namespace App\Livewire\Public;
 
-use Livewire\Component;
-use Livewire\Attributes\On;
 use App\Models\Product\Products;
 use App\Models\Product\ProductVariations;
 use Livewire\Attributes\Renderless;
+use Livewire\Component;
 use Spatie\Activitylog\Models\Activity;
 
 class Product extends Component
 {
     public $id;
     public $title;
-    public $qty = 1;
-    public $final = 0;
+    public $qty        = 1;
+    public $final      = 0;
     public $variations = [];
     public $breadCrumb = 'Home.Product';
 
     public function mount($id, $name)
     {
-        $this->id = $id;
+        $this->id    = $id;
         $this->title = $name;
     }
 
@@ -32,7 +30,7 @@ class Product extends Component
         $variations = [];
 
         foreach ($this->variations as $key => $value) {
-            $variation = ProductVariations::find($value);
+            $variation        = ProductVariations::find($value);
             $variations[$key] = $variation;
         }
 
@@ -59,7 +57,7 @@ class Product extends Component
         $variations = [];
 
         foreach ($this->variations as $key => $value) {
-            $variation = ProductVariations::find($value);
+            $variation        = ProductVariations::find($value);
             $variations[$key] = $variation;
         }
 
@@ -82,17 +80,17 @@ class Product extends Component
 
     public function render()
     {
-        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('id', $this->id)->where('status',1)->where('qty','!=',0)->first();
+        $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('id', $this->id)->where('status', 1)->where('qty', '!=', 0)->first();
 
-        if (!$product) {
-            return redirect()->route('public.home');
+        if (! $product) {
+            return view('not-found');
         }
 
         $hasActivity = Activity::whereJsonContains('properties->ip_address', request()->ip())->whereJsonContains('properties->session_id', request()->session()->getId())->whereJsonContains('properties->product_id', $product->id)->whereDate('created_at', now()->format('Y-m-d'))->where('log_name', 'product_click')->first();
 
         if (! $hasActivity) {
             activity('product_click') // Log name
-                ->causedBy(null) // Anonymous user
+                ->causedBy(null)          // Anonymous user
                 ->withProperties([
                     'product_id' => $product->id,
                     'ip_address' => request()->ip(),
