@@ -35226,12 +35226,13 @@ blockquote:not(.blockquote) p {
 
 @media (min-width: 1200px) {
   .product-item:hover .product-item__inner:not(.remove-prodcut-hover) {
-    position: absolute;
+    /* position: absolute; */
     width: 100%;
-    height: auto;
-    min-height: 100%;
-    box-shadow: 0px 0px 6px 0px rgba(1, 1, 1, 0.3);
-    background-color:{{ $backgroundColor?$backgroundColor:'#fff' }};
+    /* height: auto;
+    min-height: 100%; */
+     border: 1px solid {{ $borderColor?$borderColor:'#fed700' }} !important;
+    /* box-shadow: 0px 0px 6px 0px rgba(1, 1, 1, 0.3); */
+    background-color:#ffffff;
     z-index: 1;
   }
   .product-item:hover .product-item__footer {

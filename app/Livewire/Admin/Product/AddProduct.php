@@ -86,6 +86,10 @@ class AddProduct extends Component
 
     public $offered = 0;
 
+    public $offerExpireAt;
+
+    public $used = 0;
+
     public function mount($productID = null)
     {
         if ($productID) {
@@ -122,6 +126,8 @@ class AddProduct extends Component
                 $this->featured         = $product->isFeatured;
                 $this->brand            = $product->hasBrand;
                 $this->offered          = $product->isOffer;
+                $this->used             = $product->isUsed;
+                $this->offerExpireAt    = $product->offerExpireAt;
                 $this->metaTags         = json_validate($product->metaTagKeywords) ? json_decode($product->metaTagKeywords) : [];
                 $this->hasAssets        = $product->assets;
                 foreach ($product->variations as $key => $value) {
@@ -330,7 +336,7 @@ class AddProduct extends Component
                 'discountData'       => $this->discountData,
                 'status'             => $this->status,
                 'shippingType'       => $this->sameDay,
-                'vat'                => $this->vat ?? 0,
+                'vat'                => $this->vat ? $this->vat : 0,
                 'sku'                => $this->sku ?? '',
                 'qty'                => $this->onSQty,
                 'wQty'               => $this->onWQty,
@@ -346,6 +352,8 @@ class AddProduct extends Component
                 'hasBrand'           => $this->brand,
                 'isFeatured'         => $this->featured,
                 'isOffer'            => $this->offered,
+                'isUsed'             => $this->used,
+                'offerExpireAt'      => $this->offerExpireAt,
             ];
 
             $product = $this->product->update($data);
@@ -516,7 +524,7 @@ class AddProduct extends Component
             'discountData'       => $this->discountData,
             'status'             => $this->status,
             'shippingType'       => $this->sameDay,
-            'vat'                => $this->vat ?? 0,
+            'vat'                => $this->vat ? $this->vat : 0,
             'sku'                => $sku ?? '',
             'qty'                => $this->onSQty,
             'wQty'               => $this->onWQty,
@@ -532,6 +540,8 @@ class AddProduct extends Component
             'hasBrand'           => $this->brand,
             'isFeatured'         => $this->featured,
             'isOffer'            => $this->offered,
+            'isUsed'             => $this->used,
+            'offerExpireAt'      => $this->offerExpireAt,
         ]);
 
         if (is_array($this->metaTags)) {
@@ -672,6 +682,7 @@ class AddProduct extends Component
         $this->metaTitle       = null;
         $this->metaDescription = null;
         $this->metaTags        = null;
+        $this->offerExpireAt   = null;
         $this->assets          = [];
         $this->variations      = [['type' => '', 'data' => '', 'hasPrice' => '', 'thumbnail' => '']];
         $this->dispatch('on-clear');

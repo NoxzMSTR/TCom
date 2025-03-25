@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Models\Product;
 
 use App\Models\Brands;
+use App\Models\Order\OrderItems;
 use App\Models\Product\Categories;
 use App\Models\Vendors;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Products extends Model
 {
@@ -54,8 +54,18 @@ class Products extends Model
         return $this->hasMany(ProductSpecification::class, 'productID', 'id');
     }
 
-    function hasFeedBack()
+    public function hasFeedBack()
     {
         return $this->feedback()->count();
+    }
+
+    public function order()
+    {
+        return $this->hasMany(OrderItems::class, 'productID', 'id');
+    }
+
+    public function hasOrders()
+    {
+        return $this->order()->count();
     }
 }

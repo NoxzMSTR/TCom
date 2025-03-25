@@ -1,13 +1,10 @@
 <?php
-
 namespace App\Livewire\Admin\Product;
 
-use App\Models\User;
 use App\Models\Product\Products;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ProductDatatable extends DataTableComponent
 {
@@ -26,6 +23,7 @@ class ProductDatatable extends DataTableComponent
     {
         return [
             Column::make("Id", "id")
+                ->searchable()
                 ->sortable(),
             Column::make('Thumbnail', 'thumbnail')
                 ->unclickable()
@@ -34,8 +32,10 @@ class ProductDatatable extends DataTableComponent
                     return view('livewire.admin.product.product-el', ['type' => 'image', 'value' => $value, 'data' => $row]);
                 })->collapseOnMobile(),
             Column::make("Name", "name")
+                ->searchable()
                 ->sortable(),
             Column::make("Category", "categories.name")
+                ->searchable()
                 ->sortable(),
             Column::make("Created at", "created_at")
                 ->sortable(),
