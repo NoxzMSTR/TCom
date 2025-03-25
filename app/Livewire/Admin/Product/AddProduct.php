@@ -678,29 +678,15 @@ class AddProduct extends Component
         $this->vendor = [];
     }
 
-    public function updated($property)
+    #[Renderless]
+    public function searchVen($searchVendor)
     {
-        if ($property == 'searchVendor') {
-
-            if ($this->searchVendor) {
-                $this->searchList = Vendors::where('company', 'LIKE', '%' . $this->searchVendor . '%')->orWhere('name', 'LIKE', '%' . $this->searchVendor . '%')->orWhere('phone', 'LIKE', '%' . $this->searchVendor . '%');
-            } else {
-                $this->searchVendor = null;
-            }
-        }
-        $this->dispatch('hide-loader');
-    }
-
-    #[Computed]
-    public function searchData()
-    {
+        $vendors    = Vendors::where('company', 'LIKE', '%' . $searchVendor . '%')->orWhere('name', 'LIKE', '%' . $searchVendor . '%')->orWhere('phone', 'LIKE', '%' . $searchVendor . '%')->orderBy('id', 'DESC')->get();
         $searchData = [];
-        if ($this->searchList) {
-            $this->searchList = $this->searchList->orderBy('id', 'DESC')->get();
-            foreach ($this->searchList as $key => $value) {
-                $searchData[] = $value;
-            }
+        foreach ($vendors as $key => $value) {
+            $searchData[] = $value;
         }
+
         return $searchData;
     }
 
