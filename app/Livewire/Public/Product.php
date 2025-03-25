@@ -83,7 +83,7 @@ class Product extends Component
         $product = Products::with(['brand', 'categories', 'assets', 'variations', 'vendor', 'feedback', 'specification'])->where('id', $this->id)->where('status', 1)->where('qty', '!=', 0)->first();
 
         if (! $product) {
-            return view('not-found');
+            return view('not-found')->extends('layout.public-master', ['title' => $this->title, 'breadCrumb' => $this->breadCrumb])->section('content');
         }
 
         $hasActivity = Activity::whereJsonContains('properties->ip_address', request()->ip())->whereJsonContains('properties->session_id', request()->session()->getId())->whereJsonContains('properties->product_id', $product->id)->whereDate('created_at', now()->format('Y-m-d'))->where('log_name', 'product_click')->first();
