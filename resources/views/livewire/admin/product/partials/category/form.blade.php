@@ -28,6 +28,12 @@
     
             KTComponents.init();
     
+            $('.parentCategory').select2({
+                placeholder: 'Select Parent Category',
+    
+                templateResult: formatCatResult,
+            });
+    
             $('.parentCategory').on('select2:select', function(e) {
                 $wire.set('parent', $(this).val(), false)
             });
@@ -180,11 +186,16 @@
                 <!--end::Label-->
 
                 <!--begin::Input-->
-                <select class="form-select parentCategory" data-control="select2" wire:model='parent'
-                    data-placeholder="Select Parent Category">
-                    <option value="0" selected>Parent</option>
+                <select class="form-select parentCategory" wire:model='parent'>
+                    <option data-level="1" value="0" selected>Parent</option>
                     @foreach ($this->categories as $key => $cat)
-                        <option value="{{ $key }}">{{ $cat }}</option>
+                        <option data-level="{{ $cat['level'] }}" value="{{ $cat['id'] }}">{{ $cat['name'] }}
+                        </option>
+                        @if (isset($cat['child']))
+                            @include('livewire.admin.product.partials.product.sub-cat-options', [
+                                'categories' => $cat['child'],
+                            ])
+                        @endif
                     @endforeach
                 </select>
                 <!--end::Input-->

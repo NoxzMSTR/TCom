@@ -44,8 +44,16 @@
 
         });
 
-        function initEl() {
+        window.formatCatResult = function formatCatResult(node) {
+            var level = 0;
+            if (node.element !== undefined) {
+                level = $(node.element).attr('data-level');
 
-        }
+                level = parseInt(level);
+
+            }
+            var $result = $('<span style="padding-left:' + (20 * level) + 'px;">' + node.text + '</span>');
+            return $result;
+        };
     </script>
 @endscript
