@@ -158,6 +158,18 @@
 
         });
 
+        window.formatCatResult = function formatCatResult(node) {
+            var level = 0;
+            if (node.element !== undefined) {
+                level = $(node.element).attr('data-level');
+
+                level = parseInt(level);
+
+            }
+            var $result = $('<span style="padding-left:' + (20 * level) + 'px;">' + node.text + '</span>');
+            return $result;
+        };
+
         function initEl(e = null) {
             var metatags = document.querySelector("#metatags");
             $('#metatags').parent().find('.tagify').remove();
@@ -179,18 +191,7 @@
                 var key = $(this).attr('wire:model');
                 $wire.set(key, $(this).val(), false)
             });
-            $('.category').on('select2:select', function(e) {
-                $wire.set("category", $(this).val(), false)
-            });
-            $('.category').on('select2:unselect', function(e) {
-                $wire.set("category", $(this).val(), false)
-            });
-            $('.brand').on('select2:select', function(e) {
-                $wire.set("brand", $(this).val(), false)
-            });
-            $('.brand').on('select2:unselect', function(e) {
-                $wire.set("brand", $(this).val(), false)
-            });
+
         }
     </script>
 @endscript

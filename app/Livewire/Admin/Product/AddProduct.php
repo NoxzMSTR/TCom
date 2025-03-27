@@ -168,14 +168,36 @@ class AddProduct extends Component
     public function categories()
     {
         $categories = [];
-        $category   = Categories::with(['descendants'])->get();
+        $category   = Categories::with(['descendants'])->get()->toArray();
         foreach ($category as $key => $cat) {
-            $categories[$cat->id] = $cat->name;
-            if ($cat->descendants->count()) {
-                foreach ($cat->descendants as $child) {
-                    $categories[$child->id] = $cat->name . '->' . $child->name;
-                }
+            $categories[$key]['id']    = $cat['id'];
+            $categories[$key]['name']  = $cat['name'];
+            $categories[$key]['level'] = 1;
+            if (isset($cat['descendants'])) {
+                $categories[$key]['child'] = $this->buildCatTree($cat['descendants'], 2);
             }
+        }
+
+        return $categories;
+    }
+
+    public function buildCatTree($subCats, $level)
+    {
+        $categories = [];
+
+        foreach ($subCats as $cat) {
+            $menuItem = [
+                'id'    => $cat['id'],
+                'name'  => $cat['name'],
+                'level' => $level,
+            ];
+
+            // Check if it has children and call the function recursively
+            if (! empty($cat['descendants'])) {
+                $menuItem['child'] = $this->buildCatTree($cat['descendants'], $level + 1);
+            }
+
+            $categories[] = $menuItem;
         }
 
         return $categories;

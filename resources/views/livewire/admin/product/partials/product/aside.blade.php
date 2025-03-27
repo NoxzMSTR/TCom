@@ -142,15 +142,36 @@
             <!--end::Label-->
 
             <!--begin::Select2-->
-            <select class="form-select category mb-3" wire:modal.fill='category' data-control="select2"
-                data-placeholder="Select category">
-                <option value=""></option>
-                @foreach ($this->categories as $key => $value)
-                    <option value="{{ $key }}" {{ $category == $key ? 'selected' : '' }}>
-                        {{ $value }}
-                    </option>
-                @endforeach
-            </select>
+            <div wire:ignore x-data="{
+                init() {
+            
+                    $('.category').select2({
+                        placeholder: 'Select category',
+            
+                        templateResult: formatCatResult,
+                    });
+                    $('.category').on('select2:select', function(e) {
+                        $wire.set('category', $(this).val(), false)
+                    });
+                    $('.category').on('select2:unselect', function(e) {
+                        $wire.set('category', $(this).val(), false)
+                    });
+                }
+            }">
+
+                <select class="form-select category mb-3" wire:modal.fill='category'>
+                    <option value=""></option>
+                    @foreach ($this->categories as $key => $cat)
+                        <option data-level="{{ $cat['level'] }}" value="{{ $cat['id'] }}">{{ $cat['name'] }}
+                        </option>
+                        @if (isset($cat['child']))
+                            @include('livewire.admin.product.partials.product.sub-cat-options', [
+                                'categories' => $cat['child'],
+                            ])
+                        @endif
+                    @endforeach
+                </select>
+            </div>
             <!--end::Select2-->
 
             <!--end::Input group-->
@@ -182,18 +203,28 @@
         <!--begin::Card body-->
         <div class="card-body pt-0 pb-0">
             <!--begin::Input group-->
-            <!--begin::Select2-->
-            <select class="form-select brand mb-3" wire:modal.fill='brand' data-control="select2"
-                data-placeholder="Select brand">
-                <option value=""></option>
-                @foreach ($this->brands as $key => $value)
-                    <option value="{{ $key }}" {{ $brand == $key ? 'selected' : '' }}>
-                        {{ $value }}
-                    </option>
-                @endforeach
-            </select>
-            <!--end::Select2-->
-
+            <div wire:ignore x-data="{
+                init() {
+                    $('.brand').on('select2:select', function(e) {
+                        $wire.set('brand', $(this).val(), false)
+                    });
+                    $('.brand').on('select2:unselect', function(e) {
+                        $wire.set('brand', $(this).val(), false)
+                    });
+                }
+            }">
+                <!--begin::Select2-->
+                <select class="form-select brand mb-3" wire:modal.fill='brand' data-control="select2"
+                    data-placeholder="Select brand">
+                    <option value=""></option>
+                    @foreach ($this->brands as $key => $value)
+                        <option value="{{ $key }}" {{ $brand == $key ? 'selected' : '' }}>
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                </select>
+                <!--end::Select2-->
+            </div>
             <!--end::Input group-->
 
             <!--begin::Button-->
