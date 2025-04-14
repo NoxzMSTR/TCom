@@ -69,10 +69,7 @@
                 City
                 <span class="text-danger">*</span>
             </label>
-            <select class="form-control js-select selectpicker dropdown-select" required=""
-                data-msg="Please select city." data-error-class="u-has-error" data-success-class="u-has-success"
-                data-live-search="true" data-style="form-control border-color-1 font-weight-normal"
-                wire:model.fill='billing.city'>
+            <select class="form-control" required wire:model.fill='billing.city'>
                 <option value="" disabled>Select city</option>
                 @foreach ($cities as $key => $city)
                     <option value="{{ $city }}">{{ $city }}</option>

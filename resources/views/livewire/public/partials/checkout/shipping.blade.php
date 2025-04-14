@@ -82,10 +82,7 @@
                         City
                         <span class="text-danger">*</span>
                     </label>
-                    <select class="form-control js-select selectpicker dropdown-select" required=""
-                        data-msg="Please select city." data-error-class="u-has-error" data-success-class="u-has-success"
-                        data-live-search="true" data-style="form-control border-color-1 font-weight-normal"
-                        wire:model.fill='shipping.city'>
+                    <select class="form-control" required wire:model.fill='shipping.city'>
                         <option value="" disabled>Select city</option>
                         @foreach ($cities as $key => $city)
                             <option value="{{ $city }}">{{ $city }}</option>
@@ -106,9 +103,8 @@
                         <span class="text-danger">*</span>
                     </label>
                     <input type="email" class="form-control" name="emailAddress" placeholder="Email"
-                        aria-label="jackwayley@gmail.com" required=""
-                        data-msg="Please enter a valid email address." data-error-class="u-has-error"
-                        data-success-class="u-has-success" wire:model='shipping.email'>
+                        aria-label="jackwayley@gmail.com" required="" data-msg="Please enter a valid email address."
+                        data-error-class="u-has-error" data-success-class="u-has-success" wire:model='shipping.email'>
                     @error('shipping.email')
                         <div class="text-danger" style="font-weight: 700;">{{ $message }}</div>
                     @enderror

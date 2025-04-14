@@ -1,53 +1,51 @@
 <?php
-
 namespace App\Livewire\Public;
 
+use App\Mail\Order\OrderPlaced;
 use App\Models\Buyers;
-use Livewire\Component;
-use App\Models\Order\Orders;
 use App\Models\Order\OrderItems;
-use Livewire\Attributes\Validate;
+use App\Models\Order\Orders;
 use Illuminate\Support\Facades\DB;
-use Aaqib\GeoPakistan\Models\District;
-use Illuminate\Validation\ValidationException;
-use Stevebauman\Location\Facades\Location;
+use Illuminate\Support\Facades\Mail;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Checkout extends Component
 {
-    public $title = 'Checkout';
-    public $breadCrumb = 'Home.Checkout';
-    public $products = [];
+    public $title       = 'Checkout';
+    public $breadCrumb  = 'Home.Checkout';
+    public $products    = [];
     public $totalAmount = 0;
     #[Validate([
-        'billing.name' => [
-            'required',
-            'min:3'
-        ],
+            'billing.name'    => [
+                'required',
+                'min:3',
+            ],
 
-        'billing.address' => [
-            'required'
-        ],
-        'billing.city' => [
-            'required'
-        ],
+            'billing.address' => [
+                'required',
+            ],
+            'billing.city'    => [
+                'required',
+            ],
 
-        'billing.email' => [
-            'required',
-            'email',
-        ],
-        'billing.phone' => [
-            'required',
-        ],
-    ], message: [
-        'billing.name.required' => 'Billing name is required.',
-        'billing.country.required' => 'Billing country is required.',
-        'billing.address.required' => 'Billing address is required.',
-        'billing.city.required' => 'Billing city is required.',
-        'billing.postcode.required' => 'Billing postcode is required.',
-        'billing.state.required' => 'Billing state is required.',
-        'billing.email.required' => 'Billing email is required.',
-        'billing.phone.required' => 'Billing phone is required.',
-    ])]
+            'billing.email'   => [
+                'required',
+                'email',
+            ],
+            'billing.phone'   => [
+                'required',
+            ],
+        ], message: [
+            'billing.name.required'     => 'Billing name is required.',
+            'billing.country.required'  => 'Billing country is required.',
+            'billing.address.required'  => 'Billing address is required.',
+            'billing.city.required'     => 'Billing city is required.',
+            'billing.postcode.required' => 'Billing postcode is required.',
+            'billing.state.required'    => 'Billing state is required.',
+            'billing.email.required'    => 'Billing email is required.',
+            'billing.phone.required'    => 'Billing phone is required.',
+        ])]
     public $billing = [];
 
     public $shipping = [];
@@ -62,7 +60,6 @@ class Checkout extends Component
     public $note;
     public $userIP;
 
-
     public function mount()
     {
         $products = getSharedProperty('add-to-cart');
@@ -75,12 +72,12 @@ class Checkout extends Component
 
         if (is_array($products)) {
             $totalAmount = 0;
-            $exProducts = [];
+            $exProducts  = [];
             foreach ($products as $key => $vars) {
                 $exProducts[$vars['product']->id] = 1;
                 $totalAmount += $vars['final'];
             }
-            $this->products = $products;
+            $this->products    = $products;
             $this->totalAmount = currency_format(
                 $totalAmount,
                 $default_currency,
@@ -92,51 +89,51 @@ class Checkout extends Component
     {
         if ($this->shippingdiffrentAddress) {
             $this->validate([
-                'shipping.name' => [
+                'shipping.name'    => [
                     'required',
-                    'min:3'
+                    'min:3',
                 ],
 
                 'shipping.address' => [
-                    'required'
+                    'required',
                 ],
-                'shipping.city' => [
-                    'required'
+                'shipping.city'    => [
+                    'required',
                 ],
 
-                'shipping.email' => [
+                'shipping.email'   => [
                     'required',
                     'email',
                 ],
-                'shipping.phone' => [
+                'shipping.phone'   => [
                     'required',
                 ],
             ], [
-                'shipping.name.required' => 'Shipping name is required.',
-                'shipping.country.required' => 'Shipping country is required.',
-                'shipping.address.required' => 'Shipping address is required.',
-                'shipping.city.required' => 'Shipping city is required.',
+                'shipping.name.required'     => 'Shipping name is required.',
+                'shipping.country.required'  => 'Shipping country is required.',
+                'shipping.address.required'  => 'Shipping address is required.',
+                'shipping.city.required'     => 'Shipping city is required.',
                 'shipping.postcode.required' => 'Shipping postcode is required.',
-                'shipping.state.required' => 'Shipping state is required.',
-                'shipping.email.required' => 'Shipping email is required.',
-                'shipping.phone.required' => 'Shipping phone is required.',
+                'shipping.state.required'    => 'Shipping state is required.',
+                'shipping.email.required'    => 'Shipping email is required.',
+                'shipping.phone.required'    => 'Shipping phone is required.',
             ]);
         }
     }
 
     public function hasBuyer()
     {
-        $buyer = 0;
+        $buyer    = 0;
         $hasBuyer = Buyers::where('email', $this->billing['email'])->first();
         if ($hasBuyer) {
             $buyer = $hasBuyer->id;
         } else {
             $buyer = Buyers::create([
-                'type' => 0,
+                'type'      => 0,
                 'firstName' => $this->billing['name'],
-                'lastName' => '',
-                'email' => $this->billing['email'],
-                'phone' => $this->billing['phone'],
+                'lastName'  => '',
+                'email'     => $this->billing['email'],
+                'phone'     => $this->billing['phone'],
             ]);
             $buyer = $buyer->id;
         }
@@ -150,10 +147,6 @@ class Checkout extends Component
 
         $this->validateShipping();
 
-        if (count($this->hasSlots) !== count($this->slots)) {
-            throw ValidationException::withMessages(['hasSlots' => 'Please select slots to proceed with order!']);
-        }
-
         $billing = DB::table('pakistan_districts')->select(['pakistan_districts.name as city', 'pakistan_provinces.name as state'])->join('pakistan_provinces', 'pakistan_districts.province_id', '=', 'pakistan_provinces.id')->where('pakistan_districts.name', $this->billing['city'])->first();
         if ($this->shippingdiffrentAddress) {
             $shipping = DB::table('pakistan_districts')->select(['pakistan_districts.name as city', 'pakistan_provinces.name as state'])->join('pakistan_provinces', 'pakistan_districts.province_id', '=', 'pakistan_provinces.id')->where('pakistan_districts.name', $this->shipping['city'])->first();
@@ -164,10 +157,10 @@ class Checkout extends Component
             //throw $th;
         }
 
-        $country = isset($location['country']) ? $location['country'] : 'Pakistan';
-        $postalCode = isset($location['zip']) ? $location['zip'] : '0';
+        $country    = isset($location['country']) && $location['country'] == 'Pakistan' ? $location['country'] : 'Pakistan';
+        $postalCode = isset($location['zip']) && isset($location['country']) && $location['country'] == 'Pakistan' ? $location['zip'] : '0';
 
-        $buyerID =  $this->hasBuyer();
+        $buyerID = $this->hasBuyer();
 
         $count = Orders::count();
 
@@ -176,35 +169,35 @@ class Checkout extends Component
         $orderNo = $orderNo + $count;
 
         $order = Orders::create([
-            'orderNo' => $orderNo,
-            'orderDate' => now()->format('Y-m-d'),
-            'invoiceNo' => 'INV-' . $orderNo,
-            'invoicePath' => '',
-            'paymentMethod' => 'cod',
-            'userRole' => 0,
-            'userID' => $buyerID,
-            'userFirstName' => $this->billing['name'],
-            'userLastName' => '',
-            'userEmail' => $this->billing['email'],
-            'userPhone' => $this->billing['phone'],
-            'shippingPostalCode' => $this->shippingdiffrentAddress ? $postalCode : $postalCode,
-            'shippingAddress' => $this->shippingdiffrentAddress ? $this->shipping['address'] : $this->billing['address'],
-            'shippingCity' => $this->shippingdiffrentAddress ? $this->shipping['city'] : $this->billing['city'],
-            'shippingRegion' => $this->shippingdiffrentAddress ? $shipping->state : $billing->state,
-            'shippingCountry' => $this->shippingdiffrentAddress ? $country : $country,
-            'deliveryPostalCode' => $postalCode,
-            'deliveryAddress' => $this->billing['address'],
-            'deliveryCity' => $this->billing['city'],
-            'deliveryRegion' => $billing->state,
-            'deliveryCountry' => $country,
-            'isPaid' => 0,
+            'orderNo'               => $orderNo,
+            'orderDate'             => now()->format('Y-m-d'),
+            'invoiceNo'             => 'INV-' . $orderNo,
+            'invoicePath'           => '',
+            'paymentMethod'         => 'cod',
+            'userRole'              => 0,
+            'userID'                => $buyerID,
+            'userFirstName'         => $this->billing['name'],
+            'userLastName'          => '',
+            'userEmail'             => $this->billing['email'],
+            'userPhone'             => $this->billing['phone'],
+            'shippingPostalCode'    => $this->shippingdiffrentAddress ? $postalCode : $postalCode,
+            'shippingAddress'       => $this->shippingdiffrentAddress ? $this->shipping['address'] : $this->billing['address'],
+            'shippingCity'          => $this->shippingdiffrentAddress ? $this->shipping['city'] : $this->billing['city'],
+            'shippingRegion'        => $this->shippingdiffrentAddress ? $shipping->state : $billing->state,
+            'shippingCountry'       => $this->shippingdiffrentAddress ? $country : $country,
+            'deliveryPostalCode'    => $postalCode,
+            'deliveryAddress'       => $this->billing['address'],
+            'deliveryCity'          => $this->billing['city'],
+            'deliveryRegion'        => $billing->state,
+            'deliveryCountry'       => $country,
+            'isPaid'                => 0,
             'shippingSameAsBilling' => $this->shippingdiffrentAddress,
-            'status' => 0,
-            'bookerID' => 0,
-            'notes' => $this->note,
+            'status'                => 0,
+            'bookerID'              => 0,
+            'notes'                 => $this->note,
         ]);
 
-        $sameData = [];
+        $sameData        = [];
         $productsByCType = [];
 
         foreach ($this->slots as $key => $value) {
@@ -219,50 +212,49 @@ class Checkout extends Component
             if ($product->vendor) {
                 $city = $product->vendor->city;
             }
-            $qty = $exProduct['qty'];
-            $discount = $exProduct['final'];
+            $qty        = $exProduct['qty'];
+            $discount   = $exProduct['final'];
             $variations = $exProduct['variations'];
             if ($product->shippingType == 1 && isset($city)) {
                 OrderItems::create([
-                    'orderID' => $order->id,
-                    'productID' => $product->id,
-                    'name' => $product->name,
-                    'amount' => $discount,
-                    'qty' => $qty,
-                    'discountType' => $product->discountType,
-                    'discountData' => $product->discountData,
-                    'from' => isset($sameData[$city]) ? $sameData[$city]['city'] : '',
-                    'sameDate' => isset($sameData[$city]) ? $sameData[$city]['date'] : '',
-                    'sameDaySlot' => isset($sameData[$city]) ? $sameData[$city]['slot'] : '',
+                    'orderID'       => $order->id,
+                    'productID'     => $product->id,
+                    'name'          => $product->name,
+                    'amount'        => $discount,
+                    'qty'           => $qty,
+                    'discountType'  => $product->discountType,
+                    'discountData'  => $product->discountData,
+                    'from'          => isset($sameData[$city]) ? $sameData[$city]['city'] : '',
+                    'sameDate'      => isset($sameData[$city]) ? $sameData[$city]['date'] : '',
+                    'sameDaySlot'   => isset($sameData[$city]) ? $sameData[$city]['slot'] : '',
                     'variationData' => json_encode($variations),
                 ]);
             } else {
                 OrderItems::create([
-                    'orderID' => $order->id,
-                    'productID' => $product->id,
-                    'name' => $product->name,
-                    'amount' => $discount,
-                    'qty' => $qty,
-                    'discountType' => $product->discountType,
-                    'discountData' => $product->discountData,
+                    'orderID'       => $order->id,
+                    'productID'     => $product->id,
+                    'name'          => $product->name,
+                    'amount'        => $discount,
+                    'qty'           => $qty,
+                    'discountType'  => $product->discountType,
+                    'discountData'  => $product->discountData,
                     'variationData' => json_encode($variations),
                 ]);
             }
         }
 
-
         foreach ($productsByCType as $city => $nProducts) {
             if ($city !== 0) {
                 foreach ($nProducts as $key => $product) {
-                    $qty = count($product);
-                    $product = $product[0];
+                    $qty      = count($product);
+                    $product  = $product[0];
                     $discount = $product->amount;
 
                     $discount = 0;
-                    $amount = $product->amount;
+                    $amount   = $product->amount;
                     if ($product->discountType == 1) {
                         $discount =
-                            ($amount / 100) * $product->discountData;
+                        ($amount / 100) * $product->discountData;
                         $discount = $amount - $discount;
                     } elseif ($product->discountType == 2) {
                         $discount = $product->discountData;
@@ -271,41 +263,41 @@ class Checkout extends Component
                     }
                     if ($product->shippingType == 1) {
                         OrderItems::create([
-                            'orderID' => $order->id,
-                            'productID' => $product->id,
-                            'name' => $product->name,
-                            'amount' => $discount,
-                            'qty' => $qty,
+                            'orderID'      => $order->id,
+                            'productID'    => $product->id,
+                            'name'         => $product->name,
+                            'amount'       => $discount,
+                            'qty'          => $qty,
                             'discountType' => $product->discountType,
                             'discountData' => $product->discountData,
-                            'from' => isset($sameData[$city]) ? $sameData[$city]['city'] : '',
-                            'sameDate' => isset($sameData[$city]) ? $sameData[$city]['date'] : '',
-                            'sameDaySlot' => isset($sameData[$city]) ? $sameData[$city]['slot'] : '',
-                            'variationID' => isset($product->variationID) ? $product->variationID : 0,
+                            'from'         => isset($sameData[$city]) ? $sameData[$city]['city'] : '',
+                            'sameDate'     => isset($sameData[$city]) ? $sameData[$city]['date'] : '',
+                            'sameDaySlot'  => isset($sameData[$city]) ? $sameData[$city]['slot'] : '',
+                            'variationID'  => isset($product->variationID) ? $product->variationID : 0,
                         ]);
                     } else {
                         OrderItems::create([
-                            'orderID' => $order->id,
-                            'productID' => $product->id,
-                            'name' => $product->name,
-                            'amount' => $discount,
-                            'qty' => $qty,
+                            'orderID'      => $order->id,
+                            'productID'    => $product->id,
+                            'name'         => $product->name,
+                            'amount'       => $discount,
+                            'qty'          => $qty,
                             'discountType' => $product->discountType,
                             'discountData' => $product->discountData,
-                            'variationID' => isset($product->variationID) ? $product->variationID : 0,
+                            'variationID'  => isset($product->variationID) ? $product->variationID : 0,
                         ]);
                     }
                 }
             } else {
-                $qty = count($product);
-                $product = $product[0];
+                $qty      = count($product);
+                $product  = $product[0];
                 $discount = $product->amount;
 
                 $discount = 0;
-                $amount = $product->amount;
+                $amount   = $product->amount;
                 if ($product->discountType == 1) {
                     $discount =
-                        ($amount / 100) * $product->discountData;
+                    ($amount / 100) * $product->discountData;
                     $discount = $amount - $discount;
                 } elseif ($product->discountType == 2) {
                     $discount = $product->discountData;
@@ -314,16 +306,22 @@ class Checkout extends Component
                 }
 
                 OrderItems::create([
-                    'orderID' => $order->id,
-                    'productID' => $product->id,
-                    'name' => $product->name,
-                    'amount' => $discount,
-                    'qty' => $qty,
+                    'orderID'      => $order->id,
+                    'productID'    => $product->id,
+                    'name'         => $product->name,
+                    'amount'       => $discount,
+                    'qty'          => $qty,
                     'discountType' => $product->discountType,
                     'discountData' => $product->discountData,
-                    'variationID' => isset($product->variationID) ? $product->variationID : 0,
+                    'variationID'  => isset($product->variationID) ? $product->variationID : 0,
                 ]);
             }
+        }
+
+        try {
+            Mail::to($order->userEmail)->send(new OrderPlaced('Order is Being Processed #' . $order->invoiceNo, $order));
+        } catch (\Throwable $th) {
+
         }
 
         forgetSharedProperties(['add-to-cart']);

@@ -78,6 +78,7 @@
                 var i = 0;
                 var currentSlot = {};
         
+        
                 $.each(this.slot, function(city, cityData) {
                     if (self.deliveryTime[city]) {
                         var [fromHours, fromMinutes] = self.deliveryTime[city].from.split(':');
@@ -93,7 +94,6 @@
         
                         let diffTo = givenToDate - now;
         
-        
                         if (!currentSlot[city]) {
                             currentSlot[city] = {};
                         }
@@ -103,8 +103,10 @@
                             $.each(cityData, function(index, elem) {
         
                                 var [slotHours, slotMinutes] = elem.to.split(':');
+                                var exSlotHrs = (slotHours % 12) + 12;
+                                let diff = (exSlotHrs - currentHours + 24) % 24;
         
-                                if (slotHours > currentHours) {
+                                if (diff > 0 && diff < 12) {
                                     var slotHr = (slotHours - 2) % 24;
                                     self.startCountdown(slotHours + '_' + self.formatDate(now) + '_' + city, now.getDate(), slotHr);
                                     currentSlot[city][slotHours + '_' + self.formatDate(now) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(now), futureDates: false };
@@ -223,8 +225,48 @@
             formatTime(date) {
                 return date.toTimeString().split(' ')[0];
             },
+            async placeOrder() {
+                $('.btn').attr('disabled', true);
+                if ($('[name*=sameDaySlot-]').length) {
         
+                    var sameDayEl = {};
+                    $.each($('[name*=sameDaySlot-]'), function(index, el) {
+                        var name = $(el).attr('name');
+                        if (!sameDayEl[name]) {
+                            sameDayEl[name] = {}
+                        }
+                        if (!sameDayEl[name][index]) {
+                            sameDayEl[name][index] = el;
+                        }
+                    });
+        
+                    var hasError = false;
+        
+                    var getError = {};
+        
+                    $.each(sameDayEl, function(index, esl) {
+        
+                        if ($('[name=' + index + ']:checked').length == 0) {
+                            hasError = true
+                        }
+                    });
+        
+                    if (hasError) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: 'Please select a slot of the product to proceed with order!',
+                        });
+                        $('.btn').attr('disabled', false);
+                        return false;
+                    }
+        
+                }
+                await $wire.placeOrder();
+                $('.btn').attr('disabled', false);
+            },
         }">
+
             <div class="mb-5">
                 <h1 class="text-center">Checkout</h1>
             </div>
@@ -235,57 +277,56 @@
             <!-- Accordion -->
 
             <!-- End Accordion -->
-            <form class="js-validate" novalidate="novalidate" wire:submit="placeOrder">
 
-                <input type="text" hidden x-model="userIP">
-                <div class="row">
-                    <div class="col-lg-5 order-lg-2 mb-7 mb-lg-0">
-                        @include('livewire.public.partials.checkout.product-summary')
-                    </div>
+            <input type="text" hidden x-model="userIP">
+            <div class="row">
+                <div class="col-lg-5 order-lg-2 mb-7 mb-lg-0">
+                    @include('livewire.public.partials.checkout.product-summary')
+                </div>
 
-                    <div class="col-lg-7 order-lg-1">
-                        <div class="pb-7 mb-7">
-                            <!-- Title -->
-                            <div class="border-bottom border-color-1 mb-5">
-                                <h3 class="section-title mb-0 pb-2 font-size-25">Billing details</h3>
-                            </div>
-                            <!-- End Title -->
-
-                            <!-- Billing Form -->
-                            @include('livewire.public.partials.checkout.billing')
-                            <!-- End Billing Form -->
-
-                            <!-- Accordion -->
-                            @include('livewire.public.partials.checkout.create-account')
-                            <!-- End Accordion -->
-                            <!-- Title -->
-                            <div class="border-bottom border-color-1 mb-5">
-                                <h3 class="section-title mb-0 pb-2 font-size-25">Shipping Details details</h3>
-                            </div>
-                            <!-- End Title -->
-                            <!-- Accordion -->
-                            <div id="shopCartAccordion3" class="accordion rounded mb-5">
-                                <!-- Card -->
-                                @include('livewire.public.partials.checkout.shipping')
-                                <!-- End Card -->
-                            </div>
-                            <!-- End Accordion -->
-                            <!-- Input -->
-                            <div class="js-form-message mb-6">
-                                <label class="form-label">
-                                    Order notes (optional)
-                                </label>
-
-                                <div class="input-group">
-                                    <textarea class="form-control p-5" rows="4" name="text" wire:model='note'
-                                        placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
-                                </div>
-                            </div>
-                            <!-- End Input -->
+                <div class="col-lg-7 order-lg-1">
+                    <div class="pb-7 mb-7">
+                        <!-- Title -->
+                        <div class="border-bottom border-color-1 mb-5">
+                            <h3 class="section-title mb-0 pb-2 font-size-25">Billing details</h3>
                         </div>
+                        <!-- End Title -->
+
+                        <!-- Billing Form -->
+                        @include('livewire.public.partials.checkout.billing')
+                        <!-- End Billing Form -->
+
+                        <!-- Accordion -->
+                        @include('livewire.public.partials.checkout.create-account')
+                        <!-- End Accordion -->
+                        <!-- Title -->
+                        <div class="border-bottom border-color-1 mb-5">
+                            <h3 class="section-title mb-0 pb-2 font-size-25">Shipping Details details</h3>
+                        </div>
+                        <!-- End Title -->
+                        <!-- Accordion -->
+                        <div id="shopCartAccordion3" class="accordion rounded mb-5">
+                            <!-- Card -->
+                            @include('livewire.public.partials.checkout.shipping')
+                            <!-- End Card -->
+                        </div>
+                        <!-- End Accordion -->
+                        <!-- Input -->
+                        <div class="js-form-message mb-6">
+                            <label class="form-label">
+                                Order notes (optional)
+                            </label>
+
+                            <div class="input-group">
+                                <textarea class="form-control p-5" rows="4" name="text" wire:model='note'
+                                    placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                            </div>
+                        </div>
+                        <!-- End Input -->
                     </div>
                 </div>
-            </form>
+            </div>
+
         </div>
     </div>
 </div>
