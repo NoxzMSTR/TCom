@@ -126,3 +126,23 @@
         </div>
     </div>
 </div>
+@script
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Corporation",
+      "name": "TechBottle",
+      "alternateName": "Tech Bottle",
+      "url": "https://techbottle.pk/",
+      "logo": "https://techbottle.pk/system/WhatsApp Image 2024-11-19 at 01.07.11_49c2be52 (1).png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "‪+923418425578‬",
+        "contactType": "customer service",
+        "areaServed": "PK",
+        "availableLanguage": ["en","Urdu"]
+      },
+      "sameAs": "https://techbottle.pk/"
+    }
+    </script>
+@endscript
