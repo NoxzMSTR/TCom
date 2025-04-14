@@ -126,7 +126,7 @@
         </div>
     </div>
 </div>
-@script
+@assets
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -145,4 +145,4 @@
       "sameAs": "https://techbottle.pk/"
     }
     </script>
-@endscript
+@endassets

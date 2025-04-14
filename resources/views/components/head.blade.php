@@ -51,4 +51,18 @@
 
     @livewireStyles
     @stack('css')
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org/",
+          "@type": "WebSite",
+          "name": "TechBottle",
+          "url": "https://techbottle.pk/",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://techbottle.pk/shop?category=Keyboards%20%26%20Mice{search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+        </script>
 </head>

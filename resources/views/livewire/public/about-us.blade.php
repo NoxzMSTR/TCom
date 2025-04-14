@@ -15,7 +15,7 @@
         {!! $aboutus !!}
     </main>
 </div>
-@script
+@assets
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -95,4 +95,4 @@
       }]
     }
     </script>
-@endscript
+@endassets
