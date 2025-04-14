@@ -54,15 +54,123 @@
 
     <script type="application/ld+json">
         {
-          "@context": "https://schema.org/",
+          "@context": "https://schema.org",
+          "@type": "Corporation",
+          "name": "TechBottle",
+          "alternateName": "Tech Bottle",
+          "url": "https://techbottle.pk/",
+          "logo": "https://techbottle.pk/system/WhatsApp%20Image%202024-11-19%20at%2001.07.11_49c2be52%20(1).png",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "‪+923418425578‬",
+            "contactType": "Customer Service",
+            "areaServed": "PK",
+            "availableLanguage": ["en", "ur"]
+          },
+          "sameAs": ["https://techbottle.pk/"]
+        }
+        </script>
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
           "@type": "WebSite",
           "name": "TechBottle",
           "url": "https://techbottle.pk/",
           "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://techbottle.pk/shop?category=Keyboards%20%26%20Mice{search_term_string}",
+            "target": "https://techbottle.pk/shop?category=Keyboards%20%26%20Mice&search={search_term_string}",
             "query-input": "required name=search_term_string"
           }
         }
         </script>
+
+    <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What is TechBottle?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "TechBottle is a leading e-commerce marketplace in Sialkot, connecting buyers with trusted sellers across Punjab. We offer a wide range of computers, laptops, peripherals, accessories, networking equipment, and storage devices."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you offer delivery services?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, we provide fast and reliable delivery within 24 hours across Sialkot."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I find gaming accessories at TechBottle?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Absolutely. We offer gaming keyboards, mice, headsets, cooling fans, graphic cards, PC cases, and other essential gaming accessories."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Who are the sellers on TechBottle?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "TechBottle collaborates with verified sellers from across Punjab to offer a diverse selection of tech products with fast delivery."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does TechBottle support freelancers and IT professionals?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, we support freelancers and IT professionals with affordable and high-quality tech accessories and hardware."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I place an order?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Visit our website, browse the products, add items to your cart, and proceed to checkout. It's quick and convenient."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I sell my products on TechBottle?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Currently, we do not offer a selling platform for individuals or businesses, but we're planning to expand in the future."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What payment methods do you accept?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We accept Cash on Delivery (COD), online payments, and bank transfers."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What if I receive a faulty or incorrect product?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "If you receive a faulty or incorrect item, contact our support team. We’ll help you with a return or exchange."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How can I contact TechBottle for inquiries?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can email us at info@techbottle.pk or call/WhatsApp at 0341-8425578. We're located in Sialkot, Pakistan."
+                  }
+                }
+              ]
+            }
+            </script>
 </head>
