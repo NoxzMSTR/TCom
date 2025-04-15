@@ -4,9 +4,11 @@
             $default_currency = null;
         }
         $variations = [];
+        $variationByID = [];
         $hasVariations = false;
         foreach ($product->variations as $key => $variation) {
             if ($variation->type !== '') {
+                $variationByID[$variation->id] = $variation;
                 if ($variation->thumbnail) {
                     $variations[PRODUCT_VARIATIONS[$variation->type]]['thumbs'][] = $variation;
                 } else {
@@ -20,9 +22,11 @@
     <div class="container" x-data="{
         default_currency: @js($default_currency),
         product: @js($product),
+        gQty: 1,
         qty: $wire.entangle('qty'),
         hasVariations: @js($hasVariations),
         validateVariation: @js($hasVariations),
+        variationByID: @js($variationByID),
         variations: {{ json_encode($variations) }},
         price: 0,
         discount: 0,
@@ -156,7 +160,7 @@
                 VND: '₫', // Vietnamese Đồng
                 ZAR: 'R' // South African Rand
             };
-
+    
             let symbol = currencySymbols[currencyCode] || currencyCode;
             return symbol + Number(amount).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
@@ -168,7 +172,7 @@
             var self = this;
             var amount = 0;
             var final = this.processAmount();
-
+    
             $.each(this.variations, function(type, nVars) {
                 $.each(nVars, function(index, nvariation) {
                     $.each(nvariation, function(index, variation) {
@@ -179,18 +183,18 @@
                     });
                 });
             });
-
+    
             final = final + amount;
-
+    
             var discount = self.discount;
             var discount = this.extractCurrency(discount);
-
+    
             if (discount) {
                 self.discount = self.formatCurrency(final, self.default_currency);
             } else {
                 self.price = self.formatCurrency(final, self.default_currency);
             }
-
+    
             return final;
         },
         selectedVars(event) {
@@ -207,15 +211,26 @@
             var self = this;
             var variations = {};
             var exVariations = {};
+    
             $('[name*=\'variation-\']').each(function(index, element) {
+    
                 if ($(element).find('option').is(':selected') || $(element).is(':checked')) {
                     var id = $(element).attr('name');
                     var val = $(element).val();
+    
+    
+                    if (self.variationByID[val]) {
+                        self.gQty = self.variationByID[val].stock;
+                    } else {
+                        self.gQty = self.product.qty;
+                    }
+                    console.log(self.gQty);
                     variations[id] = val;
                     exVariations[val] = val;
                     i++
                 }
             });
+    
             if (i == this.hasVariations) {
                 $('.add-to-cart-btn').removeClass('disabled')
                 this.validateVariation = false;
@@ -224,44 +239,44 @@
                 $('.add-to-cart-btn').addClass('disabled')
                 this.validateVariation = true;
             }
-
+    
             var final = this.afterAmount(exVariations);
             $wire.set('final', final, false);
         },
         async addToCart() {
             $('.add-to-cart-btn').addClass('disabled');
-
+    
             await $wire.addToCart();
-
+    
             $('.add-to-cart-btn').removeClass('disabled');
-
+    
             this.qty = 1;
-
+    
             $('[class*=\'variation-\']').each(function(index, element) {
                 var classes = 'border border-primary border-width-3';
                 $(element).prop('checked', false);
                 $(element).removeClass(classes);
             });
-
+    
             if (this.hasVariations) {
                 this.validateVariation = true;
             }
         },
         async buyNow() {
             $('.add-to-cart-btn').addClass('disabled');
-
+    
             await $wire.buyNow();
-
+    
             $('.add-to-cart-btn').removeClass('disabled');
-
+    
             this.qty = 1;
-
+    
             $('[class*=\'variation-\']').each(function(index, element) {
                 var classes = 'border border-primary border-width-3';
                 $(element).prop('checked', false);
                 $(element).removeClass(classes);
             });
-
+    
             if (this.hasVariations) {
                 this.validateVariation = true;
             }
@@ -281,16 +296,24 @@
             if (discount) {
                 return discount * this.qty;
             }
-
+    
             return amount * this.qty;
         },
         extractCurrency(amount) {
-            let number = amount.replace(/[^\d.-]/g, ''); // Remove non-numeric characters except dot and minus
-            return parseFloat(number);
+            try {
+                let number = amount.replace(/[^\d.-]/g, ''); // Remove non-numeric characters except dot and minus
+                return parseFloat(number);
+            } catch (error) {
+                return 0;
+            }
+    
         },
-
+    
         init() {
-            this.validateVars();
+            this.gQty = this.product.qty;
+            setTimeout(() => {
+                this.validateVars();
+            }, 0);
         }
     }">
         <!-- Single Product Body -->
@@ -346,13 +369,14 @@
                                             class="img-fluid" src="{{ $product->brand->thumbnail }}"
                                             alt="Image Description"></a>
                                 @endif
-                                @if ($product->qty)
+                                <template x-if="gQty">
                                     <div class="ml-md-3 text-gray-9 font-size-14">Availability: <span
-                                            class="text-green font-weight-bold">{{ $product->qty }} in stock</span>
+                                            class="text-green font-weight-bold" x-text="gQty+' in stock'"></span>
                                     </div>
-                                @else
+                                </template>
+                                <template x-if="!gQty">
                                     <div class="ml-md-3 text-danger font-size-14">Out of stock</div>
-                                @endif
+                                </template>
 
                             </div>
                         </div>
@@ -392,7 +416,8 @@
                                                     class="media border border-primary border-width-3">
 
                                                     <div class="width-75 height-75">
-                                                        <img class="img-fluid object-fit-cover" :src="product.thumbnail"
+                                                        <img class="img-fluid object-fit-cover"
+                                                            style="object-fit: contain" :src="product.thumbnail"
                                                             alt="Image Description">
                                                     </div>
 
@@ -407,7 +432,8 @@
 
                                                         <div class="width-75 height-75">
                                                             <img class="img-fluid object-fit-cover"
-                                                                :src="value.thumbnail" alt="Image Description">
+                                                                style="object-fit: contain" :src="value.thumbnail"
+                                                                alt="Image Description">
                                                         </div>
 
                                                         <input hidden :id="'variation-' + value.id" type="radio"
@@ -436,8 +462,8 @@
                             </template>
                         </div>
 
-                        <div class="d-md-flex align-items-end mb-3">
-                            <div class="max-width-150 mb-4 mb-md-0">
+                        <div class="d-md-flex align-items-end mb-3" :class="gQty == 0 ? 'd-none' : ''">
+                            <div class="max-width-150 mb-4 mb-md-0" :class="gQty == 0 ? 'd-none' : ''">
                                 <h6 class="font-size-14 font-weight-bolder">Quantity</h6>
                                 <!-- Quantity -->
                                 <div class="border rounded-pill py-2 px-3 border-color-1">
@@ -445,7 +471,7 @@
                                         <div class="col">
                                             <input x-model="qty"
                                                 class="js-result form-control h-auto border-0 rounded p-0 shadow-none"
-                                                type="text" value="1">
+                                                type="text" value="1" min="1" :max="gQty">
                                         </div>
                                         <div class="col-auto pr-1">
                                             <a class="js-minus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0"
@@ -453,7 +479,8 @@
                                                 <small class="fas fa-minus btn-icon__inner"></small>
                                             </a>
                                             <a class="js-plus btn btn-icon btn-xs btn-outline-secondary rounded-circle border-0"
-                                                href="javascript:;" @click="qty++;validateVars()">
+                                                href="javascript:;"
+                                                @click="gQty == qty ? gQty : qty++;validateVars()">
                                                 <small class="fas fa-plus btn-icon__inner"></small>
                                             </a>
                                         </div>
@@ -462,11 +489,11 @@
                                 <!-- End Quantity -->
                             </div>
                             <div class="ml-md-3">
-                                <a @click="addToCart()" href="javascript:;"
+                                <a @click="addToCart()" href="javascript:;" :class="gQty == 0 ? 'disabled' : ''"
                                     class="btn px-5 btn-primary-dark transition-3d-hover add-to-cart-btn"><i
                                         class="ec ec-add-to-cart cursor-pointer-on  mr-2 font-size-20"></i> Add to
                                     Cart</a>
-                                <a @click="buyNow()" href="javascript:;"
+                                <a @click="buyNow()" href="javascript:;" :class="gQty == 0 ? 'disabled' : ''"
                                     class="add-to-cart-btn btn btn-dark px-5 transition-3d-hover"><i
                                         class="ec ec-shopping-bag cursor-pointer-on  mr-2 font-size-20"></i> Buy
                                     now</a>

@@ -131,7 +131,7 @@ class AddProduct extends Component
                 $this->metaTags         = json_validate($product->metaTagKeywords) ? json_decode($product->metaTagKeywords) : [];
                 $this->hasAssets        = $product->assets;
                 foreach ($product->variations as $key => $value) {
-                    $this->variations[] = ['id' => $value['id'], 'type' => $value['type'], 'data' => $value['data'], 'hasPrice' => $value['hasPrice'], 'previewThumbnail' => $value['thumbnail']];
+                    $this->variations[] = ['id' => $value['id'], 'type' => $value['type'], 'data' => $value['data'], 'hasPrice' => $value['hasPrice'], 'stock' => $value['stock'], 'previewThumbnail' => $value['thumbnail']];
                 }
                 $specification = [];
                 foreach ($product->specification as $key => $value) {
@@ -441,6 +441,7 @@ class AddProduct extends Component
                                     'type'      => $value['type'],
                                     'data'      => $value['data'],
                                     'hasPrice'  => $value['hasPrice'] ?: 0,
+                                    'stock'     => $value['stock'] ?: 0,
                                     'thumbnail' => asset($path),
                                     'productID' => $this->product->id,
                                 ]);
@@ -449,6 +450,7 @@ class AddProduct extends Component
                                     'type'      => $value['type'],
                                     'data'      => $value['data'],
                                     'hasPrice'  => $value['hasPrice'] ?: 0,
+                                    'stock'     => $value['stock'] ?: 0,
                                     'productID' => $this->product->id,
                                 ]);
                             }
@@ -621,6 +623,7 @@ class AddProduct extends Component
                     'type'      => $value['type'],
                     'data'      => $value['data'],
                     'hasPrice'  => $value['hasPrice'] ?: 0,
+                    'stock'     => $value['stock'] ?: 0,
                     'thumbnail' => isset($path) && ! empty($path) ? asset($path) : '',
                     'productID' => $product->id,
                 ]);

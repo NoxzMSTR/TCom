@@ -109,6 +109,7 @@
                             this.variations[index] = {
                                 type: '',
                                 hasPrice: '',
+                                stock: 0,
                                 data: '',
                                 thumbnail: null,
                                 previewThumbnail: null,
@@ -140,6 +141,7 @@
                                 this.variations[0] = {
                                     type: '',
                                     hasPrice: '',
+                                    stock: 0,
                                     data: '',
                                     thumbnail: null,
                                     previewThumbnail: null,
@@ -185,10 +187,13 @@
                                                 <!--end::Select2-->
 
                                                 <!--begin::Input-->
-                                                <input type="text" class="form-control " x-model="variation.hasPrice"
+                                                <input type="number" class="form-control " x-model="variation.hasPrice"
                                                     placeholder="Percentage %">
                                                 <!--end::Input-->
-
+                                                <!--begin::Input-->
+                                                <input type="number" class="form-control " x-model="variation.stock"
+                                                    placeholder="Stock">
+                                                <!--end::Input-->
                                                 <!--begin::Input-->
                                                 <input type="text" class="form-control " x-model="variation.data"
                                                     placeholder="Variation">
