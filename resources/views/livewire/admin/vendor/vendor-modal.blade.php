@@ -1,5 +1,5 @@
 <div>
-    <div class="modal fade" tabindex="-1" id="vendorModal">
+    <div class="modal fade" tabindex="-1" id="vendorModal" wire:ignore.self>
         <div class="modal-dialog mw-700px">
             <div class="modal-content">
                 <div class="modal-header">
@@ -27,7 +27,10 @@
                                 <div class="col-lg-12 fv-row">
                                     <input type="text" wire:model="vendor.fname"
                                         class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                        placeholder="First name" value="" />
+                                        placeholder="Full name" value="" />
+                                    @error('vendor.fname')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -46,6 +49,9 @@
                             <input type="text" wire:model="vendor.company"
                                 class="form-control form-control-lg form-control-solid" placeholder="Company name"
                                 value="" />
+                            @error('vendor.company')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <!--end::Col-->
                     </div>
@@ -69,6 +75,9 @@
                             <input type="tel" wire:model="vendor.phone"
                                 class="form-control form-control-lg form-control-solid" placeholder="Phone number"
                                 value="" />
+                            @error('vendor.phone')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <!--end::Col-->
                     </div>
@@ -83,6 +92,9 @@
                             <input type="text" wire:model="vendor.email"
                                 class="form-control form-control-lg form-control-solid" placeholder="Email"
                                 value="" />
+                            @error('vendor.email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <!--end::Col-->
                     </div>
@@ -101,6 +113,9 @@
                                     <input type="text" wire:model="vendor.address"
                                         class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
                                         placeholder="Address" value="" />
+                                    @error('vendor.address')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <!--end::Col-->
                                 <!--begin::Col-->
@@ -108,6 +123,9 @@
                                     <input type="text" wire:model="vendor.postalCode"
                                         class="form-control form-control-lg form-control-solid" placeholder="Post Code"
                                         value="" />
+                                    @error('vendor.postalCode')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -141,9 +159,17 @@
                             <div class="row">
                                 <!--begin::Col-->
                                 <div class="col-lg-8 fv-row">
-                                    <input type="text" wire:model="vendor.city"
-                                        class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                        placeholder="City" value="" />
+                                    <select wire:model.fill="vendor.city"
+                                        class="form-select form-select-solid form-select-lg fw-semibold">
+                                        <option value="" selected>Select City</option>
+                                        @foreach ($cities as $city)
+                                            <option value="{{ $city }}">{{ $city }}</option>
+                                        @endforeach
+
+                                    </select>
+                                    @error('vendor.city')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <!--end::Col-->
                                 <!--begin::Col-->
@@ -151,6 +177,9 @@
                                     <input type="text" wire:model="vendor.state"
                                         class="form-control form-control-lg form-control-solid" placeholder="State"
                                         value="" />
+                                    @error('vendor.state')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <!--end::Col-->
                             </div>
@@ -175,12 +204,14 @@
                         <!--end::Label-->
                         <!--begin::Col-->
                         <div class="col-lg-8 fv-row">
-                            <select wire:model="vendor.country" aria-label="Select a Country" data-control="select2"
-                                data-placeholder="Select a country..."
+                            <select wire:model.fill="vendor.country"
                                 class="form-select form-select-solid form-select-lg fw-semibold">
+                                <option value="" selected>Select Country</option>
                                 <option value="PK" selected>{{ $this->country }}</option>
-
                             </select>
+                            @error('vendor.country')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <!--end::Col-->
                     </div>
@@ -191,6 +222,7 @@
                     @if ($hasVendor)
                         <button wire:click='update' type="button" class="btn btn-primary">Update</button>
                     @else
+                        <button wire:click='update' type="button" class="btn btn-primary">Create</button>
                     @endif
 
                 </div>

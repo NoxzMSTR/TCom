@@ -69,10 +69,18 @@
                             <td style="padding: 10px 10px 10px 0; vertical-align: top;">
                                 <strong style="font-size: 14px; display: block;">
                                     {{ $item->name ?: $item->product->name }}</strong>
-                                <span style="font-size: 14px; color: #333;">{{ $item->qty }} ×
-                                    {{ currency_format($item->amount, default_currency) }}</span>
+                                <br>
+                                <small>
+                                    <strong class="product-quantity" style="font-size: 14px; color: #333;"> QTY
+                                        {{ $qty }}
+                                    </strong>
+                                </small>
                             </td>
+                            <td> {{ currency_format($item->amount, default_currency) }}</td>
                         </tr>
+                        @php
+                            $total += $item->amount * $qty;
+                        @endphp
                     @endforeach
 
                 </table>

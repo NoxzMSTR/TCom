@@ -39,8 +39,7 @@
             },
             init() {
                 if (!navigator.geolocation) {
-                    alert('Geolocation is not supported by your browser.');
-                    return;
+                    console.error('Geolocation is not supported by your browser.');
                 }
                 navigator.geolocation.getCurrentPosition(async (position) => {
                         this.latitude = position.coords.latitude;
@@ -60,11 +59,12 @@
                             this.country = 'Unable to fetch country.';
                         }
         
-                        this.setTimeSlot();
+        
                     },
                     (error) => {
-                        alert('Unable to retrieve location. Error: ' + error.message);
+                        console.error('Unable to retrieve location. Error: ' + error.message);
                     });
+                this.setTimeSlot();
             },
             setTimeSlot() {
                 var self = this;

@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Livewire\Admin\Vendor;
 
-use App\Models\User;
 use App\Models\Vendors;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VendorDatatable extends DataTableComponent
 {
@@ -18,6 +16,17 @@ class VendorDatatable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+
+        $this->setDefaultSort('id', 'desc');
+
+        $this->setConfigurableAreas([
+            'toolbar-right-end' => [
+                'livewire.admin.vendor.vendor-el',
+                [
+                    'type' => 'add',
+                ],
+            ],
+        ]);
     }
 
     public function columns(): array
@@ -58,5 +67,10 @@ class VendorDatatable extends DataTableComponent
     public function view()
     {
         return view('livewire.admin.vendor.vendor-list', ['title' => $this->title, 'breadCrumb' => $this->breadCrumb]);
+    }
+
+    public function add()
+    {
+        $this->dispatch('update-vendor', id: 0);
     }
 }

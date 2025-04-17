@@ -23,16 +23,16 @@
                     foreach ($products as $key => $vars) {
                         $product = $vars['product'];
                         if ($product->vendor) {
-                            $productsByCType[$product->vendor->city][$product['shippingType']] = $vars;
+                            $productsByCType[$product->vendor->city][$product['shippingType']][] = $vars;
                         } else {
-                            $productsByType[0] = $vars;
+                            $productsByType[0][] = $vars;
                         }
                     }
 
                 @endphp
 
                 @foreach ($productsByCType as $city => $cityData)
-                    @foreach ($cityData as $sType => $nProducts)
+                    @foreach ($cityData as $sType => $nestProducts)
                         <div class="card mb-3" x-data="{
                             city: @js($city),
                             init() {
@@ -67,24 +67,29 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($nestProducts as $nKey => $nProducts)
+                                            @php
+                                                $qty = $nProducts['qty'];
+                                                $variations = $nProducts['variations'];
+                                                $amount = $nProducts['final'];
+                                                if (isset($default_currency)) {
+                                                    $amount = currency_format($amount, $default_currency);
+                                                }
+                                                $product = $nProducts['product'];
 
-                                        @php
-                                            $qty = $nProducts['qty'];
-                                            $variations = $nProducts['variations'];
-                                            $amount = $nProducts['final'];
-                                            if (isset($default_currency)) {
-                                                $amount = currency_format($amount, $default_currency);
-                                            }
-                                            $product = $nProducts['product'];
-
-                                        @endphp
-                                        <tr class="cart_item">
-                                            <td>{{ $product->name }}<strong class="product-quantity"> ×
-                                                    {{ $qty }}</strong>
-                                            </td>
-                                            <td>{{ $amount }}</td>
-                                        </tr>
-
+                                            @endphp
+                                            <tr class="cart_item">
+                                                <td>{{ $product->name }}
+                                                    <br>
+                                                    <small>
+                                                        <strong class="product-quantity"> QTY
+                                                            {{ $qty }}
+                                                        </strong>
+                                                    </small>
+                                                </td>
+                                                <td>{{ $amount }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                                 <!-- End Product Content -->
@@ -120,7 +125,7 @@
                         </div>
                     @endforeach
                 @endforeach
-                @foreach ($productsByType as $sType => $nProducts)
+                @foreach ($productsByType as $sType => $nestProducts)
                     <div class="card mb-3">
                         <div class="card-body">
                             @php
@@ -146,24 +151,29 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($nestProducts as $nKey => $nProducts)
+                                        @php
+                                            $qty = $nProducts['qty'];
+                                            $variations = $nProducts['variations'];
+                                            $amount = $nProducts['final'];
+                                            if (isset($default_currency)) {
+                                                $amount = currency_format($amount, $default_currency);
+                                            }
+                                            $product = $nProducts['product'];
 
-                                    @php
-                                        $qty = $nProducts['qty'];
-                                        $variations = $nProducts['variations'];
-                                        $amount = $nProducts['final'];
-                                        if (isset($default_currency)) {
-                                            $amount = currency_format($amount, $default_currency);
-                                        }
-                                        $product = $nProducts['product'];
-
-                                    @endphp
-                                    <tr class="cart_item">
-                                        <td>{{ $product->name }}<strong class="product-quantity"> ×
-                                                {{ $qty }}</strong>
-                                        </td>
-                                        <td>{{ $amount }}</td>
-                                    </tr>
-
+                                        @endphp
+                                        <tr class="cart_item">
+                                            <td>{{ $product->name }}
+                                                <br>
+                                                <small>
+                                                    <strong class="product-quantity"> QTY
+                                                        {{ $qty }}
+                                                    </strong>
+                                                </small>
+                                            </td>
+                                            <td>{{ $amount }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                             <!-- End Product Content -->
