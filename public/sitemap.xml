@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    <url>
+    <loc>http://localhost/</loc>
+            </url>
+    <url>
+    <loc>http://localhost</loc>
+            </url>
+    <url>
+    <loc>http://localhost/shop</loc>
+            </url>
+    <url>
+    <loc>http://localhost/shop/checkout</loc>
+            </url>
+    <url>
+    <loc>http://localhost/shop/cart</loc>
+            </url>
+    <url>
+    <loc>http://localhost/about-us</loc>
+            </url>
+    <url>
+    <loc>http://localhost/contact-us</loc>
+            </url>
+    <url>
+    <loc>http://localhost/privacy-policy</loc>
+            </url>
+    <url>
+    <loc>http://localhost/refund-policy</loc>
+            </url>
+    <url>
+    <loc>http://localhost/terms-&amp;-conditions</loc>
+            </url>
+    <url>
+    <loc>http://localhost/shipping-policy</loc>
+            </url>
+    <url>
+    <loc>http://localhost/cancellation-policy</loc>
+            </url>
+    <url>
+    <loc>http://localhost/my-account</loc>
+            </url>
+    <url>
+    <loc>http://localhost/my-orders</loc>
+            </url>
+</urlset>

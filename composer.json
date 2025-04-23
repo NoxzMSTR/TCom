@@ -21,6 +21,7 @@
         "rappasoft/laravel-livewire-tables": "^3.4",
         "spatie/color": "^1.6",
         "spatie/laravel-activitylog": "^4.9",
+        "spatie/laravel-sitemap": "^7.3",
         "stevebauman/location": "^7.4",
         "torann/currency": "^1.1"
     },

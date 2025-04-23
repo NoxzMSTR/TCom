@@ -277,58 +277,91 @@
                         </div>
                         <!--end::Input group-->
                     </div>
-                    <div class="row">
-                        <!--begin::Input group-->
-                        <div class="row col-12 mb-6">
-                            <!--begin::Label-->
-                            <label class="col-lg-12 col-form-label required fw-semibold fs-6">Privacy
-                                Policy</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-12 fv-row">
-                                <livewire:quill-text-editor wire:model="system.privacyPolicy" />
+                    <div class="mb-2">
+                        <div class="card p-0">
+                            <div class="card-header card-header-stretch">
+                                <h3 class="card-title">Documents</h3>
+                                <div class="card-toolbar" wire:ignore>
+                                    <ul class="nav nav-tabs nav-line-tabs nav-stretch fs-6 border-0">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#aboutUS">About Us
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link " data-bs-toggle="tab" href="#termConditions">Terms &
+                                                Conditions</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#privacyPolicy">Privacy
+                                                Policy</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#refundPolicy">Refund
+                                                Policy</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab"
+                                                href="#cancelPolicy">Cancellation
+                                                Policy</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#shipPolicy">Shipping
+                                                Policy</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row col-12 mb-6">
-                            <!--begin::Label-->
-                            <label class="col-lg-12 col-form-label required fw-semibold fs-6">Refund
-                                Policy</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-12 fv-row">
-                                <livewire:quill-text-editor wire:model="system.refundPolicy" />
+                            <div class="card-body p-2">
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade" id="privacyPolicy" role="tabpanel" wire:ignore.self>
+                                        <!--begin::Col-->
+                                        <div class="col-lg-12 fv-row">
+                                            <livewire:quill-text-editor wire:model="system.privacyPolicy" />
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+
+                                    <div class="tab-pane fade" id="refundPolicy" role="tabpanel" wire:ignore.self>
+                                        <!--begin::Col-->
+                                        <div class="col-lg-12 fv-row">
+                                            <livewire:quill-text-editor wire:model="system.refundPolicy" />
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+
+                                    <div class="tab-pane fade" id="termConditions" role="tabpanel" wire:ignore.self>
+                                        <!--begin::Col-->
+                                        <div class="col-lg-12 fv-row">
+                                            <livewire:quill-text-editor wire:model="system.termNCondition" />
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade show active" id="aboutUS" role="tabpanel"
+                                        wire:ignore.self>
+                                        <!--begin::Col-->
+                                        <div class="col-lg-12 fv-row">
+                                            <livewire:quill-text-editor wire:model="system.aboutUs" />
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <div class="tab-pane fade" id="cancelPolicy" role="tabpanel" wire:ignore.self>
+                                        <!--begin::Col-->
+                                        <div class="col-lg-12 fv-row">
+                                            <livewire:quill-text-editor wire:model="system.cancelPolicy" />
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <div class="tab-pane fade" id="shipPolicy" role="tabpanel" wire:ignore.self>
+                                        <!--begin::Col-->
+                                        <div class="col-lg-12 fv-row">
+                                            <livewire:quill-text-editor wire:model="system.shipPolicy" />
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                </div>
                             </div>
-                            <!--end::Col-->
                         </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row col-12 mb-6">
-                            <!--begin::Label-->
-                            <label class="col-lg-12 col-form-label required fw-semibold fs-6">Terms &
-                                Conditions</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-12 fv-row">
-                                <livewire:quill-text-editor wire:model="system.termNCondition" />
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row col-12 mb-6">
-                            <!--begin::Label-->
-                            <label class="col-lg-12 col-form-label  required fw-semibold fs-6">About Us</label>
-                            <!--end::Label-->
-                            <!--begin::Col-->
-                            <div class="col-lg-12 fv-row">
-                                <livewire:quill-text-editor wire:model="system.aboutUs" />
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Input group-->
+
                     </div>
 
                     <div class="row">

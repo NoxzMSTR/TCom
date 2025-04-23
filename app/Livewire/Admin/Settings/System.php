@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Livewire\Admin\Settings;
 
+use App\Models\Settings\System as SettingsSystem;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
-use App\Models\Settings\System as SettingsSystem;
 
 class System extends Component
 {
@@ -16,16 +15,16 @@ class System extends Component
     public $breadCrumb = 'Home.Settings.System';
 
     #[Validate([
-        'system.name' => ['required'],
-        'system.email' => ['required'],
-        'system.phone' => ['required'],
-        'system.address' => ['required'],
-    ], message: [
-        'system.name' => 'System name is required',
-        'system.email' => 'System email is required',
-        'system.phone' => 'System phone is required',
-        'system.address' => 'System address is required',
-    ])]
+            'system.name'    => ['required'],
+            'system.email'   => ['required'],
+            'system.phone'   => ['required'],
+            'system.address' => ['required'],
+        ], message: [
+            'system.name'    => 'System name is required',
+            'system.email'   => 'System email is required',
+            'system.phone'   => 'System phone is required',
+            'system.address' => 'System address is required',
+        ])]
     public $system = [];
 
     public function mount()
@@ -33,20 +32,22 @@ class System extends Component
         $system = SettingsSystem::get()->keyBy('key');
         if ($system->count()) {
 
-            $this->system['name'] = isset($system['name']) ? $system['name']->value : '';
-            $this->system['email'] = isset($system['email']) ? $system['email']->value : '';
-            $this->system['phone'] = isset($system['phone']) ? $system['phone']->value : '';
-            $this->system['address'] = isset($system['address']) ? $system['address']->value : '';
-            $this->system['aLogoLight'] = isset($system['logoLight']) ?  $system['logoLight']->value : '';
-            $this->system['aLogoDark'] = isset($system['logoDark']) ?  $system['logoDark']->value : '';
-            $this->system['aFavicon'] = isset($system['favconLogo']) ?  $system['favconLogo']->value : '';
-            $this->system['privacyPolicy'] = isset($system['privacyPolicy']) ?  $system['privacyPolicy']->value : '';
-            $this->system['refundPolicy'] = isset($system['refundPolicy']) ?  $system['refundPolicy']->value : '';
+            $this->system['name']           = isset($system['name']) ? $system['name']->value : '';
+            $this->system['email']          = isset($system['email']) ? $system['email']->value : '';
+            $this->system['phone']          = isset($system['phone']) ? $system['phone']->value : '';
+            $this->system['address']        = isset($system['address']) ? $system['address']->value : '';
+            $this->system['aLogoLight']     = isset($system['logoLight']) ? $system['logoLight']->value : '';
+            $this->system['aLogoDark']      = isset($system['logoDark']) ? $system['logoDark']->value : '';
+            $this->system['aFavicon']       = isset($system['favconLogo']) ? $system['favconLogo']->value : '';
+            $this->system['privacyPolicy']  = isset($system['privacyPolicy']) ? $system['privacyPolicy']->value : '';
+            $this->system['refundPolicy']   = isset($system['refundPolicy']) ? $system['refundPolicy']->value : '';
             $this->system['termNCondition'] = isset($system['termsNCondition']) ? $system['termsNCondition']->value : '';
-            $this->system['aboutUs'] = isset($system['aboutUs']) ?  $system['aboutUs']->value : '';
-            $this->system['facebook'] = isset($system['facebook']) ?  $system['facebook']->value : '';
-            $this->system['instagram'] = isset($system['instagram']) ? $system['instagram']->value : '';
-            $this->system['google'] = isset($system['google']) ?  $system['google']->value : '';
+            $this->system['aboutUs']        = isset($system['aboutUs']) ? $system['aboutUs']->value : '';
+            $this->system['facebook']       = isset($system['facebook']) ? $system['facebook']->value : '';
+            $this->system['instagram']      = isset($system['instagram']) ? $system['instagram']->value : '';
+            $this->system['google']         = isset($system['google']) ? $system['google']->value : '';
+            $this->system['cancelPolicy']   = isset($system['cancelPolicy']) ? $system['cancelPolicy']->value : '';
+            $this->system['shipPolicy']     = isset($system['shipPolicy']) ? $system['shipPolicy']->value : '';
         }
     }
 
@@ -55,17 +56,19 @@ class System extends Component
         $this->validate();
 
         $data = [
-            'name' => $this->system['name'],
-            'address' => $this->system['address'],
-            'email' => $this->system['email'],
-            'phone' => $this->system['phone'],
-            'privacyPolicy' => isset($this->system['privacyPolicy']) ? $this->system['privacyPolicy'] : '',
-            'refundPolicy' => isset($this->system['refundPolicy']) ? $this->system['refundPolicy'] : '',
+            'name'            => $this->system['name'],
+            'address'         => $this->system['address'],
+            'email'           => $this->system['email'],
+            'phone'           => $this->system['phone'],
+            'privacyPolicy'   => isset($this->system['privacyPolicy']) ? $this->system['privacyPolicy'] : '',
+            'refundPolicy'    => isset($this->system['refundPolicy']) ? $this->system['refundPolicy'] : '',
             'termsNCondition' => isset($this->system['termNCondition']) ? $this->system['termNCondition'] : '',
-            'aboutUs' => isset($this->system['aboutUs']) ? $this->system['aboutUs'] : '',
-            'facebook' => isset($this->system['facebook']) ? $this->system['facebook'] : '',
-            'instagram' => isset($this->system['instagram']) ? $this->system['instagram'] : '',
-            'google' => isset($this->system['google']) ? $this->system['google'] : '',
+            'aboutUs'         => isset($this->system['aboutUs']) ? $this->system['aboutUs'] : '',
+            'cancelPolicy'    => isset($this->system['cancelPolicy']) ? $this->system['cancelPolicy'] : '',
+            'shipPolicy'      => isset($this->system['shipPolicy']) ? $this->system['shipPolicy'] : '',
+            'facebook'        => isset($this->system['facebook']) ? $this->system['facebook'] : '',
+            'instagram'       => isset($this->system['instagram']) ? $this->system['instagram'] : '',
+            'google'          => isset($this->system['google']) ? $this->system['google'] : '',
         ];
 
         if (isset($this->system['logoLight'])) {
@@ -75,7 +78,7 @@ class System extends Component
 
             $light = $file->storeAs('system', $name, ['disk' => 'public']);
 
-            $data += ['logoLight' =>  isset($light) && !empty($light) ? asset($light) : ''];
+            $data += ['logoLight' => isset($light) && ! empty($light) ? asset($light) : ''];
         }
 
         if (isset($this->system['logoDark'])) {
@@ -85,17 +88,17 @@ class System extends Component
 
             $dark = $file->storeAs('system', $name, ['disk' => 'public']);
 
-            $data += ['logoDark' =>  isset($dark) && !empty($dark) ? asset($dark) : ''];
+            $data += ['logoDark' => isset($dark) && ! empty($dark) ? asset($dark) : ''];
         }
 
         if (isset($this->system['favicon'])) {
-            $file =  $this->system['favicon'];
+            $file = $this->system['favicon'];
 
             $name = $file->getClientOriginalName();
 
             $favicon = $file->storeAs('system', $name, ['disk' => 'public']);
 
-            $data += ['favconLogo' =>  isset($favicon) && !empty($favicon) ? asset($favicon) : ''];
+            $data += ['favconLogo' => isset($favicon) && ! empty($favicon) ? asset($favicon) : ''];
         }
 
         foreach ($data as $key => $value) {
@@ -103,13 +106,13 @@ class System extends Component
 
             if ($system) {
                 $system->update([
-                    'value' => $value
+                    'value' => $value,
                 ]);
             } else {
                 SettingsSystem::create([
-                    'key' => $key,
+                    'key'   => $key,
                     'value' => $value,
-                    'type' => 'system'
+                    'type'  => 'system',
                 ]);
             }
         }

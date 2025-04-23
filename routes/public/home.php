@@ -1,19 +1,21 @@
 <?php
 
-use App\Livewire\Public\Cart;
-use App\Livewire\Public\Home;
-use App\Livewire\Public\Shop;
-use App\Livewire\Public\Product;
-
-use App\Livewire\Public\Checkout;
-use Illuminate\Support\Facades\Route;
-use App\Livewire\Public\CheckoutSuccess;
 use App\Http\Middleware\PublicActivities;
 use App\Livewire\Public\AboutUs;
+use App\Livewire\Public\CancellationPolicy;
+use App\Livewire\Public\Cart;
+use App\Livewire\Public\Checkout;
+use App\Livewire\Public\CheckoutSuccess;
 use App\Livewire\Public\ContactUs;
+use App\Livewire\Public\Home;
 use App\Livewire\Public\PrivacyPolicy;
+use App\Livewire\Public\Product;
 use App\Livewire\Public\RefundPolicy;
+use App\Livewire\Public\ShippingPolicy;
+use App\Livewire\Public\Shop;
+use App\Livewire\Public\SiteMap;
 use App\Livewire\Public\TermsConditions;
+use Illuminate\Support\Facades\Route;
 
 Route::as('public.')->middleware([PublicActivities::class])->group(function () {
     Route::get('/', Home::class)->name('home');
@@ -27,4 +29,8 @@ Route::as('public.')->middleware([PublicActivities::class])->group(function () {
     Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
     Route::get('/refund-policy', RefundPolicy::class)->name('refund-policy');
     Route::get('/terms-&-conditions', TermsConditions::class)->name('terms-n-conditions');
+    Route::get('/shipping-policy', ShippingPolicy::class)->name('shipping-policy');
+    Route::get('/cancellation-policy', CancellationPolicy::class)->name('cancellation-policy');
+    Route::get('/cancellation-policy', CancellationPolicy::class)->name('cancellation-policy');
+    Route::get('/site-map', SiteMap::class)->name('site-map');
 });

@@ -157,17 +157,32 @@
                                 <li><a class="list-group-item list-group-item-action"
                                         href="../shop/track-your-order.html">Order Tracking</a></li> --}}
                                 <li><a class="list-group-item list-group-item-action"
-                                        href="{{ route('public.terms-n-conditions') }}">Terms
-                                        & Conditions</a></li>
-                                <li><a class="list-group-item list-group-item-action"
                                         href="{{ route('public.contact-us') }}">Contact Us</a></li>
                                 <li><a class="list-group-item list-group-item-action"
                                         href="{{ route('public.about-us') }}">About us</a></li>
+                                <li><a class="list-group-item list-group-item-action"
+                                        href="{{ route('public.terms-n-conditions') }}">Terms
+                                        & Conditions</a></li>
                                 <li><a class="list-group-item list-group-item-action"
                                         href="{{ route('public.privacy-policy') }}">Privacy
                                         Policy</a>
                                 </li>
 
+                                <li><a class="list-group-item list-group-item-action"
+                                        href="{{ route('public.cancellation-policy') }}">Cancellation
+                                        Policy</a>
+                                </li>
+                                <li><a class="list-group-item list-group-item-action"
+                                        href="{{ route('public.refund-policy') }}">Refund
+                                        Policy</a>
+                                </li>
+                                <li><a class="list-group-item list-group-item-action"
+                                        href="{{ route('public.shipping-policy') }}">Shipping
+                                        Policy</a>
+                                </li>
+                                <li><a class="list-group-item list-group-item-action"
+                                        href="{{ route('public.site-map') }}">Site Map</a>
+                                </li>
                             </ul>
                             <!-- End List Group -->
                         </div>
