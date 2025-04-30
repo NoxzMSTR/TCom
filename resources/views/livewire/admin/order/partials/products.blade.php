@@ -1,4 +1,42 @@
-<div class="card card-flush py-4">
+<div class="card card-flush py-4" x-data="{
+    total: 0,
+    formatNumber(number) {
+        return number.toFixed(2);
+    },
+    changeVar() {
+        this.total = 0
+        document.querySelectorAll('.productVars').forEach((element) => {
+            const selectedOption = element.querySelector('option:checked');
+            const dataVars = selectedOption?.getAttribute('data-vars');
+            const aTotal = parseFloat(element.getAttribute('data-amount')) || 0;
+
+            const id = element.value ? element.value : 0;
+            const field = element.getAttribute('data-field');
+            const qtyEl = element.getAttribute('data-qty');
+            const type = element.getAttribute('data-type');
+            const qty = $('.' + qtyEl).val();
+
+            if (id > 0 && dataVars) {
+                const evar = JSON.parse(dataVars);
+
+                if (evar.id == id) {
+                    const percent = evar.hasPrice || 0;
+                    let amount = (aTotal / 100) * percent;
+                    const famount = (amount + aTotal);
+                    this.total += (famount * qty);
+                    const formatted = this.formatNumber(famount);
+
+                    $wire.set(`${field}.selectedVars.variation-${type}`, id, false);
+                    $wire.set(`${field}.amount`, formatted, false);
+                }
+            } else {
+                $wire.set(`${field}.selectedVars.variation-${type}`, id, false);
+                $wire.set(`${field}.amount`, this.formatNumber(aTotal), false);
+            }
+        });
+    }
+}">
+    <script></script>
     <!--begin::Card header-->
     <div class="card-header">
         <div class="card-title">
@@ -17,11 +55,13 @@
                 <!--end::Label-->
 
                 <!--begin::Selected products-->
-                <div class="row row-cols-1 row-cols-xl-3 row-cols-md-2 border border-dashed rounded pt-3 pb-1 px-2 mb-5 mh-300px overflow-scroll"
-                    id="">
-
+                <div class="row border border-dashed rounded pt-3 pb-1 px-2 mb-5 mh-300px overflow-scroll" id="">
+                    @php
+                        $total = 0;
+                    @endphp
                     @forelse ($products as $key => $product)
                         @php
+
                             $variations = [];
                             if (isset($product['variations'])) {
                                 foreach ($product['variations'] as $vKey => $variation) {
@@ -33,53 +73,140 @@
 
                         @endphp
 
-                        <div class="col my-2">
+                        <div class="col-12 my-2" x-data="{
+                            actualAmount: {{ $product['actualAmount'] }}
+                        }">
+
                             <div
-                                class="d-flex align-items-center border border-dashed rounded p-3 bg-body position-relative">
-                                <div class="ms-5">
-                                    <!--begin::Title-->
-                                    <p class="text-gray-800 text-hover-primary fs-5 fw-bold">{{ $product['name'] }}</p>
-                                    <!--end::Title-->
+                                class="d-flex align-items-center border border-dashed rounded p-3 bg-body position-relative flex-column">
+                                <!--begin::Title-->
+                                <p class="text-gray-800 text-hover-primary fs-5 fw-bold">{{ $product['name'] }}</p>
+                                <!--end::Title-->
+                                <div class="d-flex gap-2">
+                                    <div class="w-100">
+                                        <div class="fw-semibold fs-7">Price
+                                        </div>
 
+                                        <input class="form-control form-control-sm" placeholder="Price" type="number"
+                                            wire:model='products.{{ $key }}.amount'>
 
-                                    <div class="fw-semibold fs-7">Price
-                                    </div>
-
-                                    <input class="form-control form-control-sm" placeholder="Price" type="number"
-                                        wire:model='products.{{ $key }}.amount'>
-
-                                    @error('products.' . $key . '.amount')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-
-                                    <div class="fw-semibold fs-7">Qty
-                                    </div>
-
-                                    <input class="form-control form-control-sm" placeholder="Qty" type="number"
-                                        wire:model.fill='products.{{ $key }}.qty' value="1">
-
-                                    @error('products.' . $key . '.qty')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-
-                                    @foreach ($variations as $type => $variationData)
-                                        <div class="fw-semibold fs-7">Select {{ $type }} </div>
-                                        <select class="form-select mb-2"
-                                            wire:model.fill='products.{{ $key }}.variationID'>>
-                                            <option value="0">None</option>
-                                            @foreach ($variationData as $vKey => $value)
-                                                <option value="{{ $value['id'] }}"
-                                                    {{ isset($product['variationID']) ? 'selected' : '' }}>
-                                                    {{ $value['data'] }}</option>
-                                            @endforeach
-                                        </select>
-
-                                        @error('products.' . $key . '.variationID')
+                                        @error('products.' . $key . '.amount')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
+                                    </div>
+
+                                    <div class="w-100">
+                                        <div class="fw-semibold fs-7">Qty
+                                        </div>
+
+                                        <input @change="changeVar()" min="1"
+                                            class="form-control form-control-sm products_{{ $key }}_qty"
+                                            placeholder="Qty" type="number"
+                                            wire:model.fill='products.{{ $key }}.qty' value="1">
+
+                                        @error('products.' . $key . '.qty')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    @php
+                                        $total += $product['amount'] * $product['qty'];
+                                    @endphp
+
+                                    @php
+                                        $orderVariation = json_validate($product['variationData'])
+                                            ? json_decode($product['variationData'], true)
+                                            : [];
+                                    @endphp
+
+
+
+                                    @foreach ($variations as $type => $variationData)
+                                        <div class="w-100" x-data="{
+                                            vars: @js($variationData)
+                                        }">
+                                            <div class="fw-semibold fs-7">Select {{ $type }} </div>
+
+                                            <select x-ref="" class="form-select form-select-sm mb-2 productVars"
+                                                data-type='{{ $type }}'
+                                                data-field='products.{{ $key }}'
+                                                data-qty='products_{{ $key }}_qty' :data-amount="actualAmount"
+                                                @change="changeVar()">
+                                                <option value="0">None</option>
+                                                @foreach ($variationData as $vKey => $value)
+                                                    <option data-vars="{{ json_encode($value) }}"
+                                                        value="{{ $value['id'] }}"
+                                                        {{ isset($orderVariation['variation-' . $type]['id']) && $orderVariation['variation-' . $type]['id'] == $value['id'] ? 'selected' : '' }}>
+                                                        {{ $value['data'] }}</option>
+                                                @endforeach
+                                            </select>
+
+                                            @error('products.' . $key . '.variationData')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                     @endforeach
 
+
                                 </div>
+
+                                <div class="d-flex align-items-center flex-wrap d-grid gap-4 mt-2">
+                                    @if ($product['sameDate'])
+                                        <!--begin::Item-->
+                                        <div class="d-flex align-items-center">
+
+                                            <!--begin::Symbol-->
+                                            <div class="symbol symbol-30px symbol-circle me-3">
+                                                <span class="symbol-label bg-success">
+                                                    <i class="ki-duotone ki-calendar-2 fs-5 text-white">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                        <span class="path3"></span>
+                                                        <span class="path4"></span>
+                                                        <span class="path5"></span>
+                                                    </i>
+
+                                                </span>
+                                            </div>
+                                            <!--end::Symbol-->
+
+
+
+                                            <!--begin::Info-->
+                                            <div class="m-0">
+                                                <span class="fw-semibold text-gray-500 d-block fs-8">Date</span>
+                                                <span
+                                                    class="fw-bold text-gray-800 text-hover-primary fs-7">{{ $product['sameDate'] }}</span>
+                                            </div>
+                                            <!--end::Info-->
+                                        </div>
+                                        <!--end::Item-->
+                                    @endif
+                                    @if ($product['sameDaySlot'])
+                                        <!--begin::Item-->
+                                        <div class="d-flex align-items-center">
+                                            <!--begin::Symbol-->
+                                            <div class="symbol symbol-30px symbol-circle me-3">
+                                                <span class="symbol-label bg-primary">
+                                                    <i class="ki-duotone ki-abstract-41 fs-5 text-white"><span
+                                                            class="path1"></span><span class="path2"></span></i>
+                                                </span>
+                                            </div>
+                                            <!--end::Symbol-->
+
+                                            <!--begin::Info-->
+                                            <div class="m-0">
+                                                <span class="fw-semibold text-gray-500 d-block fs-8">Time
+                                                    Slot</span>
+                                                <span
+                                                    class="fw-bold text-gray-800 fs-7">{{ $product['sameDaySlot'] }}</span>
+                                            </div>
+                                            <!--end::Info-->
+                                        </div>
+                                        <!--end::Item-->
+                                    @endif
+                                </div>
+
                                 <span wire:click='deleteProduct({{ $key }})'
                                     class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger cursor-pointer">x</span>
                             </div>
@@ -100,10 +227,10 @@
                 <!--begin::Selected products-->
 
                 <!--begin::Total price-->
-                <div class="fw-bold fs-4">
+                <div class="fw-bold fs-4" x-init="total = {{ number_format($total, 2, '.', '') }}">
                     Total Cost:
-                    <span id="kt_ecommerce_edit_order_total_price">
-                        0.00
+                    <span id="kt_ecommerce_edit_order_total_price" x-text="formatNumber(total)">
+                        {{ number_format($total, 2, '.', '') }}
                     </span>
                 </div>
                 <!--end::Total price-->
@@ -150,7 +277,8 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="dt-scroll-body" style="position: relative; overflow: auto; max-height: 400px;">
+                            <div class="dt-scroll-body"
+                                style="position: relative; overflow: auto; max-height: 400px;">
                                 <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable"
                                     style="width: 100%;">
 
@@ -186,7 +314,8 @@
                                                             <!--end::Price-->
 
                                                             <!--begin::SKU-->
-                                                            <div class="text-muted fs-7">SKU: {{ $value->sku }}</div>
+                                                            <div class="text-muted fs-7">SKU: {{ $value->sku }}
+                                                            </div>
                                                             <!--end::SKU-->
                                                         </div>
                                                     </div>
