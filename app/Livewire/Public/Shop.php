@@ -1,14 +1,13 @@
 <?php
-
 namespace App\Livewire\Public;
 
 use App\Models\Brands;
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\Product\Products;
 use App\Models\Product\ProductVariations;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class Shop extends Component
 {
@@ -22,9 +21,17 @@ class Shop extends Component
 
     public $filter = [];
 
-    public function setFilter($reset = false)
+    public function setFilter($reset = false, $hasSearch = null, $hasCategory = null)
     {
         $products = Products::with(['assets', 'variations', 'categories', 'feedback'])->where('status', 1);
+
+        if ($hasCategory) {
+            request()->merge(['category' => $hasCategory]);
+        }
+
+        if ($hasSearch) {
+            request()->merge(['search' => $hasSearch]);
+        }
 
         if (request('category')) {
             $products = $products->whereHas('categories', function ($query) {
@@ -32,8 +39,11 @@ class Shop extends Component
             });
         }
         if (request('search')) {
-            $products = $products->whereHas('tags', function ($query) {
-                $query->where('tag', 'LIKE', '%' . request('search') . '%');
+
+            $products = $products->where(function ($query) {
+                $query->whereHas('tags', function ($query) {
+                    $query->where('tag', 'LIKE', '%' . request('search') . '%');
+                })->orWhere('name', 'LIKE', '%' . request('search') . '%');
             });
         }
 
@@ -66,20 +76,20 @@ class Shop extends Component
         }
 
         if (isset($this->filter['price'])) {
-            $min = $this->filter['price']['min'];
-            $max = $this->filter['price']['max'];
+            $min = isset($this->filter['price']['min']) ? $this->filter['price']['min'] : 0;
+            $max = isset($this->filter['price']['max']) ? $this->filter['price']['max'] : 0;
 
-            if (is_numeric($min)) {
+            if (is_numeric($min) && $min) {
                 $products = $products->where('amount', '>=', $min);
             }
 
-            if (is_numeric($max)) {
+            if (is_numeric($max) && $max) {
                 $products = $products->where('amount', '<=', $max);
             }
         }
 
         if (isset($this->filter['sort'])) {
-            $sortType = (int)$this->filter['sort'];
+            $sortType = (int) $this->filter['sort'];
             if ($sortType == 4) {
                 $products = $products->orderBy('amount', 'ASC');
             }
@@ -118,7 +128,7 @@ class Shop extends Component
 
         $variations = ProductVariations::select('type', 'data', DB::raw('COUNT(products.id) as products_count'))
             ->join('products', 'product_variations.productID', '=', 'products.id') // Adjust the relationship column names
-            ->groupBy(['data', 'type']) // Group by the 'name' column of ProductVariations
+            ->groupBy(['data', 'type'])                                            // Group by the 'name' column of ProductVariations
             ->get();
 
         return view('livewire.public.shop', ['products' => $products, 'brands' => $brands, 'variations' => $variations])->extends('layout.public-master', ['title' => $this->title, 'breadCrumb' => $this->breadCrumb])->section('content');

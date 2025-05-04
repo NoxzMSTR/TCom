@@ -166,7 +166,7 @@
 
 
         </div>
-        <button type="button" wire:click='setFilter(true)'
+        <button type="button" wire:click='setFilter(true,"{{ request('search') }}","{{ request('category') }}")'
             class="btn px-4 btn-primary-dark-w py-2 rounded-lg">Filter</button>
     </div>
 </div>

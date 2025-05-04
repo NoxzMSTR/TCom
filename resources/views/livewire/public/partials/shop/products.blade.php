@@ -1,7 +1,16 @@
 @php
     $default_currency = default_currency;
 @endphp
-<div class="col-xl-9 col-wd-9gdot5">
+<div class="col-xl-9 col-wd-9gdot5" x-data="{
+    search: `{{ request('search') }}`,
+    category: `{{ request('category') }}`,
+    async topFilter(key, value) {
+        $('input,select').attr('disabled', true);
+        $wire.set(key, value, false);
+        await $wire.setFilter(true, this.search, this.category);
+        $('input,select').attr('disabled', false);
+    }
+}">
     <!-- Shop-control-bar Title -->
     <div class="flex-center-between mb-3">
         <h3 class="font-size-25 mb-0">Shop</h3>
@@ -37,7 +46,7 @@
         <div class="d-flex">
 
             <!-- Select -->
-            <select class="form-control mr-3" wire:model.live.debounce.300ms='filter.sort'
+            <select class="form-control mr-3" @change.debounce.300ms='topFilter("filter.sort",$event.target.value)'
                 data-style="btn-sm bg-white font-weight-normal py-2 border text-gray-20 bg-lg-down-transparent border-lg-down-0">
                 <option value="0" selected>Default sorting</option>
                 <option value="1">Sort by popularity</option>
@@ -50,7 +59,7 @@
 
 
             <!-- Select -->
-            <select class="form-control" wire:model.live.debounce.300ms='filter.totalPages'
+            <select class="form-control" @change.debounce.300ms='topFilter("filter.totalPages",$event.target.value)'
                 data-style="btn-sm bg-white font-weight-normal py-2 border text-gray-20 bg-lg-down-transparent border-lg-down-0">
                 <option value="20" selected>Show 20</option>
                 <option value="40">Show 40</option>
@@ -83,10 +92,10 @@
                                             href="{{ route('public.shop', ['category' => $product->categories->name]) }}"
                                             class="font-size-12 text-gray-5">{{ $product->categories->name }}</a></div>
                                     <h5 class="mb-1 product-item__title"><a
-                                            href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
+                                            href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-', $product->name)]) }}"
                                             class="text-blue font-weight-bold">{{ $product->name }}</a></h5>
                                     <div class="mb-2">
-                                        <a href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
+                                        <a href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-', $product->name)]) }}"
                                             class="d-block text-center"><img class="img-fluid"
                                                 src="{{ $product->thumbnail }}" alt="Image Description"></a>
                                     </div>
@@ -124,7 +133,7 @@
 
                                         </div>
                                         <div class="d-none d-xl-block prodcut-add-cart">
-                                            <a href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-',$product->name)]) }}"
+                                            <a href="{{ route('public.product', [$product->id, preg_replace('/[^A-Za-z0-9]+/', '-', $product->name)]) }}"
                                                 class="btn-add-cart btn-primary transition-3d-hover"><i
                                                     class="ec ec-add-to-cart cursor-pointer-on "></i></a>
                                         </div>
