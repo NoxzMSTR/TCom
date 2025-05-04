@@ -1,12 +1,16 @@
 <?php
 namespace App\Livewire\Admin\Order;
 
+use App\Mail\Order\OrderCancelled;
+use App\Mail\Order\OrderCompleted;
+use App\Mail\Order\OrderPlaced;
 use App\Models\Buyers;
 use App\Models\Order\OrderItems;
 use App\Models\Order\Orders;
 use App\Models\Product\Products;
 use App\Models\Product\ProductVariations;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -32,7 +36,7 @@ class AddOrder extends Component
     #[Validate('required', message: 'Please select status')]
     public $status;
 
-    public $search;
+    public $search = [];
 
     public $productData;
 
@@ -193,15 +197,29 @@ class AddOrder extends Component
         }
     }
 
-    public function setProduct($product)
+    public function setProduct($product, $searched = false)
     {
         $variations = ProductVariations::where('productID', $product['id'])->get()->toArray();
 
         $product += ['variations' => $variations];
 
+        if ($searched) {
+            $product['amount'] = $product['amount'];
+
+            $product['actualAmount'] = $product['amount'];
+
+            $product['qty'] = 1;
+
+            $product['sameDate'] = null;
+
+            $product['sameDaySlot'] = null;
+
+            $product['variationData'] = json_encode([]);
+        }
+
         $this->products[] = $product;
 
-        $this->search = null;
+        $this->search = [];
     }
 
     public function deleteProduct($index)
@@ -282,22 +300,32 @@ class AddOrder extends Component
 
             $vars = [];
 
-            foreach ($product['selectedVars'] as $type => $id) {
-                $hasVar      = ProductVariations::find($id);
-                $vars[$type] = $hasVar ? $hasVar : [];
+            if (isset($product['selectedVars'])) {
+                foreach ($product['selectedVars'] as $type => $id) {
+                    $hasVar      = ProductVariations::find($id);
+                    $vars[$type] = $hasVar ? $hasVar : [];
+                }
             }
 
-            OrderItems::create([
-                'orderID'       => $order->id,
-                'productID'     => $product['id'],
-                'name'          => $product['name'],
-                'amount'        => $product['amount'],
-                'qty'           => $product['qty'],
-                'discountType'  => $product['discountType'],
-                'discountData'  => $product['discountData'],
-                'variationData' => json_encode($vars),
-            ]);
+            $data = [
+                'orderID'      => $order->id,
+                'productID'    => $product['id'],
+                'name'         => $product['name'],
+                'amount'       => $product['amount'],
+                'qty'          => $product['qty'],
+                'discountType' => $product['discountType'],
+                'discountData' => $product['discountData'],
+
+            ];
+
+            if (count($vars)) {
+                $data = array_merge($data, ['variationData' => json_encode($vars)]);
+            }
+
+            OrderItems::create($data);
         }
+
+        $this->dispatch('order-notification', type: 'success', title: 'Order Added Successfully', message: 'The order has been successfully added. 🎉');
 
         $this->clear();
     }
@@ -340,23 +368,41 @@ class AddOrder extends Component
         foreach ($this->products as $key => $product) {
 
             $items = OrderItems::where('orderID', $this->order->id)->where('productID', $product['id'])->first();
-            if ($items) {
-                $vars = [];
+            $vars  = [];
 
+            if (isset($product['selectedVars'])) {
                 foreach ($product['selectedVars'] as $type => $id) {
                     $hasVar      = ProductVariations::find($id);
                     $vars[$type] = $hasVar ? $hasVar : [];
                 }
+            }
 
-                $items->update([
-                    'amount'        => $product['amount'],
-                    'qty'           => $product['qty'],
-                    'discountType'  => $product['discountType'],
-                    'discountData'  => $product['discountData'],
-                    'variationData' => json_encode($vars),
-                ]);
+            $data = [
+                'amount'       => $product['amount'],
+                'qty'          => $product['qty'],
+                'discountType' => $product['discountType'],
+                'discountData' => $product['discountData'],
+                'sameDate'     => $product['sameDate'],
+                'sameDaySlot'  => $product['sameDaySlot'],
+
+            ];
+
+            if (count($vars)) {
+                $data = array_merge($data, ['variationData' => json_encode($vars)]);
+            }
+            if ($items) {
+                $items->update($data);
+            } else {
+                $data += [
+                    'orderID'   => $this->order->id,
+                    'productID' => $product['id'],
+
+                ];
+                OrderItems::create($data);
             }
         }
+
+        $this->dispatch('order-notification', type: 'success', title: 'Order Updated Successfully', message: 'The order has been successfully updated. 🎉');
     }
 
     public function setShippingData()
@@ -380,30 +426,49 @@ class AddOrder extends Component
 
     public function updated($property)
     {
-        if ($property == 'search') {
 
-            if ($this->search) {
-                $this->productData = Products::where('description', 'LIKE', '%' . $this->search . '%')->orWhere('name', 'LIKE', '%' . $this->search . '%')->orWhere('id', 'LIKE', '%' . $this->search . '%');
-            } else {
-                $this->search = null;
-            }
-        }
         if ($property == 'shippingSameAsBilling') {
             $this->setShippingData();
         }
     }
 
-    #[Computed]
-    public function searchData()
+    public function searchData($query)
     {
-        $searchData = [];
-        if ($this->productData) {
-            $this->productData = $this->productData->orderBy('id', 'DESC')->get();
-            foreach ($this->productData as $key => $value) {
+        $searchData  = [];
+        $productData = Products::where('description', 'LIKE', '%' . $query . '%')->orWhere('name', 'LIKE', '%' . $query . '%')->orWhere('id', 'LIKE', '%' . $query . '%')->orderBy('id', 'DESC')->get();
+
+        if ($productData) {
+            foreach ($productData as $key => $value) {
                 $searchData[] = $value;
             }
         }
-        return $searchData;
+
+        $this->search = $searchData;
+    }
+
+    public function sendMail()
+    {
+        if ($this->order) {
+            try {
+                if ($this->status == 0) {
+                    Mail::to($this->order->userEmail)->send(new OrderPlaced('Order is Being Processed #' . $this->order->invoiceNo, $this->order));
+                }
+
+                if ($this->status == 3) {
+                    Mail::to($this->order->userEmail)->send(new OrderCompleted(' Your Order #' . $this->order->invoiceNo . ' is Complete – Thank You for Shopping with Us!', $this->order));
+                }
+
+                if ($this->status == 4) {
+                    Mail::to($this->order->userEmail)->send(new OrderCancelled(' Your Order #' . $this->order->invoiceNo . ' Has Been Cancelled', $this->order));
+                }
+
+                $this->dispatch('order-notification', type: 'info', title: 'Mail Sent', message: 'The order mail has been sent!');
+
+                $this->order->update(['status' => $this->status]);
+            } catch (\Throwable $th) {
+                $this->dispatch('order-notification', type: 'error', title: 'Mail Sent Failed', message: 'Something went wrong!');
+            }
+        }
     }
 
     public function clear()
@@ -429,7 +494,7 @@ class AddOrder extends Component
         $this->billingState          = null;
         $this->billingPostcode       = null;
         $this->productData           = null;
-        $this->search                = null;
+        $this->search                = [];
         $this->products              = [];
     }
 

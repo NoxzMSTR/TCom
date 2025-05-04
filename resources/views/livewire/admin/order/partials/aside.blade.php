@@ -31,17 +31,33 @@
                     <!--end::Label-->
 
                     <!--begin::Select2-->
-                    <select class="form-select mb-2" wire:model.fill='status'>>
-                        @foreach (ORDER_STATUS as $key => $value)
-                            <option value="{{ $key }}">{{ $value }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex gap-2" x-data="{
+                        async sendMail() {
+                            $('input,select').attr('disabled', true);
+                            await $wire.sendMail();
+                            $('input,select').attr('disabled', false);
+                        }
+                    }">
+                        <select class="form-select mb-2 w-100" wire:model.fill='status'>>
+                            @foreach (ORDER_STATUS as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
+                        <button @click="sendMail" class="btn btn-sm btn-primary">
+                            <span class="indicator-label">
+                                Send Mail
+                            </span>
+                            <span class="indicator-progress">
+                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                        </button>
+                    </div>
                     <!--end::Select2-->
 
                     <!--begin::Description-->
-                    <div class="text-muted fs-7">Set the date of the order to process.</div>
+                    <div class="text-muted fs-7">Set the status of the order to process.</div>
                     <!--end::Description-->
-                    @error('shippingMethod')
+                    @error('status')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -63,7 +79,7 @@
                     <!--end::Select2-->
 
                     <!--begin::Description-->
-                    <div class="text-muted fs-7">Set the date of the order to process.</div>
+                    <div class="text-muted fs-7">Set the payment method of the order to process.</div>
                     <!--end::Description-->
                     @error('paymentMethod')
                         <span class="text-danger">{{ $message }}</span>
@@ -86,9 +102,9 @@
                     <!--end::Select2-->
 
                     <!--begin::Description-->
-                    <div class="text-muted fs-7">Set the date of the order to process.</div>
+                    <div class="text-muted fs-7">Set the paid status of the order to process.</div>
                     <!--end::Description-->
-                    @error('shippingMethod')
+                    @error('paidStatus')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>

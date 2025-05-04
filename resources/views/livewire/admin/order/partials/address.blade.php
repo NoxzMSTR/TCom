@@ -92,7 +92,7 @@
                 <!--end::Label-->
 
                 <!--begin::Select2-->
-                <select wire:model.fill="billingCountry" aria-label="Select a Country" data-control="select2"
+                <select wire:model.fill="billingCountry" aria-label="Select a Country"
                     data-placeholder="Select a country..." {{ isset($vendor['id']) ? 'readonly' : '' }}
                     class="form-select form-select-solid form-select-lg fw-semibold">
                     <option value="">Select Country</option>

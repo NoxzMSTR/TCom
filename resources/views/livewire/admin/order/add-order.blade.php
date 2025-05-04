@@ -14,10 +14,21 @@
             <!--begin::Order details-->
             @include('livewire.admin.order.partials.address')
             <!--end::Order details-->
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end" x-data="{
+                async updateOrder() {
+                        $('input,select').attr('disabled', true);
+                        await $wire.updateOrder();
+                        $('input,select').attr('disabled', false);
+                    },
+                    async addOrder() {
+                        $('input,select').attr('disabled', true);
+                        await $wire.addOrder();
+                        $('input,select').attr('disabled', false);
+                    }
+            }">
                 @if ($order)
                     <!--begin::Button-->
-                    <button wire:click='updateOrder' class="btn btn-primary">
+                    <button @click='updateOrder' class="btn btn-primary">
                         <span class="indicator-label">
                             Update
                         </span>
@@ -34,7 +45,7 @@
                     <!--end::Button-->
 
                     <!--begin::Button-->
-                    <button wire:click='addOrder' id="kt_ecommerce_edit_order_submit" class="btn btn-primary">
+                    <button @click='addOrder' id="kt_ecommerce_edit_order_submit" class="btn btn-primary">
                         <span class="indicator-label">
                             Add
                         </span>
@@ -52,6 +63,13 @@
 </div>
 @script
     <script>
+        $wire.on('order-notification', (e) => {
+            Swal.fire({
+                title: e.title,
+                text: e.message,
+                icon: e.type
+            });
+        });
         setTimeout(() => {
             KTApp.hidePageLoading();
             KTComponents.init();

@@ -181,6 +181,9 @@
                                             <!--end::Info-->
                                         </div>
                                         <!--end::Item-->
+                                    @else
+                                        <input class="form-control form-control-sm" placeholder="Date" type="date"
+                                            wire:model='products.{{ $key }}.sameDate'>
                                     @endif
                                     @if ($product['sameDaySlot'])
                                         <!--begin::Item-->
@@ -204,6 +207,50 @@
                                             <!--end::Info-->
                                         </div>
                                         <!--end::Item-->
+                                    @else
+                                        <div class="d-flex gap-2 align-items-center" x-data="{
+                                            init() {
+                                                $('.products_{{ $key }}_slot_from').flatpickr({
+                                                    enableTime: true,
+                                                    noCalendar: true,
+                                                    dateFormat: 'H:i',
+                                                    time_24hr: true,
+                                                    onChange: function(selectedDates, dateStr, instance) {
+                                                        var slot_from = dateStr;
+                                                        var slot_to = $('.products_{{ $key }}_slot_to').val();
+                                        
+                                                        if (dateStr && slot_to) {
+                                                            $wire.set('products.{{ $key }}.sameDaySlot', slot_from + ' - ' + slot_to, false)
+                                                        }
+                                                    },
+                                                });
+                                        
+                                                $('.products_{{ $key }}_slot_to').flatpickr({
+                                                    enableTime: true,
+                                                    noCalendar: true,
+                                                    dateFormat: 'H:i',
+                                                    time_24hr: true,
+                                                    onChange: function(selectedDates, dateStr, instance) {
+                                                        var slot_to = dateStr;
+                                                        var slot_from = $('.products_{{ $key }}_slot_from').val();
+                                        
+                                                        if (dateStr && slot_from) {
+                                                            $wire.set('products.{{ $key }}.sameDaySlot', slot_from + ' - ' + slot_to, false)
+                                                        }
+                                                    },
+                                                });
+                                            }
+                                        }">
+                                            <input
+                                                class="form-control form-control-sm products_{{ $key }}_slot_from"
+                                                placeholder="Time Slot From" type="text">
+                                            <input
+                                                class="form-control form-control-sm products_{{ $key }}_slot_to"
+                                                placeholder="Time Slot To" type="text">
+
+                                            <input class="form-control form-control-sm" placeholder="Time Slot"
+                                                type="text" wire:model='products.{{ $key }}.sameDaySlot'>
+                                        </div>
                                     @endif
                                 </div>
 
@@ -244,7 +291,8 @@
             <!--begin::Search products-->
             <div class="d-flex align-items-center position-relative mb-n7 ">
                 <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-4"><span class="path1"></span><span
-                        class="path2"></span></i> <input type="text" wire:model.live='search'
+                        class="path2"></span></i> <input type="text"
+                    @input.debounce.500m='$wire.searchData($event.target.value)'
                     class="form-control form-control-solid w-100 w-lg-50 ps-12" placeholder="Search Products">
             </div>
             <!--end::Search products-->
@@ -256,7 +304,8 @@
                         <div class="dt-scroll">
                             <div class="dt-scroll-head"
                                 style="overflow: hidden; position: relative; border: 0px; width: 100%;">
-                                <div class="dt-scroll-headInner" style="box-sizing: content-box; padding-right: 12px;">
+                                <div class="dt-scroll-headInner"
+                                    style="box-sizing: content-box; padding-right: 12px;">
                                     <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable"
                                         style="margin-left: 0px;">
                                         <thead>
@@ -283,9 +332,9 @@
                                     style="width: 100%;">
 
                                     <tbody class="fw-semibold text-gray-600">
-                                        @forelse ($this->searchData as $key => $value)
+                                        @forelse ($search as $key => $value)
                                             <tr class="border-bottom border-dashed border-gray-300 border-hover border-top cursor-pointer rounded-3"
-                                                wire:click='setProduct({{ $value }})'>
+                                                wire:click='setProduct({{ $value }},true)'>
                                                 <td>
                                                     @php
                                                         $thumbnail = asset('mAssets/media/avatars/thumbnail.jpg');

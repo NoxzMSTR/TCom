@@ -48,9 +48,9 @@
             <p id="izfri" style="box-sizing: border-box;">Dear {{ $order->userFirstName }}
                 {{ $order->userLastName }},
             </p>
-            <p id="i2ki9" style="box-sizing: border-box;">Thank you for your purchase! We’re happy to confirm that
-                your order #{{ $order->invoiceNo }} has been successfully placed on
-                <strong>{{ $order->orderDate }}</strong>.
+            <p id="i2ki9" style="box-sizing: border-box;">
+                We regret to inform you that your order #{{ $order->invoiceNo }}, placed on
+                <strong>{{ $order->orderDate }}</strong>, has been cancelled.
             </p>
             <h3 style="margin-top: 20px; font-family: Arial, sans-serif;">Order Summary:</h3>
 
@@ -105,14 +105,21 @@
                 </table>
             </div>
 
-            <p id="iqc2c" style="box-sizing: border-box;">You will receive another email once your order is shipped.
-                You can also track your order status anytime by logging into your account or clicking the link below:
+            <p id="iqc2c" style="box-sizing: border-box;">If this was unintentional or if you have any questions
+                regarding the cancellation, please feel free to contact our support team. We're here to assist you and
+                ensure a smooth shopping experience.
+                <br>
+                We value your interest in <strong>{{ $name }}</strong> and hope to serve you again in the
+                future.
+                You can explore our latest products here:
             </p>
-            <a href="{{ route('public.checkout.success', [$order->trackingNo]) }}" id="i1tbj" target="_blank"
-                class="button"
-                style="box-sizing: border-box; display: inline-block; padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 20px; margin-top: 20px; margin-right: 0px; margin-bottom: 20px; margin-left: 0px; background-color: rgb(0, 123, 255); color: rgb(255, 255, 255); text-decoration-line: none; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;">Order
-                Status</a>
-
+            <a href="{{ route('public.home') }}" id="i1tbj" target="_blank" class="button"
+                style="box-sizing: border-box; display: inline-block; padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 20px; margin-top: 20px; margin-right: 0px; margin-bottom: 20px; margin-left: 0px; background-color: rgb(0, 123, 255); color: rgb(255, 255, 255); text-decoration-line: none; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;">Shop
+                Now</a>
+            <p id="iqc2c" style="box-sizing: border-box;">Thank you for shopping with
+                <strong>{{ $name }}</strong>. We look forward to
+                serving you again.
+            </p>
         </div>
         <div id="ivrt9" class="footer"
             style="text-align: center; box-sizing: border-box; background-color: rgb(244, 244, 244); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; font-size: 12px; color: rgb(119, 119, 119);">
@@ -120,8 +127,6 @@
                     href="mailto:{{ $email }}k">{{ $email }}</a> or whatsapp us at
                 <strong>{{ $phone }}</strong>.
             </p>
-
-            <p>Thank you for shopping with <strong>{{ $name }}</strong>! We appreciate your business.</p>
         </div>
     </div>
 </body>
