@@ -68,8 +68,9 @@ class VendorDatatable extends DataTableComponent
     public function exportSelected()
     {
         $ids = $this->getSelected();
-
-        return (new ProductExport($ids))->download('exported-products.xlsx');
+        if (count($ids)) {
+            return (new ProductExport($ids))->download('exported-products.xlsx');
+        }
     }
 
     public $title = 'Vendor List';
