@@ -16,6 +16,7 @@
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
+        "maatwebsite/excel": "^3.1",
         "monarobase/country-list": "^3.5",
         "ozdemirburak/iris": "^3.1",
         "rappasoft/laravel-livewire-tables": "^3.4",

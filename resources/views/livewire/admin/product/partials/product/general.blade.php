@@ -101,6 +101,25 @@
                     @enderror
                 </div>
                 <!--end::Input group-->
+                <!--begin::Input group-->
+                <div class="mb-10 fv-row fv-plugins-icon-container">
+                    <!--begin::Label-->
+                    <label class="required form-label">Retail Price</label>
+                    <!--end::Label-->
+
+                    <!--begin::Input-->
+                    <input type="text" wire:model="rPrice" class="form-control mb-2"
+                        placeholder="Product retailer price" value="">
+                    <!--end::Input-->
+
+                    <!--begin::Description-->
+                    <div class="text-muted fs-7">Set the product retail price.</div>
+                    <!--end::Description-->
+                    @error('rPrice')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+                <!--end::Input group-->
 
                 <!--begin::Input group-->
                 <div class="fv-row mb-10">

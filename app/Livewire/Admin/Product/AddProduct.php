@@ -30,6 +30,7 @@ class AddProduct extends Component
     public $shortDescription = '';
     #[Validate('required', message: 'Please add a product price')]
     public $price = 0;
+    public $rPrice = 0;
 
     public $thumbnail = '';
     public $showThumbnail = '';
@@ -106,6 +107,7 @@ class AddProduct extends Component
                 $this->description      = $product->description;
                 $this->shortDescription = $product->shortDescription;
                 $this->price            = $product->amount;
+                $this->rPrice           = $product->retailAmount;
                 $this->showThumbnail    = $product->thumbnail;
                 $this->category         = $product->category;
                 $this->discountType     = $product->discountType;
@@ -353,6 +355,7 @@ class AddProduct extends Component
                 'description'        => $this->description,
                 'shortDescription'   => $this->shortDescription,
                 'amount'             => $this->price,
+                'retailAmount'       => $this->rPrice,
                 'category'           => $this->category,
                 'discountType'       => $this->discountType,
                 'discountData'       => $this->discountData,
@@ -542,6 +545,7 @@ class AddProduct extends Component
             'description'        => $this->description,
             'shortDescription'   => $this->shortDescription,
             'amount'             => $this->price,
+            'retailAmount'       => $this->rPrice,
             'thumbnail'          => isset($path) && ! empty($path) ? asset($path) : '',
             'category'           => $this->category,
             'discountType'       => $this->discountType,
@@ -686,6 +690,7 @@ class AddProduct extends Component
         $this->name            = '';
         $this->description     = '';
         $this->price           = 0;
+        $this->rPrice          = 0;
         $this->thumbnail       = '';
         $this->showThumbnail   = '';
         $this->category        = null;

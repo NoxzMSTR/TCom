@@ -1,6 +1,7 @@
 <?php
 namespace App\Livewire\Admin\Vendor;
 
+use App\Exports\Vendor\ProductExport;
 use App\Models\Vendors;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -58,6 +59,17 @@ class VendorDatatable extends DataTableComponent
                     return view('livewire.admin.vendor.vendor-el', ['type' => 'action', 'data' => $row]);
                 })->collapseOnMobile(),
         ];
+    }
+
+    public array $bulkActions = [
+        'exportSelected' => 'Export Products',
+    ];
+
+    public function exportSelected()
+    {
+        $ids = $this->getSelected();
+
+        return (new ProductExport($ids))->download('exported-products.xlsx');
     }
 
     public $title = 'Vendor List';
