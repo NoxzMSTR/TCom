@@ -81,8 +81,7 @@
                         @if ($item->sameDate && $item->sameDaySlot)
                             <tr>
                                 <td colspan="3" style="padding: 10px 10px 10px 0; vertical-align: top;">
-                                    <strong style="font-size: 14px; display: block;">Timeslot:</strong>
-                                    {{ $item->sameDate }} {{ $item->sameDaySlot }}
+                                    Timeslot: {{ $item->sameDate }} {{ $item->sameDaySlot }}
                                 </td>
                             </tr>
                         @endif
