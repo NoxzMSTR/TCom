@@ -67,19 +67,19 @@
                                     style="width: 55px; border-radius: 4px; display: block;">
                             </td>
                             <td style="padding: 10px 10px 10px 0; vertical-align: top;">
-                                <strong style="font-size: 14px; display: block;">
+                                <strong style="font-size: 14px; display: block; width: 300px">
                                     {{ $item->name ?: $item->product->name }}</strong>
 
                             </td>
                             <td style="padding: 10px 10px 10px 0; vertical-align: top;">
-                                <strong class="product-quantity" style="font-size: 14px; color: #333;">QTY:</strong>
-                                {{ $item->qty }}
+                                Qty: {{ $item->qty }}
                             </td>
-                            <td> {{ currency_format($item->amount, default_currency) }}</td>
+                            <td style="padding: 10px 10px 10px 0; vertical-align: top;">
+                                {{ currency_format($item->amount, default_currency) }}</td>
                         </tr>
                         @if ($item->sameDate && $item->sameDaySlot)
                             <tr>
-                                <td colspan="3" style="padding: 10px 10px 10px 0; vertical-align: top;">
+                                <td colspan="4" style="padding: 10px 10px 10px 0; vertical-align: top;">
                                     Timeslot: {{ $item->sameDate }} {{ $item->sameDaySlot }}
                                 </td>
                             </tr>
