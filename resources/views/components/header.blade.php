@@ -18,10 +18,10 @@
 
                             <li
                                 class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                @if (Auth::check())
+                                @if (auth()->check())
                                     <a class="font-weight-bold text-primary u-header-topbar__nav-link"
                                         href="{{ route('public.account') }}">
-                                        <i class="ec ec-user mr-1"></i>{{ Auth::user()->name }}
+                                        <i class="ec ec-user mr-1"></i>{{auth()->user()->name }}
                                     </a>
                                     <span class="text-gray-50"> - </span>
                                     <a href="{{ route('public.logout') }}" class="u-header-topbar__nav-link">Sign out
