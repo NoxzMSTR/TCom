@@ -73,17 +73,16 @@
 
                             </td>
                             <td style="padding: 10px 10px 10px 0; vertical-align: top;">
-                                <strong class="product-quantity" style="font-size: 14px; color: #333;">QTY:</strong>
+                                <strong class="product-quantity" style="font-size: 12px; color: #333;">Qty:</strong>
                                 {{ $item->qty }}
                             </td>
                             <td> {{ currency_format($item->amount, default_currency) }}</td>
                         </tr>
                         @if ($item->sameDate && $item->sameDaySlot)
                             <tr>
-                                <td colspan="2" style="padding: 10px 10px 10px 0; vertical-align: top;">
-                                    <small>
-                                        {{ $item->sameDate }} {{ $item->sameDaySlot }}
-                                    </small>
+                                <td colspan="3" style="padding: 10px 10px 10px 0; vertical-align: top;">
+                                    <strong style="font-size: 14px; display: block;">Timeslot:</strong>
+                                    {{ $item->sameDate }} {{ $item->sameDaySlot }}
                                 </td>
                             </tr>
                         @endif
