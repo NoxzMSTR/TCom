@@ -26,7 +26,7 @@ class ProductSheet implements FromQuery, WithHeadings, WithTitle, ShouldAutoSize
         return Products::query()
             ->join('categories', 'products.category', '=', 'categories.id')
             ->select([
-                'products.sku',
+                'products.thumbnail',
                 'products.name',
                 'categories.name as category',
                 'products.amount',
@@ -49,7 +49,7 @@ class ProductSheet implements FromQuery, WithHeadings, WithTitle, ShouldAutoSize
     public function headings(): array
     {
         return [
-            'SKU',
+            'Thumbnail',
             'Name',
             'Category',
             'Amount',
