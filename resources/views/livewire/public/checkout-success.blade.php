@@ -47,7 +47,7 @@
 
                                         <tr>
                                             <th>Date</th>
-                                            <td>{{ $order->created_at }}</td>
+                                            <td>{{ carbonDate($order->created_at) }}</td>
                                         </tr>
 
                                         <tr>

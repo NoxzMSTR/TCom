@@ -23,4 +23,11 @@
     <link href="{{ asset('mAssets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
     @yield('css')
+
+    <script>
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        // Store it in a cookie or send via AJAX
+        document.cookie = "user_timezone=" + timezone;
+    </script>
 </head>

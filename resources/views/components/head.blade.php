@@ -49,6 +49,13 @@
         }
     </style>
 
+    <script>
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        // Store it in a cookie or send via AJAX
+        document.cookie = "user_timezone=" + timezone;
+    </script>
+
     @livewireStyles
     @stack('css')
 

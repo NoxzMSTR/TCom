@@ -1,9 +1,10 @@
 <?php
 
-use GuzzleHttp\Client;
 use App\Models\Product\Products;
-use OzdemirBurak\Iris\Color\Hex;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
+use OzdemirBurak\Iris\Color\Hex;
 
 define('PRODUCT_STATUS', ['Draft', 'Published', 'OnHold', 'Disabled']);
 
@@ -21,7 +22,7 @@ function convertColor($hex, $type, $percent)
 {
     $hexColor = new Hex($hex);
     if ($type == 'dark') {
-        return $hexColor->darken($percent);  // 20% darker
+        return $hexColor->darken($percent); // 20% darker
     }
 
     return $hexColor->lighten($percent); // 20% lighter
@@ -59,7 +60,7 @@ function product($id)
 
 function getIp()
 {
-    foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
+    foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key) {
         if (array_key_exists($key, $_SERVER) === true) {
             foreach (explode(',', $_SERVER[$key]) as $ip) {
                 $ip = trim($ip); // just to be safe
@@ -79,9 +80,9 @@ function getCountry($ip)
     $url = "http://ip-api.com/json/{$ip}";
 
     // Use Guzzle to make the API request
-    $client = new Client();
+    $client   = new Client();
     $response = $client->get($url);
-    $data = json_decode($response->getBody(), true);
+    $data     = json_decode($response->getBody(), true);
 
     // Check if the country is available
     if ($data && isset($data['country'])) {
@@ -89,4 +90,15 @@ function getCountry($ip)
     } else {
         return false;
     }
+}
+
+function carbonDate($date, $format = 'Y-m-d H:i:s')
+{
+    if (isset($_COOKIE['user_timezone'])) {
+        $localized = Carbon::parse($date, config('app.timezone'))->setTimezone(isset($_COOKIE['user_timezone']))->format($format);
+    } else {
+        $localized = Carbon::parse($date, config('app.timezone'))->format($format);
+    }
+
+    return $localized;
 }
