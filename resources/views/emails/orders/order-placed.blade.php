@@ -37,7 +37,7 @@
                 $contentColor = isset(system_config['color.content']) ? system_config['color.content']->value : null;
                 $cardColor = isset(system_config['color.card']) ? system_config['color.card']->value : null;
             }
-            dd($logo);
+
         @endphp
         <div id="izda" class="header"
             style="box-sizing: border-box; background-color: rgba(255, 87, 51, 0); color: rgb(0, 0, 0); padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; text-align: center; text-decoration-line: none; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
