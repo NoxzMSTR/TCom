@@ -70,15 +70,24 @@
                             <td style="padding: 10px 10px 10px 0; vertical-align: top;">
                                 <strong style="font-size: 14px; display: block;">
                                     {{ $item->name ?: $item->product->name }}</strong>
-                                <br>
-                                <small>
-                                    <strong class="product-quantity" style="font-size: 14px; color: #333;"> QTY
-                                        {{ $item->qty }}
-                                    </strong>
-                                </small>
+
+                            </td>
+                            <td style="padding: 10px 10px 10px 0; vertical-align: top;">
+                                <strong class="product-quantity" style="font-size: 14px; color: #333;">QTY:</strong>
+                                {{ $item->qty }}
                             </td>
                             <td> {{ currency_format($item->amount, default_currency) }}</td>
                         </tr>
+                        @if ($item->sameDate && $item->sameDaySlot)
+                            <tr>
+                                <td colspan="2" style="padding: 10px 10px 10px 0; vertical-align: top;">
+                                    <small>
+                                        {{ $item->sameDate }} {{ $item->sameDaySlot }}
+                                    </small>
+                                </td>
+                            </tr>
+                        @endif
+
                         @php
                             $total += $item->amount * $item->qty;
                         @endphp
@@ -89,16 +98,19 @@
                 <table width="100%" cellpadding="0" cellspacing="0" border="0"
                     style="margin-top: 20px; font-size: 14px; border-collapse: collapse;">
                     <tr>
+                        <td></td>
                         <td style="padding: 5px 0;"><strong>Subtotal:</strong></td>
                         <td style="padding: 5px 0; text-align: right;"> {{ currency_format($total, default_currency) }}
                         </td>
                     </tr>
                     <tr>
+                        <td></td>
                         <td style="padding: 5px 0;"><strong>Shipping:</strong></td>
                         <td style="padding: 5px 0; text-align: right;">
                             {{ ORDER_PAYMENT_METHOD[$order->paymentMethod] }}</td>
                     </tr>
                     <tr>
+                        <td></td>
                         <td style="padding: 5px 0;"><strong>Total:</strong></td>
                         <td style="padding: 5px 0; text-align: right; font-weight: bold;">
                             {{ currency_format($total, default_currency) }}</td>
