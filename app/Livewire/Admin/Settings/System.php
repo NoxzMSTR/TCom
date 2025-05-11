@@ -74,9 +74,11 @@ class System extends Component
         if (isset($this->system['logoLight'])) {
             $file = $this->system['logoLight'];
 
-            $name = $file->getClientOriginalName();
+            $name       = $file->getClientOriginalName();
+            $extension  = $file->getClientOriginalExtension();
+            $hashedName = md5($name) . '.' . $extension;
 
-            $light = $file->storeAs('system', $name, ['disk' => 'public']);
+            $light = $file->storeAs('system', ($hashedName), ['disk' => 'public']);
 
             $data += ['logoLight' => isset($light) && ! empty($light) ? asset($light) : ''];
         }
@@ -84,9 +86,11 @@ class System extends Component
         if (isset($this->system['logoDark'])) {
             $file = $this->system['logoDark'];
 
-            $name = $file->getClientOriginalName();
+            $name       = $file->getClientOriginalName();
+            $extension  = $file->getClientOriginalExtension();
+            $hashedName = md5($name) . '.' . $extension;
 
-            $dark = $file->storeAs('system', $name, ['disk' => 'public']);
+            $dark = $file->storeAs('system', ($hashedName), ['disk' => 'public']);
 
             $data += ['logoDark' => isset($dark) && ! empty($dark) ? asset($dark) : ''];
         }
@@ -94,9 +98,11 @@ class System extends Component
         if (isset($this->system['favicon'])) {
             $file = $this->system['favicon'];
 
-            $name = $file->getClientOriginalName();
+            $name       = $file->getClientOriginalName();
+            $extension  = $file->getClientOriginalExtension();
+            $hashedName = md5($name) . '.' . $extension;
 
-            $favicon = $file->storeAs('system', $name, ['disk' => 'public']);
+            $favicon = $file->storeAs('system', ($hashedName), ['disk' => 'public']);
 
             $data += ['favconLogo' => isset($favicon) && ! empty($favicon) ? asset($favicon) : ''];
         }
