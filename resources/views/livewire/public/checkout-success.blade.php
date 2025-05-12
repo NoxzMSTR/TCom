@@ -139,6 +139,17 @@
                     </div>
                 </div>
             </div>
+        @elseif($title == 'Ops something went wrong!')
+            <div class="mx-xl-10">
+                <div class="mb-6 text-center">
+                    <h1 class="mb-6">Ops. something went wrong!</h1>
+                    <p class="text-gray-90 px-xl-10">
+                        Sorry, we couldn’t find your order. Please contact us for assistance, and we’ll help you resolve
+                        it as soon as possible.
+                    </p>
+                </div>
+
+            </div>
         @else
             <div class="mx-xl-10">
                 <div class="mb-6 text-center">
