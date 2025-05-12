@@ -13,17 +13,22 @@ class CheckoutSuccess extends Component
 
     public function mount($trackingNo)
     {
-        $this->order = Orders::with(['items.product'])->whereRaw('REPLACE(trackingNo, "-", "") = ?', [str_replace('-', '', $trackingNo)])->latest()->first();
+        if ($trackingNo == 'failed') {
+            $this->title = 'Ops something went wrong!';
+        } else {
+            $this->order = Orders::with(['items.product'])->whereRaw('REPLACE(trackingNo, "-", "") = ?', [str_replace('-', '', $trackingNo)])->latest()->first();
 
-        if (request('type')) {
-            $this->type = request('type');
+            if (request('type')) {
+                $this->type = request('type');
+            }
+            if ($this->type == 'success') {
+                $this->title = 'Order has been confirmed!';
+            }
+            if (! $this->order) {
+                $this->title = 'Order Not Found';
+            }
         }
-        if ($this->type == 'success') {
-            $this->title = 'Order has been confirmed!';
-        }
-        if (! $this->order) {
-            $this->title = 'Order Not Found';
-        }
+
     }
 
     public function render()
