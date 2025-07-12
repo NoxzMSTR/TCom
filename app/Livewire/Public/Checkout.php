@@ -390,7 +390,7 @@ class Checkout extends Component
             $parms = [
                 'customerTransactionid' => $orderNo,
                 'item'                  => preg_replace('/[^A-Za-z0-9 .,]/', '', implode(', ', $items)),
-                'amount'                => 1,
+                'amount'                => $total,
                 'PayeeName'             => $this->billing['name'],
                 'Email'                 => $this->billing['email'],
                 'MSISDN'                => $this->billing['phone'],
