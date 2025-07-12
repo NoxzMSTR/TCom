@@ -22,6 +22,24 @@
                                 #{{ $order->trackingNo }}</span>
                         </p>
                     </div>
+                @elseif ($type == 'paid')
+                    <div class="mb-6 text-center">
+                        <h1 class="mb-6">Payment Complete – Order in Process
+                        </h1>
+                        <p class="text-gray-90 px-xl-10">
+                            Thank you for completing your payment. Your order is confirmed and is now being prepared for
+                            delivery.
+                        </p>
+                    </div>
+                @elseif ($type == 'advance')
+                    <div class="mb-6 text-center">
+                        <h1 class="mb-6">Advance Payment Received – Order Confirmed!
+                        </h1>
+                        <p class="text-gray-90 px-xl-10">
+                            We’ve successfully received your advance payment. Your order is now confirmed and being
+                            processed. Thank you for shopping with us!
+                        </p>
+                    </div>
                 @endif
 
                 <div class="row mb-10">
@@ -118,22 +136,44 @@
                                 </li>
 
                             </ul>
-
+                            @php
+                                $total = $total + $order->shippingCharges;
+                            @endphp
                             <ul class="list-unstyled mb-6">
                                 <li class="flex-center-between align-items-baseline mb-1">
                                     <h5 class="font-size-14 font-weight-bold">Subtotal</h5>
                                     {{ currency_format($total, default_currency) }}
                                 </li>
-
                                 <li class="flex-center-between align-items-baseline mb-1">
                                     <h5 class="font-size-14 font-weight-bold">Shipping</h5>
-                                    {{ ORDER_PAYMENT_METHOD[$order->paymentMethod] }}
+                                    {{ currency_format($order->shippingCharges, default_currency) }}
                                 </li>
-
-                                <li class="flex-center-between align-items-baseline mb-1">
-                                    <h5 class="font-size-14 font-weight-bold">Total</h5>
-                                    {{ currency_format($total, default_currency) }}
-                                </li>
+                                @if ($order->isAdvancePaid)
+                                    @php
+                                        $total = $total - $order->advance;
+                                    @endphp
+                                    <li class="flex-center-between align-items-baseline mb-1">
+                                        <h5 class="font-size-14 font-weight-bold">Advance Payment</h5>
+                                        <span
+                                            class="text-danger">-{{ currency_format($order->advance, default_currency) }}</span>
+                                    </li>
+                                @endif
+                                @if ($order->isAdvancePaid)
+                                    <li class="flex-center-between align-items-baseline mb-1">
+                                        <h5 class="font-size-14 font-weight-bold">Due Payment</h5>
+                                        {{ currency_format($total, default_currency) }}
+                                    </li>
+                                @elseif($order->isPaid)
+                                    <li class="flex-center-between align-items-baseline mb-1">
+                                        <h5 class="font-size-14 font-weight-bold">Total Paid Amount</h5>
+                                        {{ currency_format($total, default_currency) }}
+                                    </li>
+                                @else
+                                    <li class="flex-center-between align-items-baseline mb-1">
+                                        <h5 class="font-size-14 font-weight-bold">Total Amount</h5>
+                                        {{ currency_format($total, default_currency) }}
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </div>

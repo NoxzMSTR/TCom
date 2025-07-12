@@ -23,6 +23,7 @@ Route::as('public.')->middleware([PublicActivities::class])->group(function () {
     Route::get('/shop', Shop::class)->name('shop');
     Route::get('/shop/checkout', Checkout::class)->name('checkout');
     Route::get('/order/checkout/{trackingNo}/view', CheckoutSuccess::class)->name('checkout.success');
+    Route::get('/order/checkout/{orderNo}/before', [CheckoutSuccess::class, 'before'])->name('checkout.before');
     Route::get('/shop/cart', Cart::class)->name('cart');
     Route::get('/about-us', AboutUs::class)->name('about-us');
     Route::get('/contact-us', ContactUs::class)->name('contact-us');

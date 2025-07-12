@@ -4,14 +4,16 @@
         <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
             <!--begin::Nav item-->
             <li class="nav-item mt-2">
-                <span class="nav-link text-active-primary ms-0 me-10 py-5 active">
+                <span @click='currentTab = "general"' :class="currentTab == 'general' ? 'active' : ''"
+                    class="nav-link text-active-primary ms-0 me-10 py-5 cursor-pointer">
                     General </span>
             </li>
             <!--end::Nav item-->
             <!--begin::Nav item-->
             <li class="nav-item mt-2">
-                <span class="nav-link text-active-primary ms-0 me-10 py-5 " href="/metronic8/demo1/account/security.html">
-                    Payment Gateway </span>
+                <span @click='currentTab = "payment"' :class="currentTab == 'payment' ? 'active' : ''"
+                    class="nav-link text-active-primary ms-0 me-10 py-5 cursor-pointer">
+                    Payment </span>
             </li>
             <!--end::Nav item-->
 

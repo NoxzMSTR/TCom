@@ -1,17 +1,23 @@
 <?php
 namespace App\Livewire\Public;
 
+use App\Mail\Accounts\AuthenticateMail;
 use App\Mail\Order\OrderPlaced;
 use App\Models\Buyers;
 use App\Models\Order\OrderItems;
 use App\Models\Order\Orders;
+use App\Models\User;
+use App\Traits\Api\SwitchTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Livewire\Attributes\Renderless;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Checkout extends Component
 {
+    use SwitchTrait;
+
     public $title       = 'Checkout';
     public $breadCrumb  = 'Home.Checkout';
     public $products    = [];
@@ -73,11 +79,15 @@ class Checkout extends Component
         if (is_array($products)) {
             $totalAmount = 0;
             $exProducts  = [];
+            $eProducts   = [];
             foreach ($products as $key => $vars) {
-                $exProducts[$vars['product']->id] = 1;
-                $totalAmount += $vars['final'];
+                if (isset($vars['product'])) {
+                    $exProducts[$vars['product']->id] = 1;
+                    $totalAmount += $vars['final'];
+                    $eProducts[] = $vars;
+                }
             }
-            $this->products    = $products;
+            $this->products    = $eProducts;
             $this->totalAmount = currency_format(
                 $totalAmount,
                 $default_currency,
@@ -141,7 +151,7 @@ class Checkout extends Component
         return $buyer;
     }
 
-    public function placeOrder()
+    public function placeOrder($paymentMethod = 'cod')
     {
         $this->validate();
 
@@ -164,16 +174,58 @@ class Checkout extends Component
 
         $count = Orders::count();
 
-        $orderNo = 1000000;
+        $orderNo = 100001;
 
-        $orderNo = $orderNo + $count;
+        $orderNo = $orderNo + $count + rand(10000, 99999);
+
+        $items = [];
+
+        $shippingCharges     = 0;
+        $shippingChargeLimit = 0;
+        if (defined('order_settings')) {
+            foreach (order_settings as $key => $value) {
+                if ($value['type'] == 'shipping_charges') {
+                    $charge          = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+                    $shippingCharges = $charge;
+                }
+                if ($value['type'] == 'shipping_charge_limit') {
+                    $chargeLimit         = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+                    $shippingChargeLimit = $chargeLimit;
+                }
+            }
+        }
+
+        $total = 0;
+
+        foreach ($this->products as $key => $exProduct) {
+            $product = $exProduct['product'];
+
+            $items[] = $product->name;
+
+            $qty      = $exProduct['qty'];
+            $discount = $exProduct['final'];
+
+            $total += $discount * $qty;
+        }
+
+        if ($shippingCharges && $total < $shippingChargeLimit) {
+            $shippingCharges = 0;
+        }
+
+        if (in_array($paymentMethod, ['online'])) {
+            $payM = 'credit';
+        } elseif (in_array($paymentMethod, ['advance'])) {
+            $payM = 'advance';
+        } else {
+            $payM = 'cod';
+        }
 
         $order = Orders::create([
             'orderNo'               => $orderNo,
             'orderDate'             => now()->format('Y-m-d'),
             'invoiceNo'             => 'INV-' . $orderNo,
             'invoicePath'           => '',
-            'paymentMethod'         => 'cod',
+            'paymentMethod'         => $payM,
             'userRole'              => 0,
             'userID'                => $buyerID,
             'userFirstName'         => $this->billing['name'],
@@ -195,6 +247,7 @@ class Checkout extends Component
             'status'                => 0,
             'bookerID'              => 0,
             'notes'                 => $this->note,
+            'shippingCharges'       => $shippingCharges,
         ]);
 
         $sameData        = [];
@@ -318,6 +371,38 @@ class Checkout extends Component
             }
         }
 
+        if (in_array($paymentMethod, ['online', 'advance'])) {
+            if ($paymentMethod == 'advance') {
+                $advanceAmount = 0;
+                if (defined('order_settings')) {
+                    foreach (order_settings as $key => $value) {
+                        if ($value['type'] == 'advance_payment') {
+                            $amount        = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+                            $advanceAmount = $amount;
+                        }
+                    }
+                }
+                $total = $advanceAmount;
+            }
+
+            $total = $total + $shippingCharges;
+
+            $parms = [
+                'customerTransactionid' => $orderNo,
+                'item'                  => preg_replace('/[^A-Za-z0-9 .,]/', '', implode(', ', $items)),
+                'amount'                => 1,
+                'PayeeName'             => $this->billing['name'],
+                'Email'                 => $this->billing['email'],
+                'MSISDN'                => $this->billing['phone'],
+                'description'           => 'Payment for Order',
+                'currency'              => 'PKR',
+                'successRedirectUrl'    => route('public.checkout.before', [$orderNo, 'type' => 'success']),
+            ];
+
+            $resp = $this->checkout($parms);
+            return redirect($resp);
+        }
+
         try {
             Mail::to($order->userEmail)->send(new OrderPlaced('Order is Being Processed #' . $order->invoiceNo, $order));
         } catch (\Throwable $th) {
@@ -327,6 +412,51 @@ class Checkout extends Component
         forgetSharedProperties(['add-to-cart']);
 
         return redirect()->route('public.checkout.success', [$order->trackingNo, 'type' => 'success']);
+    }
+
+    public $email;
+
+    #[Renderless]
+    public function login()
+    {
+        try {
+            $this->validate(['email' => 'required|email'], ['email' => 'Please enter your valid email.']);
+
+        } catch (\Throwable $th) {
+            $this->dispatch('account-notification', title: 'Validation', message: 'Please enter your valid email.', type: 'error');
+            return false;
+        }
+
+        $user = User::where('email', $this->email)->first();
+
+        $name = isset(system_config['name']['value']) ? system_config['name']['value'] : '';
+
+        if ($user) {
+
+            $type = 'auth-token-' . rand(75543435, 965245474);
+
+            $id = session()->getId();
+
+            $url = route('public.login', ['token' => $type . '-' . $id, 'type' => 'checkout', 'session' => $id]);
+
+            sharedProperty($type, $user);
+
+            $user->update(['token' => $type . '-' . $id]);
+
+            try {
+                Mail::to($this->email)->send(new AuthenticateMail('Welcome back to ' . $name, $user, $url));
+
+                $this->dispatch('account-notification', title: 'Authenticate Success', message: 'Mail has been sent to your email successfully!', type: 'success');
+
+            } catch (\Throwable $th) {
+                $this->dispatch('account-notification', title: 'Mail Sent Failed', message: 'Ops! Something went wrong.', type: 'error');
+
+            }
+        } else {
+            $this->dispatch('account-notification', title: 'Account', message: 'Ops user not found, Kindly click on signup to register on customer portal.', type: 'error');
+        }
+
+        $this->dispatch('mail-sent');
     }
 
     public function render()

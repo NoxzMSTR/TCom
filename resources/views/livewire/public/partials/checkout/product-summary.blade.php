@@ -189,10 +189,33 @@
                             <th>Subtotal</th>
                             <td>{{ $totalAmount }}</td>
                         </tr>
-                        <tr>
-                            <th>Shipping</th>
-                            <td>Free Delivery</td>
-                        </tr>
+                        @php
+                            $charge = 0;
+                            // Remove non-numeric characters except dot and comma
+                            $clean = preg_replace('/[^\d.,]/', '', $totalAmount);
+
+                            // Remove comma for float conversion
+                            $number = str_replace(',', '', $clean);
+                        @endphp
+                        @if ($shipping_charges && $shipping_charge_limit && (float) $number > $shipping_charge_limit)
+                            @php
+                                $totalAmount = (float) $number + (float) $shipping_charges;
+                                if (isset($default_currency)) {
+                                    $charge = currency_format($shipping_charges, $default_currency);
+                                    $totalAmount = currency_format($totalAmount, $default_currency);
+                                }
+                            @endphp
+                            <tr>
+                                <th>Shipping</th>
+                                <td>{{ $charge }}</td>
+                            </tr>
+                        @else
+                            <tr>
+                                <th>Shipping</th>
+                                <td>Free Delivery</td>
+                            </tr>
+                        @endif
+
                         <tr>
                             <th>Total</th>
                             <td><strong>{{ $totalAmount }}</strong></td>
@@ -200,57 +223,8 @@
                     </tfoot>
                 </table>
                 <!-- End Product Content -->
-                <div class="border-top border-width-3 border-color-1 pt-3 mb-3">
-                    <!-- Basics Accordion -->
-                    <div id="basicsAccordion1">
 
-                        <!-- Card -->
-                        <div class="border-bottom border-color-1 border-dotted-bottom">
-                            <div class="p-3" id="basicsHeadingThree">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="thirdstylishRadio1"
-                                        name="stylishRadio" checked>
-                                    <label class="custom-control-label form-label" for="thirdstylishRadio1"
-                                        data-toggle="collapse" data-target="#basicsCollapseThree" aria-expanded="false"
-                                        aria-controls="basicsCollapseThree">
-                                        Cash on delivery
-                                    </label>
-                                </div>
-                            </div>
-                            <div id="basicsCollapseThree"
-                                class="collapse show border-top border-color-1 border-dotted-top bg-dark-lighter"
-                                aria-labelledby="basicsHeadingThree" data-parent="#basicsAccordion1">
-                                <div class="p-4">
-                                    Pay with cash upon delivery.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Card -->
-                    </div>
-                    <!-- End Basics Accordion -->
-                </div>
-                <div class="form-group d-flex align-items-center justify-content-between px-3 mb-5">
-                    <div class="form-check">
-                        <input wire:model='termCondtions' class="form-check-input" type="checkbox" value=""
-                            id="defaultCheck10" required data-msg="Please agree terms and conditions."
-                            data-error-class="u-has-error" data-success-class="u-has-success">
-                        <label class="form-check-label form-label" for="defaultCheck10">
-                            I have read and agree to the website <a href="{{ route('public.terms-n-conditions') }}"
-                                target="_blank" class="text-blue">terms and
-                                conditions </a>
-                            <span class="text-danger">*</span>
-                        </label>
-                    </div>
-                </div>
-                @error('termCondtions')
-                    <p class="text-danger">{{ $message }}</p>
-                @enderror
-                @error('hasSlots')
-                    <p class="text-danger">{{ $message }}</p>
-                @enderror
-                <button @click="placeOrder"
-                    class="btn btn-primary-dark-w btn-block btn-pill font-size-20 mb-3 py-3">Place
-                    order</button>
+                @include('livewire.public.partials.checkout.place-order')
             </div>
         @else
             <div class="p-4 mb-4 checkout-table">

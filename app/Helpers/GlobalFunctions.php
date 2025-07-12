@@ -10,7 +10,7 @@ define('PRODUCT_STATUS', ['Draft', 'Published', 'OnHold', 'Disabled']);
 
 define('PRODUCT_VARIATIONS', ['Color', 'Size', 'Material', 'Style', 'Piece']);
 
-define('ORDER_PAYMENT_METHOD', ['cod' => 'Cash on delivery', 'credit' => 'Credit / Debit Card', 'bank' => 'Bank']);
+define('ORDER_PAYMENT_METHOD', ['cod' => 'Cash on delivery', 'credit' => 'Credit / Debit Card', 'bank' => 'Bank', 'advance' => 'Advance Payment + Cash on delivery']);
 
 define('BUYER_TYPE', [0 => 'Customer', 1 => 'Client']);
 

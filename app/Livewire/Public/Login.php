@@ -1,16 +1,16 @@
 <?php
-
 namespace App\Livewire\Public;
 
-use App\Models\User;
-use Livewire\Component;
-use Livewire\Attributes\Validate;
-use Livewire\Attributes\Renderless;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\Accounts\AuthenticateMail;
 use App\Mail\Accounts\RegistrationMail;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Renderless;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Login extends Component
 {
@@ -40,11 +40,11 @@ class Login extends Component
 
             $user->update(['token' => $type . '-' . $id]);
 
-           try {
-            Mail::to($this->email)->send(new AuthenticateMail('Welcome back to ' . $name, $user, $url));
-           } catch (\Throwable $th) {
-            throw ValidationException::withMessages(['email' => 'Ops! Something went wrong']);
-           }
+            try {
+                Mail::to($this->email)->send(new AuthenticateMail('Welcome back to ' . $name, $user, $url));
+            } catch (\Throwable $th) {
+                throw ValidationException::withMessages(['email' => 'Ops! Something went wrong']);
+            }
         } else {
             throw ValidationException::withMessages(['email' => 'Ops user not found, Kindly click on signup to register on customer portal.']);
         }
@@ -71,11 +71,11 @@ class Login extends Component
 
             $url = route('public.login', ['token' => $type . '-' . $id]);
 
-            $user =  User::create([
-                'name' => '',
-                'email' => $this->email,
+            $user = User::create([
+                'name'     => '',
+                'email'    => $this->email,
                 'password' => '',
-                'token' => $type . '-' . $id
+                'token'    => $type . '-' . $id,
             ]);
 
             sharedProperty($type, $user);
@@ -104,8 +104,19 @@ class Login extends Component
         if ($user) {
             Auth::login($user);
             $user->update(['token' => null]);
-            // Redirect to the intended page
-            return redirect()->route('public.account');
+
+            if (request('session')) {
+                Session::setId(request('session'));
+            }
+
+            if (request('type') == 'checkout') {
+                // Redirect to the intended page
+                return redirect()->route('public.checkout');
+            } else {
+                // Redirect to the intended page
+                return redirect()->route('public.account');
+            }
+
         }
     }
     public function logout()

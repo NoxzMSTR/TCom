@@ -1,11 +1,9 @@
 <?php
-
 namespace App\Livewire\Public\Cart;
 
-use Livewire\Component;
-use Livewire\Attributes\On;
 use App\Models\Product\Products;
-use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 class GlobalCart extends Component
 {
@@ -32,16 +30,20 @@ class GlobalCart extends Component
             $products = [];
         }
 
-        $this->products = $products;
-
         $default_currency = default_currency;
         if (is_array($products)) {
             $totalAmount = 0;
-            $exProducts = [];
+            $exProducts  = [];
+            $eProducts   = [];
             foreach ($products as $key => $vars) {
-                $exProducts[$vars['product']->id] = 1;
-                $totalAmount += $vars['final'];
+                if (isset($vars['product'])) {
+                    $exProducts[$vars['product']->id] = 1;
+                    $totalAmount += $vars['final'];
+                    $eProducts[] = $vars;
+                }
             }
+
+            $this->products = $eProducts;
 
             $this->total = count($exProducts);
             if ($totalAmount) {
@@ -62,18 +64,22 @@ class GlobalCart extends Component
             $products = [];
         }
 
-        $this->products = $products;
-
         $default_currency = default_currency;
 
         if (is_array($products)) {
             $totalAmount = 0;
-            $exProducts = [];
+            $exProducts  = [];
+            $eProducts   = [];
             foreach ($products as $key => $vars) {
-                $exProducts[$vars['product']->id] = 1;
-                $totalAmount += $vars['final'];
+                if (isset($vars['product'])) {
+                    $exProducts[$vars['product']->id] = 1;
+                    $totalAmount += $vars['final'];
+                    $eProducts[] = $vars;
+                }
             }
-            $this->total = count($exProducts);
+
+            $this->products    = $eProducts;
+            $this->total       = count($exProducts);
             $this->totalAmount = currency_format(
                 $totalAmount,
                 $default_currency,

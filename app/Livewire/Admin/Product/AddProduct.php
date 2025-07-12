@@ -87,6 +87,8 @@ class AddProduct extends Component
 
     public $offered = 0;
 
+    public $needAdvance = 0;
+
     public $offerExpireAt;
 
     public $used = 0;
@@ -130,6 +132,7 @@ class AddProduct extends Component
                 $this->offered          = $product->isOffer;
                 $this->used             = $product->isUsed;
                 $this->offerExpireAt    = $product->offerExpireAt;
+                $this->needAdvance      = $product->needAdvance;
                 $this->metaTags         = json_validate($product->metaTagKeywords) ? json_decode($product->metaTagKeywords) : [];
                 $this->hasAssets        = $product->assets;
                 foreach ($product->variations as $key => $value) {
@@ -379,6 +382,7 @@ class AddProduct extends Component
                 'isOffer'            => $this->offered,
                 'isUsed'             => $this->used,
                 'offerExpireAt'      => $this->offerExpireAt,
+                'needAdvance'        => $this->needAdvance,
             ];
 
             $product = $this->product->update($data);
@@ -570,6 +574,7 @@ class AddProduct extends Component
             'isOffer'            => $this->offered,
             'isUsed'             => $this->used,
             'offerExpireAt'      => $this->offerExpireAt,
+            'needAdvance'        => $this->needAdvance,
         ]);
 
         if (is_array($this->metaTags)) {
@@ -708,6 +713,7 @@ class AddProduct extends Component
         $this->width           = 0;
         $this->height          = 0;
         $this->featured        = 0;
+        $this->needAdvance     = 0;
         $this->brand           = null;
         $this->metaTitle       = null;
         $this->metaDescription = null;

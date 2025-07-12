@@ -1,14 +1,13 @@
 <?php
-
 namespace App\Livewire\Public;
 
 use Livewire\Component;
 
 class Cart extends Component
 {
-    public $title = 'Cart';
-    public $breadCrumb = 'Home.Cart';
-    public $products = [];
+    public $title       = 'Cart';
+    public $breadCrumb  = 'Home.Cart';
+    public $products    = [];
     public $totalAmount = 0;
     public $default_currency;
 
@@ -29,14 +28,18 @@ class Cart extends Component
 
         if (is_array($products)) {
 
-            $this->products = $products;
-
             $totalAmount = 0;
-            $exProducts = [];
+            $exProducts  = [];
+            $eProducts   = [];
             foreach ($products as $key => $vars) {
-                $exProducts[$vars['product']->id] = 1;
-                $totalAmount += $vars['final'];
+                if (isset($vars['product'])) {
+                    $exProducts[$vars['product']->id] = 1;
+                    $totalAmount += $vars['final'];
+                    $eProducts[] = $vars;
+                }
             }
+
+            $this->products = $eProducts;
 
             $this->totalAmount = currency_format(
                 $totalAmount,
@@ -54,9 +57,9 @@ class Cart extends Component
             $this->default_currency = default_currency;
 
             $totalAmount = 0;
-            $exProducts = [];
+            $exProducts  = [];
             foreach ($this->products as $key => $vars) {
-                $products[] = $vars;
+                $products[]                       = $vars;
                 $exProducts[$vars['product']->id] = 1;
                 $totalAmount += $vars['final'];
             }

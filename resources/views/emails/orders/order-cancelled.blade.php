@@ -92,6 +92,9 @@
 
                 </table>
 
+                @php
+                    $total = $total + $order->shippingCharges;
+                @endphp
                 <table width="100%" cellpadding="0" cellspacing="0" border="0"
                     style="margin-top: 20px; font-size: 14px; border-collapse: collapse;">
                     <tr>
@@ -104,14 +107,44 @@
                         <td></td>
                         <td style="padding: 5px 0;"><strong>Shipping:</strong></td>
                         <td style="padding: 5px 0; text-align: right;">
-                            {{ ORDER_PAYMENT_METHOD[$order->paymentMethod] }}</td>
+                            {{ currency_format($order->shippingCharges, default_currency) }}
+                        </td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td style="padding: 5px 0;"><strong>Total:</strong></td>
-                        <td style="padding: 5px 0; text-align: right; font-weight: bold;">
-                            {{ currency_format($total, default_currency) }}</td>
-                    </tr>
+                    @if ($order->isAdvancePaid)
+                        @php
+                            $total = $total - $order->advance;
+                        @endphp
+                        <tr>
+                            <td></td>
+                            <td style="padding: 5px 0;"><strong>Advance Payment:</strong></td>
+                            <td style="padding: 5px 0; text-align: right;color:red;">
+                                -{{ currency_format($order->advance, default_currency) }}
+                            </td>
+                        </tr>
+                    @endif
+                    @if ($order->isAdvancePaid)
+                        <tr>
+                            <td></td>
+                            <td style="padding: 5px 0;"><strong>Due Payment:</strong></td>
+                            <td style="padding: 5px 0; text-align: right; font-weight: bold;">
+                                {{ currency_format($total, default_currency) }}</td>
+                        </tr>
+                    @elseif($order->isPaid)
+                        <tr>
+                            <td></td>
+                            <td style="padding: 5px 0;"><strong>Total Paid Amount:</strong></td>
+                            <td style="padding: 5px 0; text-align: right; font-weight: bold;">
+                                {{ currency_format($total, default_currency) }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td></td>
+                            <td style="padding: 5px 0;"><strong>Total Amount:</strong></td>
+                            <td style="padding: 5px 0; text-align: right; font-weight: bold;">
+                                {{ currency_format($total, default_currency) }}</td>
+                        </tr>
+                    @endif
+
                 </table>
             </div>
 

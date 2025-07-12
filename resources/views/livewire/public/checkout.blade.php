@@ -1,4 +1,11 @@
 <div>
+    <style>
+        @media (max-width: 991px) {
+            .flex-mobile-column-reverse {
+                flex-direction: column-reverse !important;
+            }
+        }
+    </style>
     @php
         $cities = [];
         $standard_delivery = 48;
@@ -24,6 +31,7 @@
     <div class="container" x-data='{ slot: @json($slot),deliveryTime: @json($deliveryTime)}'>
 
         <div x-data="{
+            paymentMethod: 'cod',
             latitude: '',
             longitude: '',
             address: '',
@@ -262,24 +270,85 @@
                     }
         
                 }
-                await $wire.placeOrder();
+                await $wire.placeOrder(this.paymentMethod);
                 $('.btn').attr('disabled', false);
             },
+            init() {
+                $wire.on('checkout-notification', (e) => {
+                    Swal.fire({
+                        title: e.title,
+                        text: e.message,
+                        icon: e.type
+                    });
+                });
+            }
         }">
+            @php
+                $advanceAmount = 0;
+                $advanceAmountLimit = 0;
+                $shipping_charges = 0;
+                $shipping_charge_limit = 0;
+                $sUrl = null;
+                $sClientID = null;
+                $sSecret = null;
 
+                if (defined('order_settings')) {
+                    foreach (order_settings as $key => $value) {
+                        if ($value['type'] == 'advance_payment') {
+                            $amount = json_validate($value['data']) ? json_decode($value['data'], true) : 0;
+                            if (isset($default_currency)) {
+                                $amount = currency_format($amount, $default_currency);
+                            }
+                            $advanceAmount = $amount;
+                        }
+                        if ($value['type'] == 'advance_payment_limit') {
+                            $amountLimit = json_validate($value['data']) ? json_decode($value['data'], true) : 0;
+
+                            $advanceAmountLimit = (float) $amountLimit;
+                        }
+
+                        if ($value['type'] == 'switch_landing_url') {
+                            $sUrl = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+
+                            $sUrl = $sUrl;
+                        }
+                        if ($value['type'] == 'switch_client_id') {
+                            $sClient = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+
+                            $sClient = $sClient;
+                        }
+                        if ($value['type'] == 'switch_secret_key') {
+                            $sSecret = json_validate($value['data']) ? json_decode($value['data'], true) : [];
+
+                            $sSecret = $sSecret;
+                        }
+                        if ($value['type'] == 'shipping_charges') {
+                            $shipping_charges = json_validate($value['data']) ? json_decode($value['data'], true) : 0;
+
+                            $shipping_charges = $shipping_charges;
+                        }
+                        if ($value['type'] == 'shipping_charge_limit') {
+                            $shipping_charge_limit = json_validate($value['data'])
+                                ? json_decode($value['data'], true)
+                                : 0;
+
+                            $shipping_charge_limit = $shipping_charge_limit;
+                        }
+                    }
+                }
+            @endphp
             <div class="mb-5">
                 <h1 class="text-center">Checkout</h1>
             </div>
-            <!-- Accordion -->
-            @include('livewire.public.partials.checkout.returning-customer')
-            <!-- End Accordion -->
+            @if (!Auth::check())
+                <!-- Accordion -->
+                @include('livewire.public.partials.checkout.returning-customer')
+                <!-- End Accordion -->
+            @endif
 
-            <!-- Accordion -->
-
-            <!-- End Accordion -->
 
             <input type="text" hidden x-model="userIP">
-            <div class="row">
+            <div class="row flex-mobile-column-reverse">
                 <div class="col-lg-5 order-lg-2 mb-7 mb-lg-0">
                     @include('livewire.public.partials.checkout.product-summary')
                 </div>

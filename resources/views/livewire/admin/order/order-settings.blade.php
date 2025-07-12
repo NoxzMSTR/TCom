@@ -4,6 +4,7 @@
     deliveryTime: $wire.entangle('deliveryTime'),
     deliveryCities: [],
     sameDayDelivery: $wire.entangle('sameDayDelivery'),
+    currentTab: 'general',
     init() {
 
         KTComponents.init();
@@ -26,13 +27,25 @@
     <!--begin::Navbar-->
     @include('livewire.admin.order.partials.settings.header')
     <!--end::Navbar-->
-    <!--begin::Basic info-->
-    @include('livewire.admin.order.partials.settings.general')
-    <!--end::Basic info-->
-    <!--begin::Basic info-->
-    @include('livewire.admin.order.partials.settings.shipping')
-    <!--end::Basic info-->
-
+    <div x-show="currentTab == 'general'" x-transition>
+        <!--begin::Basic info-->
+        @include('livewire.admin.order.partials.settings.general')
+        <!--end::Basic info-->
+        <!--begin::Basic info-->
+        @include('livewire.admin.order.partials.settings.shipping')
+        <!--end::Basic info-->
+    </div>
+    <div x-show="currentTab == 'payment'" x-transition>
+        <!--begin::Basic info-->
+        @include('livewire.admin.order.partials.settings.advance')
+        <!--end::Basic info-->
+        <!--begin::Basic info-->
+        @include('livewire.admin.order.partials.settings.gateway')
+        <!--end::Basic info-->
+        <!--begin::Basic info-->
+        @include('livewire.admin.order.partials.settings.charges')
+        <!--end::Basic info-->
+    </div>
 </div>
 @script
     <script>
