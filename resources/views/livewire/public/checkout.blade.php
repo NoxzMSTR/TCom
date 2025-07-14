@@ -27,6 +27,7 @@
                 }
             }
         }
+
     @endphp
     <div class="container" x-data='{ slot: @json($slot),deliveryTime: @json($deliveryTime)}'>
 
@@ -46,6 +47,7 @@
                 return year + '-' + month + '-' + day;
             },
             init() {
+        
                 if (!navigator.geolocation) {
                     console.error('Geolocation is not supported by your browser.');
                 }
@@ -72,7 +74,28 @@
                     (error) => {
                         console.error('Unable to retrieve location. Error: ' + error.message);
                     });
+                $wire.on('checkout-notification', (e) => {
+                    Swal.fire({
+                        title: e.title,
+                        text: e.message,
+                        icon: e.type
+                    });
+                });
+        
                 this.setTimeSlot();
+            },
+            async getIpAddress() {
+                try {
+                    // Fetch the user's IP address from ipify
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    const data = await response.json();
+        
+                    // Store the IP address in a reactive property
+                    this.userIP = data.ip;
+                } catch (error) {
+                    console.error('Unable to fetch IP address:', error);
+                    this.userIP = 'error';
+                }
             },
             setTimeSlot() {
                 var self = this;
@@ -85,7 +108,6 @@
                 var currentMinutes = now.getMinutes();
                 var i = 0;
                 var currentSlot = {};
-        
         
                 $.each(this.slot, function(city, cityData) {
                     if (self.deliveryTime[city]) {
@@ -106,33 +128,46 @@
                             currentSlot[city] = {};
                         }
         
+        
+        
                         if (diffFrom < 0 && diffTo > 0) {
+        
                             var hasPassed = false;
                             $.each(cityData, function(index, elem) {
         
-                                var [slotHours, slotMinutes] = elem.to.split(':');
-                                var exSlotHrs = (slotHours % 12) + 12;
-                                let diff = (exSlotHrs - currentHours + 24) % 24;
+                                let [slotHours, slotMinutes] = elem.to.split(':').map(Number);
+                                let diff = (slotHours - currentHours + 24) % 24;
+        
+                                console.log(diff, currentHours);
         
                                 if (diff > 0 && diff < 12) {
-                                    var slotHr = (slotHours - 2) % 24;
-                                    self.startCountdown(slotHours + '_' + self.formatDate(now) + '_' + city, now.getDate(), slotHr);
-                                    currentSlot[city][slotHours + '_' + self.formatDate(now) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(now), futureDates: false };
+                                    var slotHr = (slotHours + 24 - 2) % 24;
+                                    const slotKey = slotHours + '_' + self.formatDate(now) + '_' + city;
         
+                                    self.startCountdown(slotKey, now.getDate(), slotHr);
+        
+                                    currentSlot[city][slotKey] = {
+                                        from: elem.from,
+                                        to: elem.to,
+                                        date: self.formatDate(now),
+                                        futureDates: false
+                                    };
                                 } else {
                                     hasPassed = true;
                                 }
                             });
         
+                            console.log(cityData)
+        
                             if (hasPassed) {
                                 for (var i = 1; i <= 2; i++) { // Loop for next 2 days
-                                    var futureDate = new Date();
+                                    var futureDate = new Date(now.getTime());
                                     futureDate.setDate(now.getDate() + i); // Add i days
                                     $.each(cityData, function(index, elem) {
         
                                         var [slotHours, slotMinutes] = elem.to.split(':');
         
-                                        var slotHr = (slotHours - 2) % 24;
+                                        var slotHr = (slotHours + 24 - 2) % 24;
                                         self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
                                         currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
         
@@ -140,15 +175,14 @@
                                 }
                             }
                         } else {
-        
                             for (var i = 1; i <= 2; i++) { // Loop for next 2 days
-                                var futureDate = new Date();
+                                var futureDate = new Date(now.getTime());
                                 futureDate.setDate(now.getDate() + i); // Add i days
                                 $.each(cityData, function(index, elem) {
         
                                     var [slotHours, slotMinutes] = elem.to.split(':');
         
-                                    var slotHr = (slotHours - 2) % 24;
+                                    var slotHr = (slotHours + 24 - 2) % 24;
                                     self.startCountdown(slotHours + '_' + self.formatDate(futureDate) + '_' + city, futureDate.getDate(), slotHr);
                                     currentSlot[city][slotHours + '_' + self.formatDate(futureDate) + '_' + city] = { from: elem.from, to: elem.to, date: self.formatDate(futureDate), futureDates: true };
         
@@ -160,19 +194,6 @@
         
                 this.currentSlot = currentSlot;
                 $wire.set('hasSlots', currentSlot, false);
-            },
-            async getIpAddress() {
-                try {
-                    // Fetch the user's IP address from ipify
-                    const response = await fetch('https://api.ipify.org?format=json');
-                    const data = await response.json();
-        
-                    // Store the IP address in a reactive property
-                    this.userIP = data.ip;
-                } catch (error) {
-                    console.error('Unable to fetch IP address:', error);
-                    this.userIP = 'error';
-                }
             },
             now: new Date(),
             currentTime: '',
@@ -273,15 +294,6 @@
                 await $wire.placeOrder(this.paymentMethod);
                 $('.btn').attr('disabled', false);
             },
-            init() {
-                $wire.on('checkout-notification', (e) => {
-                    Swal.fire({
-                        title: e.title,
-                        text: e.message,
-                        icon: e.type
-                    });
-                });
-            }
         }">
             @php
                 $advanceAmount = 0;
